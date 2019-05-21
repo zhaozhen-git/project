@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.BrandMapper">
+
+
+    <insert id="insertBrand" parameterType="map">
+            insert into event(
+            <trim suffixOverrides=",">
+              <if test="id!=null and id!=''">
+              project_ID,
+              </if>
+              <if test="eventName!=null and eventName!=''">
+              event_name,
+              </if>
+              <if test="groupLeader!=null and groupLeader!=''">
+              event_groupLeader,
+              </if>
+              <!--<if test="phoneNumber!=null and phoneNumber!=''">-->
+              <!--event_phone,-->
+              <!--</if>-->
+              <if test="startTime!=null and startTime!=''">
+              event_startTime,
+              </if>
+              <if test="endTime!=null and endTime!=''">
+              event_endTime,
+              </if>
+              <if test="eventDescription!=null and eventDescription!=''">
+              event_description,
+              </if>
+              <if test="days!=null and days!=''">
+              days,
+              </if>
+              <if test="eventState!=null and eventState!=''">
+              event_state,
+              </if>
+            </trim>
+            )  values(
+        <trim suffixOverrides=",">
+            <if test="id!=null and id!=''">
+                #{id},
+            </if>
+            <if test="eventName!=null and eventName!=''">
+                #{eventName},
+            </if>
+            <if test="groupLeader!=null and groupLeader!=''">
+                #{groupLeader},
+            </if>
+            <!--<if test="phoneNumber!=null and phoneNumber!=''">-->
+                <!--#{phoneNumber},-->
+            <!--</if>-->
+            <if test="startTime!=null and startTime!=''">
+                #{startTime},
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                #{endTime},
+            </if>
+            <if test="eventDescription!=null and eventDescription!=''">
+                #{eventDescription},
+            </if>
+            <if test="days!=null and days!=''">
+                #{days},
+            </if>
+            <if test="eventState!=null and eventState!=''">
+                #{eventState},
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <select id="getBrandList" resultType="map">
+            select * from event where project_ID = #{id} order by event_startTime asc
+    </select>
+
+
+    <delete id="deleteBrand" parameterType="map">
+        delete from event where event_id in
+        <foreach collection="list" item="li" open="("
+                 separator="," close=")">
+            (#{li.ID})
+        </foreach>
+    </delete>
+
+
+    <update id="successBrand" parameterType="map">
+        update event set event_success = abs(event_success-1)
+         <if test="tab!=null and tab!=''">
+            ,event_tab = #{tab}
+         </if>
+     where event_id = #{ID}
+    </update>
+
+    <update id="updateBrand" parameterType="map">
+         update event set event_name = #{eventName},event_groupLeader = #{groupLeader},event_startTime=#{startTime},event_endTime=#{endTime},event_description=#{eventDescription},days=#{days},event_state=#{eventState} where event_id = #{id}
+    </update>
+
+
+
+    <select id="getBrand" resultType="map">
+         select * from event where project_ID = #{project_id} and event_id = #{event_id} order by event_startTime asc
+    </select>
+
+    <select id="getDate" resultType="String">
+        select event_endTime from event where event_id = #{ID}
+    </select>
+
+    <update id="changeTime">
+        update event set event_startTime = #{startTime},event_endTime = #{endTime},event_tab=#{select},days=#{days} where event_id = #{event_id}
+    </update>
+</mapper>

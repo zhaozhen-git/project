@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.ProjectMapper">
+
+
+    <select id="getProjectList" resultType="map">
+        select DISTINCT p.* from projects p left join event e on p.project_ID = e.project_ID left join extra ex on p.project_ID = ex.project_ID where
+        <if test="username!='admin'">
+            p.project_director = #{username} or e.event_groupLeader = #{username} or ex.extra_person = #{username} and
+        </if> p.project_state = 0
+    </select>
+
+    <select id="getFinish" resultType="map">
+        select * from projects where project_state = 1
+    </select>
+
+    <select id="getProjectOne" resultType="map">
+        select p.*,b.event_id,b.event_name,b.event_groupLeader,b.event_startTime,b.event_endTime,b.event_state,b.event_success,b.event_tab from projects p left join event b on p.project_ID = b.project_ID where p.project_ID=#{id}
+        order by b.event_startTime asc
+    </select>
+
+
+    <select id="getNum" resultType="int">
+         select project_ID from projects order by project_ID desc limit 1
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from projects
+    </select>
+
+
+    <insert id="insertProject" parameterType="map">
+        insert into projects(
+        <trim suffixOverrides=",">
+            <if test="id!=null and id!=''">
+                project_ID,
+            </if>
+            <if test="name!=null and name!=''">
+                project_name,
+            </if>
+            <if test="username!=null and username!=''">
+                project_director,
+            </if>
+            <if test="time!=null and time!=''">
+                project_time,
+            </if>
+            <if test="remark!=null and remark!=''">
+                project_remark,
+            </if>
+        </trim>)
+        values(
+        <trim suffixOverrides=",">
+            <if test="id!=null and id!=''">
+                #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                #{name},
+            </if>
+            <if test="username!=null and username!=''">
+                #{username},
+            </if>
+            <if test="time!=null and time!=''">
+                #{time},
+            </if>
+            <if test="remark!=null and remark!=''">
+                #{remark},
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <insert id="insertMsg" parameterType="map">
+            insert into brand(
+            <trim suffixOverrides=",">
+                <if test="title!=null and title!=''">
+                    brand_task,
+                </if>
+                <if test="event_person!=null and event_person!=''">
+                    brand_person,
+                </if>
+                <if test="startDate!=null and startDate!=''">
+                    brand_startTime,
+                </if>
+                <if test="project_id!=null and project_id!=''">
+                    project_ID,
+                </if>
+                <if test="state!=null and state!=''">
+                    brand_state,
+                </if>
+                <if test="event_remark!=null and event_remark!=''">
+                    brand_remark,
+                </if>
+            </trim>
+            )
+            values(
+        <trim suffixOverrides=",">
+            <if test="title!=null and title!=''">
+                #{title},
+            </if>
+            <if test="event_person!=null and event_person!=''">
+                #{event_person},
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                #{startDate},
+            </if>
+            <if test="project_id!=null and project_id!=''">
+                #{project_id},
+            </if>
+            <if test="state!=null and state!=''">
+                #{state},
+            </if>
+            <if test="event_remark!=null and event_remark!=''">
+                #{event_remark},
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <select id="getAllProject" resultType="map">
+        select distinct p.* from projects p left join event e on p.project_ID = e.project_ID left join extra ex on p.project_ID = ex.project_ID
+        <if test="username!='admin'">
+          where p.project_director=#{username} or e.event_groupLeader=#{username} or extra_person=#{username}
+        </if>
+    </select>
+
+
+    <delete id="deleteProject" parameterType="map">
+        delete p.*,e.* from projects p left join event e on p.project_ID = e.project_ID where p.project_ID in
+        <foreach collection="list" item="li" open="("
+                 separator="," close=")">
+            #{li.ID}
+        </foreach>
+    </delete>
+
+    <update id="updateProject">
+        update projects set project_name = #{name},project_director = #{director},
+        project_time = #{time},project_remark = #{remark} where project_ID = #{id}
+    </update>
+
+    <select id="boolEvent" resultType="int">
+        select count(*) from event where event_success='1' and project_ID = #{ID}
+    </select>
+
+    <update id="successProject">
+        update projects set project_state=abs(project_state-1) where project_ID = #{ID}
+    </update>
+
+    <select id="getAccount" resultType="String">
+        select user_name from user where user_account=#{name}
+    </select>
+
+</mapper>

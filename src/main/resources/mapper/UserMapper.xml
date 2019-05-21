@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.UserMapper">
+
+
+    <select id="getUserList" resultType="map">
+        select * from user where user_cancel=1
+    </select>
+
+    <select id="findUserName" resultType="map">
+        select u.user_account,u.user_password,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id where u.user_account = #{username}
+    </select>
+
+
+
+
+</mapper>

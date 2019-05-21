@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.ExtraMapper">
+
+
+    <select id="getExtra" resultType="map">
+        select * from extra e where e.project_ID = #{id}
+        <if test="username!='admin'">
+            and extra_person = #{username}
+        </if>
+    </select>
+
+    <insert id="insertExtra" parameterType="map">
+        insert into extra(project_ID,extra_name,extra_person,extra_time,extra_add)
+        values(#{project_ID},#{extraName},#{groupLeader},#{duringTime},#{addPerson})
+    </insert>
+
+
+    <delete id="deleteExtra" parameterType="map">
+        delete from extra where extra_ID in
+        <foreach collection="list" item="li" open="("
+                 separator="," close=")">
+            #{li.ID}
+        </foreach>
+    </delete>
+
+    <update id="updateExtra">
+        update extra set extra_name = #{name},extra_person = #{person},
+        extra_time = #{time} where extra_ID = #{id}
+    </update>
+
+    <update id="successExtra" parameterType="map">
+        update extra set extra_success = abs(extra_success-1) where extra_ID = #{ID}
+    </update>
+
+    <update id="changeExtraTime">
+        update extra set extra_time=#{time} where extra_ID = #{extra_id}
+    </update>
+
+</mapper>
