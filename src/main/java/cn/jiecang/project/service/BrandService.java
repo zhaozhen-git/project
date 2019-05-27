@@ -46,4 +46,8 @@ public class BrandService {
     public void changeTime(Map<String,Object> map){
         brandMapper.changeTime(map);
     }
+
+    public void changeProgress(Map<String,Object> map){
+        brandMapper.changeProgress(map);
+    }
 }

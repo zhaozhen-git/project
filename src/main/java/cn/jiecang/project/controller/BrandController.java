@@ -79,8 +79,10 @@ public class BrandController {
     @RequestMapping("/getBrandList")
     public Map<String, Object> getBrandList(HttpServletRequest request){
         String id = request.getParameter("id");
+        String username = request.getParameter("username");
         Map<String,Object> map = new HashMap<>();
         map.put("id",id);
+        map.put("username",username);
         Map<String, Object> resultMap = new HashMap<>();
         try{
             List<Map<String,Object>> list = brandService.getBrandList(map);
@@ -269,5 +271,28 @@ public class BrandController {
             e.printStackTrace();
         }
     }
+
+
+
+    @RequestMapping("/changeProgress")
+    public void changeProgress(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String event_id = request.getParameter("event_id");
+        String event_progress = request.getParameter("event_progress");
+        Map<String,Object> map = new HashMap<>();
+        map.put("event_id",event_id);
+        map.put("event_progress",event_progress);
+        try{
+            brandService.changeProgress(map);
+            logger.info("更改进度条成功");
+            JSONObject obj = new JSONObject();
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            logger.error("更改进度条失败");
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

@@ -27,4 +27,6 @@ public interface BrandMapper {
 
     void changeTime(Map<String,Object> map);
 
+    void changeProgress(Map<String,Object> map);
+
 }

@@ -8,8 +8,9 @@
     <select id="getProjectList" resultType="map">
         select DISTINCT p.* from projects p left join event e on p.project_ID = e.project_ID left join extra ex on p.project_ID = ex.project_ID where
         <if test="username!='admin'">
-            p.project_director = #{username} or e.event_groupLeader = #{username} or ex.extra_person = #{username} and
-        </if> p.project_state = 0
+            p.project_director = #{username} or p.project_person = #{username} or p.project_supplier = #{username} or p.project_demand = #{username} or e.event_groupLeader = #{username} or ex.extra_person = #{username} and
+        </if>
+        p.project_state = 0
     </select>
 
     <select id="getFinish" resultType="map">
@@ -17,7 +18,7 @@
     </select>
 
     <select id="getProjectOne" resultType="map">
-        select p.*,b.event_id,b.event_name,b.event_groupLeader,b.event_startTime,b.event_endTime,b.event_state,b.event_success,b.event_tab from projects p left join event b on p.project_ID = b.project_ID where p.project_ID=#{id}
+        select p.*,b.event_id,b.event_name,b.event_groupLeader,b.event_startTime,b.event_endTime,b.event_state,b.event_success,b.event_tab,b.event_progress from projects p left join event b on p.project_ID = b.project_ID where p.project_ID=#{id}
         order by b.event_startTime asc
     </select>
 
@@ -37,17 +38,38 @@
             <if test="id!=null and id!=''">
                 project_ID,
             </if>
-            <if test="name!=null and name!=''">
+            <if test="projectName!=null and projectName!=''">
                 project_name,
             </if>
-            <if test="username!=null and username!=''">
+            <if test="projectDirector!=null and projectDirector!=''">
                 project_director,
             </if>
             <if test="time!=null and time!=''">
                 project_time,
             </if>
+            <if test="projectPerson!=null and projectPerson!=''">
+                project_person,
+            </if>
+            <if test="projectSupplier!=null and projectSupplier!=''">
+                project_supplier,
+            </if>
+            <if test="supplierPhone!=null and supplierPhone!=''">
+                supplier_phone,
+            </if>
+            <if test="projectDemand!=null and projectDemand!=''">
+                project_demand,
+            </if>
+            <if test="demandPhone!=null and demandPhone!=''">
+                demand_phone,
+            </if>
             <if test="remark!=null and remark!=''">
-                project_remark,
+                project_detail,
+            </if>
+            <if test="supplier!=null and supplier!=''">
+                supplier_data,
+            </if>
+            <if test="demand!=null and demand!=''">
+                demand_data,
             </if>
         </trim>)
         values(
@@ -55,17 +77,38 @@
             <if test="id!=null and id!=''">
                 #{id},
             </if>
-            <if test="name!=null and name!=''">
-                #{name},
+            <if test="projectName!=null and projectName!=''">
+                #{projectName},
             </if>
-            <if test="username!=null and username!=''">
-                #{username},
+            <if test="projectDirector!=null and projectDirector!=''">
+                #{projectDirector},
             </if>
             <if test="time!=null and time!=''">
                 #{time},
             </if>
+            <if test="projectPerson!=null and projectPerson!=''">
+                #{projectPerson},
+            </if>
+            <if test="projectSupplier!=null and projectSupplier!=''">
+                #{projectSupplier},
+            </if>
+            <if test="supplierPhone!=null and supplierPhone!=''">
+                #{supplierPhone},
+            </if>
+            <if test="projectDemand!=null and projectDemand!=''">
+                #{projectDemand},
+            </if>
+            <if test="demandPhone!=null and demandPhone!=''">
+                #{demandPhone},
+            </if>
             <if test="remark!=null and remark!=''">
                 #{remark},
+            </if>
+            <if test="supplier!=null and supplier!=''">
+                #{supplier},
+            </if>
+            <if test="demand!=null and demand!=''">
+                #{demand},
             </if>
         </trim>
         )
@@ -123,7 +166,7 @@
     <select id="getAllProject" resultType="map">
         select distinct p.* from projects p left join event e on p.project_ID = e.project_ID left join extra ex on p.project_ID = ex.project_ID
         <if test="username!='admin'">
-          where p.project_director=#{username} or e.event_groupLeader=#{username} or extra_person=#{username}
+          where p.project_director=#{username} or p.project_supplier=#{username} or p.project_person=#{username} or p.project_demand=#{username} or e.event_groupLeader=#{username} or extra_person=#{username}
         </if>
     </select>
 
@@ -137,8 +180,43 @@
     </delete>
 
     <update id="updateProject">
-        update projects set project_name = #{name},project_director = #{director},
-        project_time = #{time},project_remark = #{remark} where project_ID = #{id}
+        update projects set
+        <trim suffixOverrides=",">
+        <if test="project_name!=null and project_name!=''">
+            project_name = #{project_name},
+        </if>
+        <if test="project_director!=null and project_director!=''">
+            project_director = #{project_director},
+        </if>
+        <if test="project_time!=null and project_time!=''">
+            project_time = #{project_time},
+        </if>
+        <if test="project_person!=null and project_person!=''">
+            project_person = #{project_person},
+        </if>
+        <if test="project_supplier!=null and project_supplier!=''">
+            project_supplier = #{project_supplier},
+        </if>
+        <if test="supplier_phone!=null and supplier_phone!=''">
+            supplier_phone = #{supplier_phone},
+        </if>
+        <if test="project_demand!=null and project_demand!=''">
+            project_demand = #{project_demand},
+        </if>
+        <if test="demand_phone!=null and demand_phone!=''">
+            demand_phone = #{demand_phone},
+        </if>
+        <if test="project_detail!=null and project_detail!=''">
+            project_detail = #{project_detail},
+        </if>
+        <if test="data1!=null and data1!=''">
+            supplier_data = #{data1},
+        </if>
+        <if test="data2!=null and data2!=''">
+            demand_data =#{data2},
+        </if>
+        </trim>
+         where project_ID = #{id}
     </update>
 
     <select id="boolEvent" resultType="int">
@@ -149,8 +227,8 @@
         update projects set project_state=abs(project_state-1) where project_ID = #{ID}
     </update>
 
-    <select id="getAccount" resultType="String">
-        select user_name from user where user_account=#{name}
+    <select id="getAccount" resultType="map">
+        select u.user_name,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id  where user_account=#{name}
     </select>
 
 </mapper>

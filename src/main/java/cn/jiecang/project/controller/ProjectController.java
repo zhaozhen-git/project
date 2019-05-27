@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -46,19 +48,54 @@ public class ProjectController {
         //项目id
         String id = String.valueOf(num);
         //项目名
-        String name = request.getParameter("project_name");
+        String projectName = request.getParameter("projectName");
         //负责人姓名
-        String username = request.getParameter("project_director");
+        String projectDirector = request.getParameter("projectDirector");
         //计划任务完成周期
-        String time = request.getParameter("project_duringtime");
+        String time = request.getParameter("projectTime");
+        //项目成员
+        String projectPerson = request.getParameter("projectPerson");
+        //供应商联系人
+        String projectSupplier = request.getParameter("projectSupplier");
+        //供应商电话
+        String supplierPhone = request.getParameter("supplierPhone");
+        //需求方联系人
+        String projectDemand = request.getParameter("projectDemand");
+        //需求方电话
+        String demandPhone = request.getParameter("demandPhone");
         //计划任务详细说明
-        String remark = request.getParameter("detailed_information");
+        String remark = request.getParameter("projectDetail");
+        //供应方上传文件
+        String supplier = request.getParameter("data1");
+        //需求方上传文件
+        String demand = request.getParameter("data2");
+        if(supplier!="" && supplier!=null){
+            supplier = supplier.replaceAll("[;]{2,}",";");
+            if(supplier.substring(0,1).equals(";")){
+                supplier = supplier.substring(1);
+            }
+            supplier = supplier.substring(0,supplier.length()-1);
+        }
+        if(demand!="" && demand!=null){
+            demand = demand.replaceAll("[;]{2,}",";");
+            if(demand.substring(0,1).equals(";")){
+                demand = demand.substring(1);
+            }
+            demand = demand.substring(0,demand.length()-1);
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("id",id);
-        map.put("name",name);
-        map.put("username",username);
+        map.put("projectName",projectName);
+        map.put("projectDirector",projectDirector);
         map.put("time",time);
+        map.put("projectPerson",projectPerson);
+        map.put("projectSupplier",projectSupplier);
+        map.put("supplierPhone",supplierPhone);
+        map.put("projectDemand",projectDemand);
+        map.put("demandPhone",demandPhone);
         map.put("remark",remark);
+        map.put("supplier",supplier);
+        map.put("demand",demand);
         try{
             projectService.insertProject(map);
             JSONObject obj = new JSONObject();
@@ -84,14 +121,11 @@ public class ProjectController {
         Map<String,Object> map = new HashMap<>();
         map.put("username",username);
         try{
-            //获取所有未完成的项目
+            //获取该用户可以访问的所有未完成的项目
             List<Map<String,Object>> list = projectService.getProjectList(map);
-//            //获取所有完成的项目
-//            List<Map<String,Object>> list1 = projectService.getFinish();
             logger.info("加载所有数据成功");
             JSONArray obj = new JSONArray();
             obj.add(list);
-//            obj.add(list1);
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().println(obj.toString());
         }catch (Exception e){
@@ -107,11 +141,12 @@ public class ProjectController {
      * @param request
      */
     @RequestMapping("/getProjectOne")
-    public void getProjectOne(HttpServletResponse response,HttpServletRequest request){
+    public void getProjectOne(HttpServletResponse response,HttpServletRequest request,HttpSession session){
         //获取项目id
         String ID = request.getParameter("project_id");
         Map<String,Object> map = new HashMap<>();
         map.put("id",ID);
+        session.setAttribute("ID",ID);
         try{
             List<Map<String,Object>> list = projectService.getProjectOne(map);
             logger.info("获取单个项目数据成功");
@@ -138,11 +173,12 @@ public class ProjectController {
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
             Map<String,Object> map = new HashMap<>();
             map.put("name",name);
-            String username = projectService.getAccount(map);
+            Map<String,Object> username = projectService.getAccount(map);
             //用户名
-            session.setAttribute("username",username);
+            session.setAttribute("username",username.get("user_name"));
             //账号
             session.setAttribute("account",name);
+            session.setAttribute("rolename",username.get("name"));
             logger.info("加载用户名成功");
         }catch (Exception e){
             logger.error("加载用户名失败");
@@ -205,9 +241,10 @@ public class ProjectController {
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
             Map<String,Object> map = new HashMap<>();
             map.put("name",name);
-            String username = projectService.getAccount(map);
-            session.setAttribute("username",username);
+            Map<String,Object> username = projectService.getAccount(map);
+            session.setAttribute("username",username.get("user_name"));
             session.setAttribute("account",name);
+            session.setAttribute("rolename",username.get("name"));
             logger.info("加载用户名成功");
         }catch (Exception e){
             logger.error("加载用户名失败");
@@ -265,16 +302,45 @@ public class ProjectController {
     @RequestMapping("updateProjectList")
     public void update(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String id = request.getParameter("project_id");
-        String name = request.getParameter("project_name");
-        String director = request.getParameter("project_director");
-        String time = request.getParameter("project_time");
-        String remark = request.getParameter("project_remark");
+        String project_name = request.getParameter("project_name");
+        String project_director = request.getParameter("project_director");
+        String project_time = request.getParameter("project_time");
+        String project_person = request.getParameter("project_person");
+        String project_supplier = request.getParameter("project_supplier");
+        String supplier_phone = request.getParameter("supplier_phone");
+        String project_demand = request.getParameter("project_demand");
+        String demand_phone = request.getParameter("demand_phone");
+        String project_detail = request.getParameter("project_detail");
+        String data1 = request.getParameter("data1");
+        String data2 = request.getParameter("data2");
+        data1 = data1.replaceAll("[;]{2,}",";");
+        data2 = data2.replaceAll("[;]{2,}",";");
+        if(!";".equals(data1) && data1!=null){
+            data1 = data1.replaceAll("[;]{2,}",";");
+            if(data1.substring(0,1).equals(";")){
+                data1 = data1.substring(1);
+            }
+            data1 = data1.substring(0,data1.length()-1);
+        }
+        if(!";".equals(data2) && data2!=null){
+            if(data2.substring(0,1).equals(";")){
+                data2 = data2.substring(1);
+            }
+            data2 = data2.substring(0,data2.length()-1);
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("id",id);
-        map.put("name",name);
-        map.put("director",director);
-        map.put("time",time);
-        map.put("remark",remark);
+        map.put("project_name",project_name);
+        map.put("project_director",project_director);
+        map.put("project_time",project_time);
+        map.put("project_person",project_person);
+        map.put("project_supplier",project_supplier);
+        map.put("supplier_phone",supplier_phone);
+        map.put("project_demand",project_demand);
+        map.put("demand_phone",demand_phone);
+        map.put("project_detail",project_detail);
+        map.put("data1",data1);
+        map.put("data2",data2);
         try{
             projectService.updateProject(map);
             logger.info("更新对应项目成功");
@@ -315,5 +381,48 @@ public class ProjectController {
 
 
 
-
+    @RequestMapping("/getFile")
+    public void getFile(HttpServletResponse response,HttpServletRequest request) throws IOException {
+        String supplier = request.getParameter("supplier_data");
+        String demand = request.getParameter("demand_data");
+        JSONObject obj = new JSONObject();
+        //文件存放路径
+        String filePath = request.getSession().getServletContext().getRealPath("");
+        if(supplier!="" && supplier!=null){
+            List<Map<String,Object>> list = new ArrayList<>();
+            String data1[] = null;
+            data1 = supplier.split(";");
+            for(int i=0;i<data1.length;i++){
+                File file = new File(filePath+data1[i]);
+                String size = String.valueOf(file.length());
+                String filename = data1[i];
+                String name = data1[i].substring(36);
+                Map<String,Object> map = new HashMap<>();
+                map.put("size",size);
+                map.put("name",name);
+                map.put("filename",filename);
+                list.add(map);
+            }
+            obj.put("list",list);
+        }
+        if(demand!="" && demand!=null){
+            List<Map<String,Object>> list1 = new ArrayList<>();
+            String data2[] = null;
+            data2 = demand.split(";");
+            for(int j=0;j<data2.length;j++){
+                File file = new File(filePath+data2[j]);
+                String size = String.valueOf(file.length());
+                String filename = data2[j];
+                String name = data2[j].substring(36);
+                Map<String,Object> map = new HashMap<>();
+                map.put("size",size);
+                map.put("name",name);
+                map.put("filename",filename);
+                list1.add(map);
+            }
+            obj.put("list1",list1);
+        }
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().println(obj.toString());
+    }
 }

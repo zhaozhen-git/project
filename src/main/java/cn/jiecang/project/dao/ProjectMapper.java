@@ -34,6 +34,6 @@ public interface ProjectMapper {
 
     void successProject(Map<String,Object> map);
 
-    String getAccount(Map<String,Object> map);
+    Map<String,Object> getAccount(Map<String,Object> map);
 
 }

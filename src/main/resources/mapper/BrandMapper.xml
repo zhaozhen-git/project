@@ -71,7 +71,11 @@
 
 
     <select id="getBrandList" resultType="map">
-            select * from event where project_ID = #{id} order by event_startTime asc
+            select e.* from event e left join projects p on e.project_ID = p.project_ID where
+            <if test="username!='' and username!=null and username!='admin'">
+                 e.event_groupLeader = #{username} or p.project_director = #{username} or p.project_supplier = #{username} or p.project_demand = #{username} and
+            </if>
+            e.project_ID = #{id} order by e.event_startTime asc
     </select>
 
 
@@ -108,5 +112,9 @@
 
     <update id="changeTime">
         update event set event_startTime = #{startTime},event_endTime = #{endTime},event_tab=#{select},days=#{days} where event_id = #{event_id}
+    </update>
+
+    <update id="changeProgress">
+        update event set event_progress = #{event_progress} where event_id = #{event_id}
     </update>
 </mapper>

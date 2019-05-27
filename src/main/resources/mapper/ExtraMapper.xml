@@ -6,9 +6,9 @@
 
 
     <select id="getExtra" resultType="map">
-        select * from extra e where e.project_ID = #{id}
-        <if test="username!='admin'">
-            and extra_person = #{username}
+        select e.* from extra e left join projects p on e.project_ID = p.project_ID where e.project_ID = #{id}
+        <if test="username!='admin' and username!='' and username!=null">
+            and e.extra_person = #{username} or p.project_director = #{username} or p.project_supplier = #{username}
         </if>
     </select>
 

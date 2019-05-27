@@ -16,4 +16,8 @@ public class UserService {
     public List<Map<String,Object>> getUserList(){
         return userMapper.getUserList();
     }
+
+    public Map<String,Object> getFileList(Map<String,Object> map){
+        return userMapper.getFileList(map);
+    }
 }

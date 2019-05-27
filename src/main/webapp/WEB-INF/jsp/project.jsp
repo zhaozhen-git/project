@@ -21,7 +21,7 @@
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a href="/crud">项目详情</a></li>
-            <li class="layui-nav-item layui-this"><a href="">项目管理</a></li>
+            <li class="layui-nav-item layui-this"><a href="/project">项目管理</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -52,389 +52,344 @@
 </div>
 
 <!--编辑项目-->
-<div class="modal-dialog" id="kkkkk" style="display: none;">
-    <!-- 项目名称: -->
-    <form class="form-horizontal" method="post" action="">
-        <div class="form-group">
-            <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>项目名称:</label>
-            <div class="col-xs-6">
-                <input autocomplete="off" type="text" class="form-control input-sm" id="project_name" name="" style="margin-top: 7px;" placeholder="请在这里输入项目名称">
-            </div>
-        </div>
-        <!-- 项目负责人: -->
-        <div class="form-group">
-            <label class="col-xs-4 control-label"><i style="color: red;margin-right: 2px">*</i>项目负责人:</label>
-            <div class="layui-input-inline layui-form" style="margin-left:15px">
-                <select name="modules" id="project_director" lay-search>
-                    <option value="">直接选择或搜索选择</option>
-                </select>
-            </div>
-        </div>
-        <!-- 计划任务完成周期: -->
-        <div class="form-group">
-            <label class="col-xs-4 control-label">项目周期:</label>
-            <div class="col-xs-6">
-                <input autocomplete="off" type="" class="form-control input-sm" value="" id="project_time" name="" style="margin-top: 7px;" placeholder=" - ">
-            </div>
-        </div>
-        <!-- 计划任务详细说明: -->
-        <div class="form-group">
-            <label class="col-xs-4 control-label">备注:</label>
-            <div class="col-xs-6">
-                <textarea id="project_remark" rows="10" cols="35" style="resize: none;padding:10px"></textarea>
-            </div>
-        </div>
-    </form>
-    <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close" data-dismiss="modal">取消
-        </a>
-        <button type="button" class="btn btn-primary" onclick="updateProject()">
-            确定
-        </button>
-    </div>
-</div>
-
-
-
-
-<div class="layui-tab-item" id="ggggg" style="display:none">
-    <div class="modal-dialog">
+<div class="layui-tab-item" id="kkkkk" style="display:none">
+    <div class="modal-dialog" style="width: 1100px; height:auto;">
         <div class="modal-body">
             <div class="container-fluid">
-                <!-- 计划任务名称: -->
-                <form class="form-horizontal" method="post" action="">
-                    <div class="form-group">
-                        <label class="col-xs-4 control-label"><i style="color: red;margin-right: 2px">*</i>计划任务名称:</label>
-                        <div class="col-xs-6">
-                            <input autocomplete="off" type="text" class="form-control input-sm" id="name" name="" style="margin-top: 7px;" placeholder="请在这里输入计划任务名称">
-                        </div>
-                    </div>
-                    <!-- 计划任务负责人: -->
-                    <div class="form-group">
-                        <label class="col-xs-4 control-label"><i style="color: red;margin-right: 2px">*</i>计划任务负责人:</label>
-                        <div class="layui-input-inline layui-form" style="margin-left:15px">
-                            <select name="modules" id="director" lay-search>
-                                <option value="">直接选择或搜索选择</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- 计划任务完成周期: -->
-                    <div class="form-group">
-                        <label class="col-xs-4 control-label"><i style="color: red;margin-right:2px">*</i>计划任务完成周期:</label>
-                        <div class="col-xs-6">
-                            <div class="layui-input-inline">
-                                <input autocomplete="off" type="" class="form-control input-sm" value="" id="duringtime" name="" style="margin-top: 7px;" placeholder=" - ">
+                <div class="row">
+                    <!--分成两等份-->
+                    <div class="col-md-6">
+                        <!-- 计划任务名称: -->
+                        <form class="form-horizontal" method="post" action="">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务名称:</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control input-sm" id="project_name" style="margin-top: 7px;" placeholder="请在这里输入计划任务名称">
+                                </div>
                             </div>
+                            <!-- 计划任务负责人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务负责人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="project_director" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 计划任务完成周期: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务完成周期:</label>
+                                <div class="col-xs-6">
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="form-control input-sm" value="" id="project_time" style="margin-top: 7px;" placeholder=" - ">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 项目组成员: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>项目组成员：</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="project_person" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--供应商联系人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>供应商联系人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="project_supplier" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--联系人电话-->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>供应商电话:</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control input-sm" id="supplier_phone" style="margin-top: 7px;" placeholder="请输入供应商电话">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:30px;">
+                                <span style="margin-left:87px;">注：带<i style="color:red;margin-right: 2px;">*</i>的选项为必填项目</span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form class="form-horizontal" method="post" action="" style="margin-right: 178px;">
+                            <!--需求方联系人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">需求方联系人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="project_demand" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--联系人电话-->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">需求方电话:</label>
+                                <div class="col-xs-7">
+                                    <input type="text" class="form-control input-sm" id="demand_phone" style="margin-top: 7px;" placeholder="请输入供应商联系人电话">
+                                </div>
+                            </div>
+                            <!-- 计划任务详细说明: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">计划任务说明:</label>
+                                <div class="col-xs-6">
+                                    <textarea id="project_detail" rows="15" cols="35" style="resize: none; margin-top: 10px;"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <sec:authorize access="hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')">
+                <div class="row">
+                    <!--文件上传-->
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="supplierList">供应方文件上传</button>
+                        <button type="button" class="layui-btn" id="supplierListAction">开始上传</button>
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <thead>
+                                <tr><th>文件名</th>
+                                    <th>大小</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr></thead>
+                                <tbody id="supplierDemo"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_DEMAND','ROLE_ADMIN')">
+                <div class="row">
+                    <!--文件上传-->
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="demandList">需求方文件上传</button>
+                        <button type="button" class="layui-btn" id="demandListAction">开始上传</button>
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <thead>
+                                <tr><th>文件名</th>
+                                    <th>大小</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr></thead>
+                                <tbody id="demandDemo"></tbody>
+                            </table>
                         </div>
                     </div>
-                    <!-- 计划任务详细说明: -->
-                    <div class="form-group">
-                        <label class="col-xs-4 control-label">项目详细说明:</label>
-                        <div class="col-xs-6">
-                            <textarea id="remark" rows="10" cols="35" style="resize: none;"></textarea>
-                        </div>
+                </div>
+                </sec:authorize>
+                <div class="row" style="margin-left: 100px;">
+                    <div class="col-md-2 pull-right">
+                        <a href="javascript:location.reload();" id="close" class="btn btn-default" data-dismiss="modal">取消
+                        </a>
+                        <button type="button" class="btn btn-primary" onclick="updateProject()">
+                            确定
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <a href="javascript:location.reload();" class="btn btn-default" data-dismiss="modal">取消
-            </a>
-            <button type="button" class="btn btn-primary" onclick="sentMsg()">
-                确定
-            </button>
         </div>
     </div>
 </div>
 
+
+
+
+
+
+<!--新增项目-->
+<div class="layui-tab-item" id="ggggg" style="display:none">
+<div class="modal-dialog" style="width: 1100px; height:auto;">
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <!--分成两等份-->
+                    <div class="col-md-6">
+                        <!-- 计划任务名称: -->
+                        <form class="form-horizontal" method="post" action="">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务名称:</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control input-sm" id="projectName" style="margin-top: 7px;" placeholder="请在这里输入计划任务名称">
+                                </div>
+                            </div>
+                            <!-- 计划任务负责人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务负责人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="projectDirector" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 计划任务完成周期: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务完成周期:</label>
+                                <div class="col-xs-6">
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="form-control input-sm" value="" id="projectTime" style="margin-top: 7px;" placeholder=" - ">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 项目组成员: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>项目组成员：</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="projectPerson" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--供应商联系人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>供应商联系人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="projectSupplier" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--联系人电话-->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>供应商电话:</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control input-sm" id="supplierPhone" style="margin-top: 7px;" placeholder="请输入供应商电话">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:30px;">
+                                <span style="margin-left:87px;">注：带<i style="color:red;margin-right: 2px;">*</i>的选项为必填项目</span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form class="form-horizontal" method="post" action="" style="margin-right: 178px;">
+                            <!--需求方联系人: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">需求方联系人:</label>
+                                <div class="col-xs-5">
+                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
+                                        <select name="modules" id="projectDemand" lay-search>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--联系人电话-->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">需求方电话:</label>
+                                <div class="col-xs-7">
+                                    <input type="text" class="form-control input-sm" id="demandPhone" style="margin-top: 7px;" placeholder="请输入供应商联系人电话">
+                                </div>
+                            </div>
+                            <!-- 计划任务详细说明: -->
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">计划任务说明:</label>
+                                <div class="col-xs-6">
+                                    <textarea id="projectDetail" rows="15" cols="35" style="resize: none; margin-top: 10px;"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <sec:authorize access="hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')">
+                <div class="row">
+                    <!--文件上传-->
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="testList1">供应方文件上传</button>
+                        <button type="button" class="layui-btn" id="testListAction1">开始上传</button>
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <thead>
+                                <tr><th>文件名</th>
+                                    <th>大小</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr></thead>
+                                <tbody id="demoList1"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_DEMAND','ROLE_ADMIN')">
+                <div class="row">
+                    <!--文件上传-->
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="testList2">需求方文件上传</button>
+                        <button type="button" class="layui-btn" id="testListAction2">开始上传</button>
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <thead>
+                                <tr><th>文件名</th>
+                                    <th>大小</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr></thead>
+                                <tbody id="demoList2"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                </sec:authorize>
+
+                <div class="row" style="margin-left: 100px;">
+                    <div class="col-md-2 pull-right">
+                        <a href="javascript:location.reload();" id="close_modal" class="btn btn-default" data-dismiss="modal">取消
+                        </a>
+                        <button type="button" class="btn btn-primary" onclick="sentMsg()">
+                            确定
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+</div>
 
 
 
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-        <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
-        <button class="layui-btn layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</button>
-        <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_DEMAND')">
+            <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+            <button class="layui-btn layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+            <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
         </sec:authorize>
-        <button class="layui-btn layui-bg-blue" lay-event="success"><i class="layui-icon layui-icon-ok"></i>完成</button>
+        <sec:authorize access="hasAnyRole('ROLE_DEMAND','ROLE_ADMIN')">
+            <button class="layui-btn layui-bg-blue" lay-event="success"><i class="layui-icon layui-icon-ok"></i>完成</button>
+        </sec:authorize>
     </div>
 </script>
 
 </body>
 <script>
-    var project = "";
-
     var username = "<%=session.getAttribute("account")%>";
-    // 创建加载后台布局函数
-    layui.use('element', function(){
-        var element = layui.element;
-        //加载用户列表
-        $.ajax({
-            type: "post",
-            url: "/getUser",//对应controller的URL
-            async: false,
-            dataType: 'json',
-            success: function (data) {
-                var netList = data.list;
-                $.each(netList, function (i, item) {
-                    $("#project_director").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                    $("#director").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                });
-            }
-        });
-        element.render();
-    });
-    // 创建加载时间选择函数
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        laydate.render({
-            elem: '#project_time',
-            range: true
-        });
-        laydate.render({
-            elem: '#duringtime',
-            range: true
-        });
-    });
-
-    layui.use(['table','layer','form'], function() {
-        var table = layui.table;
-        var layer = layui.layer;
-        var form = layui.form;
-        table.render({
-            elem: '#test'
-            , url: '/getAllProject?username='+username
-            , toolbar: '#toolbarDemo'
-            , title: '用户数据表'
-            , cols: [
-                [
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'project_ID', title: 'ID', hide: true, width: 60, align: 'center'}
-                    , {field: 'project_name', title: '项目名称', width: 180,align:'center'}
-                    , {field: 'project_director', title: '项目负责人', width: 180,align:'center'}
-                    , {field: 'project_time', title: '任务完成周期', width: 240, align: 'center'}
-                    , {field: 'project_remark', title: '备注', width: 300,align:'center'}
-                    , {
-                    field: 'project_state', title: '状态', width: 120, align: 'center'
-                    , templet: function (d) {
-                        if(d.project_state===0){
-                            return "未完成";
-                        }else if(d.project_state===1){
-                            return "完成";
-                        }
-                    }
-                }
-                ]
-            ]
-            , id: 'textReload'
-            , page: false
-        });
-
-
-        //头工具栏事件
-        table.on('toolbar(test)', function (obj) {
-            if (project === undefined) {
-                layer.alert('请选择一个项目', {icon: 2});
-            } else {
-                var type = obj.event;
-                if (type === "add") {
-                    var node = layer.open({
-                        title: '添加项目'
-                        , type: 1
-                        , shift: 4
-                        , area: ['700px', '600px'] //宽高
-                        , content: $('#ggggg')
-                    });
-                    $("#close_modal").click(function () {
-                        layer.close(node);
-                    });
-                } else if (type === "delete") {
-                    var checkRow = table.checkStatus('textReload');
-                    if (checkRow.data.length > 0) {
-                        var ID ="";
-                        $.each(checkRow.data, function (i, o) {
-                            ID += o.project_ID + ",";
-                        });
-                        ID = ID.substring(0, ID.length - 1);
-                        node = layer.confirm('是否删除选中的'+checkRow.data.length+'条数据', {
-                            btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
-                                $.ajax({
-                                    type: "post",
-                                    url: 'deleteProject?id=' + ID,
-                                    dataType: "json",
-                                    async: false,
-                                    success: function (data) {
-                                        layer.close(node);
-                                        layer.msg('删除成功', {icon: 1});
-                                        table.reload('textReload', {
-                                            url: '/getAllProject?username='+username,
-                                            method: 'post'
-                                        });
-                                    }
-                                })
-                            },
-                            btn2: function (index, layero) {
-                                layer.close(node);
-                                table.reload('textReload', {
-                                    url: '/getAllProject?username='+username,
-                                    method: 'post'
-                                });
-                            }
-                        });
-                    } else {
-                        layer.alert('请选择至少一个事件', {icon: 2});
-                    }
-                }else if(type==="update") {
-                    var checkRow = table.checkStatus('textReload');
-                    if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑操作', {icon: 2});
-                    }else{
-                        var project_name = checkRow.data[0].project_name;
-                        var project_director = checkRow.data[0].project_director;
-                        var project_time = checkRow.data[0].project_time;
-                        var project_remark = checkRow.data[0].project_remark;
-                        project = checkRow.data[0].project_ID;
-                        $("#project_name").val(project_name);
-                        $("#project_director option:contains('"+project_director+"')").attr("selected",true);
-                        form.render();
-                        $("#project_time").val(project_time);
-                        $("#project_remark").val(project_remark);
-                        var node = layer.open({
-                            title: '编辑项目'
-                            , type: 1
-                            , shift: 5
-                            , area: ['700px', '600px'] //宽高
-                            , content: $('#kkkkk')
-                        });
-                        $("#close").click(function () {
-                            layer.close(node);
-                        });
-                    }
-                }else if(type=="success"){
-                    var checkRow = table.checkStatus('textReload');
-                    if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个项目进行完成操作', {icon: 2});
-                    }else {
-                        var id = checkRow.data[0].project_ID;
-                        var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
-                            btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
-                                $.ajax({
-                                    type: "post",
-                                    url: 'successProject?id=' + id,
-                                    dataType: "json",
-                                    async: false,
-                                    success: function (data) {
-                                        if(data.msg==="0"){
-                                            layer.msg('该项目下还有事件没有完成', {icon: 2});
-                                        }else{
-                                            layer.close(node);
-                                            layer.msg('更改成功', {icon: 1});
-                                            table.reload('textReload', {
-                                                url: '/getAllProject?username='+username,
-                                                method: 'post'
-                                            });
-                                        }
-                                    }
-                                })
-                            },
-                            btn2: function (index, layero) {
-                                layer.close(node);
-                                table.reload('textReload', {
-                                    url: '/getAllProject?username=' + username,
-                                    method: 'post'
-                                });
-                            }
-                        });
-                    }
-                }
-            }
-        })
-
-    })
-
-
-    //编辑关键节点
-    function updateProject() {
-        layui.use(['layer', 'table'], function () {
-            var layer = layui.layer;
-            var table = layui.table;
-            var project_name = $("#project_name").val();
-            var project_director = $("#project_director option:selected").val();
-            var project_time = $("#project_time").val();
-            if (project_name === "") {
-                layer.msg("项目名称不能为空");
-            } else if (project_director === "") {
-                layer.msg("负责人不能为空");
-            } else if (project_time === "") {
-                layer.msg("项目周期不能为空");
-            } else {
-                $.ajax({
-                    type: "post",
-                    url: "/updateProjectList",//对应controller的URL
-                    data: {
-                        "project_id": project,
-                        "project_name": $("#project_name").val(),
-                        "project_director": $("#project_director option:selected").text(),
-                        "director_phone": $("#director_phone").val(),
-                        "project_time": $("#project_time").val(),
-                        "project_remark": $("#project_remark").val(),
-                    },
-                    async: false,
-                    dataType: 'json',
-                    success: function (data) {
-                        layer.closeAll();
-                        layer.msg('修改成功', {icon: 1});
-                        table.reload('textReload', {
-                            url: '/getAllProject?username='+username,
-                            method: 'post'
-                        });
-                    }
-                });
-            }
-        })
-    }
-
-
-
-
-    function sentMsg(){
-        layui.use(['table','layer'], function() {
-            var table = layui.table;
-            var layer = layui.layer;
-            var project_name = $("#name").val();
-            var project_director = $("#director option:selected").val();
-            var project_duringtime = $("#duringtime").val();
-            if(project_name===""){
-                layer.msg("任务名不能为空");
-            }else if(project_director===""){
-                layer.msg("负责人不能为空");
-            }else if(project_duringtime===""){
-                layer.msg("完成周期不能为空");
-            }else{
-                $.ajax({
-                    type: "post",
-                    url: "/insertProject",//对应controller的URL
-                    async: false,
-                    dataType: 'json',
-                    data: {
-                        "project_name":$("#name").val(),
-                        "project_director":$("#director option:selected").text(),
-                        "project_duringtime":$("#duringtime").val(),
-                        "detailed_information":$("#remark").val()
-                    },
-                    success: function (data) {
-                        layer.closeAll();
-                        table.reload('textReload', {
-                            url: '/getAllProject?username='+username,
-                            method: 'post'
-                        });
-                    }
-                });
-            }
-        })
-    }
-
+    var rolename = "<%=session.getAttribute("rolename")%>";
 </script>
+<script src="js/project.js"></script>
 </html>

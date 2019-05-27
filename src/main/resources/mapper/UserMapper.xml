@@ -6,7 +6,7 @@
 
 
     <select id="getUserList" resultType="map">
-        select * from user where user_cancel=1
+        select u.*,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id where u.user_cancel=1
     </select>
 
     <select id="findUserName" resultType="map">
@@ -14,6 +14,9 @@
     </select>
 
 
+    <select id="getFileList" resultType="map">
+        select supplier_data,demand_data from projects where project_ID = #{id}
+    </select>
 
 
 </mapper>
