@@ -69,21 +69,28 @@ public class ProjectController {
         String supplier = request.getParameter("data1");
         //需求方上传文件
         String demand = request.getParameter("data2");
+        Map<String,Object> map = new HashMap<>();
         if(supplier!="" && supplier!=null){
             supplier = supplier.replaceAll("[;]{2,}",";");
             if(supplier.substring(0,1).equals(";")){
                 supplier = supplier.substring(1);
             }
-            supplier = supplier.substring(0,supplier.length()-1);
+            if(supplier!=""){
+                supplier = supplier.substring(0,supplier.length()-1);
+                map.put("supplier",supplier);
+            }
         }
         if(demand!="" && demand!=null){
             demand = demand.replaceAll("[;]{2,}",";");
             if(demand.substring(0,1).equals(";")){
                 demand = demand.substring(1);
             }
-            demand = demand.substring(0,demand.length()-1);
+            if(demand!=""){
+                demand = demand.substring(0,demand.length()-1);
+                map.put("demand",demand);
+            }
+
         }
-        Map<String,Object> map = new HashMap<>();
         map.put("id",id);
         map.put("projectName",projectName);
         map.put("projectDirector",projectDirector);
@@ -94,8 +101,6 @@ public class ProjectController {
         map.put("projectDemand",projectDemand);
         map.put("demandPhone",demandPhone);
         map.put("remark",remark);
-        map.put("supplier",supplier);
-        map.put("demand",demand);
         try{
             projectService.insertProject(map);
             JSONObject obj = new JSONObject();

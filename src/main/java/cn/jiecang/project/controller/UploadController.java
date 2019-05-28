@@ -1,5 +1,6 @@
 package cn.jiecang.project.controller;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class UploadController {
 
 
+    private static Logger logger = Logger.getLogger(UploadController.class);
 
     @ResponseBody
     @RequestMapping("/upload")
@@ -39,13 +41,15 @@ public class UploadController {
                 }else if(file!=null){
                     String filename = file.getOriginalFilename();//获取文件的名字
 //                    String suffixFile = filename.substring(filename.lastIndexOf(".")+1);
-                    String filePath = request.getSession().getServletContext().getRealPath("/uploadFile/");
+                    String filePath = request.getSession().getServletContext().getRealPath("/uploadFile");
                     String newFileName = UUID.randomUUID()+filename;
                     File file1 = new File(filePath);
                     if (!file1.exists()){
                         file1.mkdirs();
                     }
-                    String newFilePath = filePath + newFileName; //新文件的路径
+                    logger.error("初："+filePath);
+                    String newFilePath = filePath + "\\"+ newFileName; //新文件的路径
+                    logger.error("文件路径"+newFilePath);
                     try{
                         file.transferTo(new File(newFilePath));
                         resUrl.put("src", newFileName);

@@ -105,35 +105,39 @@ public class UserController {
             List<Map<String,Object>> list2 = new ArrayList<>();
             String supplier = map1.get("supplier_data").toString();
             String demand = map1.get("demand_data").toString();
-            String supplierData[] = supplier.split(";");
-            String demandData[] = demand.split(";");
             String filename = "";
 //            String filepath = request.getSession().getServletContext().getRealPath("/uploadFile/");
             String filepath = "/uploadFile/";
-            for(int i=0;i<supplierData.length;i++){
-                Map<String,Object> map2 = new HashMap<>();
-                if(supplierData[i].equals("")){
-                    continue;
-                }else{
-                    String path = "";
-                    path = filepath + supplierData[i];
-                    filename = supplierData[i].substring(36);
-                    map2.put("filepath",path);
-                    map2.put("filename",filename);
-                    list1.add(map2);
+            if(supplier!=""){
+                String supplierData[] = supplier.split(";");
+                for(int i=0;i<supplierData.length;i++){
+                    Map<String,Object> map2 = new HashMap<>();
+                    if(supplierData[i].equals("")){
+                        continue;
+                    }else{
+                        String path = "";
+                        path = filepath + supplierData[i];
+                        filename = supplierData[i].substring(36);
+                        map2.put("filepath",path);
+                        map2.put("filename",filename);
+                        list1.add(map2);
+                    }
                 }
             }
-            for(int j=0;j<demandData.length;j++){
-                Map<String,Object> map2 = new HashMap<>();
-                if(demandData[j].equals("")){
-                    continue;
-                }else{
-                    String path = "";
-                    path = filepath + demandData[j];
-                    filename = demandData[j].substring(36);
-                    map2.put("filepath",path);
-                    map2.put("filename",filename);
-                    list2.add(map2);
+            if(demand!=""){
+                String demandData[] = demand.split(";");
+                for(int j=0;j<demandData.length;j++){
+                    Map<String,Object> map2 = new HashMap<>();
+                    if(demandData[j].equals("")){
+                        continue;
+                    }else{
+                        String path = "";
+                        path = filepath + demandData[j];
+                        filename = demandData[j].substring(36);
+                        map2.put("filepath",path);
+                        map2.put("filename",filename);
+                        list2.add(map2);
+                    }
                 }
             }
             JSONObject obj = new JSONObject();

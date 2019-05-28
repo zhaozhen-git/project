@@ -12,10 +12,10 @@ public class ProjectApplication extends SpringBootServletInitializer{
         SpringApplication.run(ProjectApplication.class, args);
     }
 
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
-//        return builder.sources(new Class[] { ProjectApplication.class });
-//    }
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
+        return builder.sources(new Class[] { ProjectApplication.class });
+    }
 
 }
 

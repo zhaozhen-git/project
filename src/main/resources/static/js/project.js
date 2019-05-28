@@ -548,7 +548,7 @@ function del2(index) {
 //删除供应商的文件
 function delSupplier(index){
     var supplier = new Array();
-    data1.substring(0,data1.length-1);
+    data1 = data1.substring(0,data1.length-1);
     supplier = data1.split(";");
     //将对应的值变成空
     supplier[index]="";
@@ -557,7 +557,7 @@ function delSupplier(index){
     num1[index]="";
     data1 = "";
     for(var i=0;i<supplier.length;i++){
-        data1+=supplier[i]+";";
+        data1+=supplier[i] + ";";
     }
 }
 
@@ -565,7 +565,7 @@ function delSupplier(index){
 //删除需求方的文件
 function  delDemand(index) {
     var demand = new Array();
-    data2.substring(0,data1.length-1);
+    data2 = data2.substring(0,data2.length-1);
     demand = data2.split(";");
     //将对应的值变成空
     demand[index]="";
@@ -574,9 +574,8 @@ function  delDemand(index) {
     num2[index]="";
     data2 = "";
     for(var i=0;i<demand.length;i++){
-        data2+=demand[i]+";";
+        data2+=demand[i] + ";";
     }
-
 }
 
 
@@ -590,9 +589,8 @@ function supplierDel(index){
     $("#supEdit"+index).remove();
     suData = "";
     for(var i=0;i<String.length;i++){
-        suData += String[i];
+        suData += String[i] + ";";
     }
-    suData = suData + ";";
 }
 
 function demandDel(index){
@@ -604,9 +602,8 @@ function demandDel(index){
     $("#demEdit"+index).remove();
     deData = "";
     for(var i=0;i<String.length;i++){
-        deData += String[i];
+        deData += String[i] + ";";
     }
-    deData = deData +";";
 }
 
 
