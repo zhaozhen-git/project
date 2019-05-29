@@ -30,7 +30,7 @@ public class extraController {
     public Map<String, Object> getExtraList(HttpServletRequest request) {
         //获取项目id
         String ID = request.getParameter("id");
-        //账号
+        //账号getExtraList
         String username = request.getParameter("username");
         Map<String, Object> map = new HashMap<>();
         map.put("id", ID);
@@ -38,14 +38,14 @@ public class extraController {
         Map<String, Object> resultMap = new HashMap<>();
         try {
             List<Map<String, Object>> list = extraService.getExtra(map);
-            logger.info("获取待完成数据成功");
+            logger.info("获取个人待完成数据成功");
             resultMap.put("data", list);
             resultMap.put("code", "0");
             resultMap.put("msg", "");
             resultMap.put("count", "1");
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取待完成数据失败");
+            logger.error("获取个人待完成数据失败");
         }
         return resultMap;
     }
@@ -163,6 +163,27 @@ public class extraController {
     }
 
 
+    @ResponseBody
+    @RequestMapping("/getExtraHtml")
+    public Map<String, Object> getExtraHtml(HttpServletRequest request){
+        //获取项目id
+        String ID = request.getParameter("id");
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", ID);
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            List<Map<String, Object>> list = extraService.getExtraHtml(map);
+            logger.info("获取全部待完成数据成功");
+            resultMap.put("data", list);
+            resultMap.put("code", "0");
+            resultMap.put("msg", "");
+            resultMap.put("count", "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("获取全部待完成数据失败");
+        }
+        return resultMap;
+    }
 
 
 

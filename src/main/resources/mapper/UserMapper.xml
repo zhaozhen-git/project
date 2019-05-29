@@ -18,5 +18,12 @@
         select supplier_data,demand_data from projects where project_ID = #{id}
     </select>
 
+    <select id="getUserPassword" resultType="String">
+        select user_password from user where user_account = #{user}
+    </select>
+
+    <update id="changePassword">
+        update user set user_password = #{pass2} where user_account = #{user}
+    </update>
 
 </mapper>

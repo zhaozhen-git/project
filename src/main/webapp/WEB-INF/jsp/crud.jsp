@@ -61,8 +61,7 @@
                     <%=session.getAttribute("username")%>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><span onclick="setPassword()" style="color: #007DDB;cursor: pointer">安全设置</span></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/">退出登录</a></li>
@@ -234,7 +233,13 @@
 
                 <!--第四个页面 -->
                 <div class="layui-tab-item" id="four">
-                    <table class="layui-hide" id="fourHtml" lay-filter="fourHtml"></table>
+                    <div style="display: inline-block;width: 49%;vertical-align:top">
+                        <table class="layui-hide" id="fourHtml" lay-filter="fourHtml"></table>
+                    </div>
+                    <div style="display: inline-block;width: 49%;vertical-align:top">
+                        <table class="layui-hide" id="fourTable" lay-filter="fourTable"></table>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -343,8 +348,8 @@
         </div>
     </form>
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_modal" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_modal" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="addEvent()">
             确定
         </button>
@@ -416,8 +421,8 @@
         </div>
     </form>
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="updateEvent()">
             确定
         </button>
@@ -452,8 +457,8 @@
     </form>
 
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_time" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_time" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="changeTime()">
             确定
         </button>
@@ -476,8 +481,8 @@
     </form>
 
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_progress" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_progress" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="changeProgress()">
             确定
         </button>
@@ -527,8 +532,8 @@
         </div>
     </form>
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_extra" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_extra" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="addExtra()">
             确定
         </button>
@@ -575,8 +580,8 @@
         </div>
     </form>
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_1" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_1" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="updateExtra()">
             确定
         </button>
@@ -602,14 +607,44 @@
     </form>
 
     <div class="modal-footer">
-        <a href="" class="btn btn-default" id="close_time1" data-dismiss="modal">取消
-        </a>
+        <button class="btn btn-default" id="close_time1" data-dismiss="modal">取消
+        </button>
         <button type="button" class="btn btn-primary" onclick="changeExtraTime()">
             确定
         </button>
     </div>
 </div>
 
+
+<!--修改密码-->
+<div class="modal-dialog" id="passwordHtml" style="display: none;">
+    <form class="form-horizontal" method="post" action="">
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">原密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password1" name="" style="margin-top: 7px;" placeholder="请输入原密码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">新密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password2" name="" style="margin-top: 7px;" placeholder="请输入新密码">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="close_time2" data-dismiss="modal">取消
+        </button>
+        <button type="button" class="btn btn-primary" onclick="changePassword()">
+            确定
+        </button>
+    </div>
+</div>
 
 
 <script type="text/html" id="toolbarDemo">
@@ -630,20 +665,26 @@
 <%--沟通事项的工具栏--%>
 <script type="text/html" id="toolDemo">
     <div class="layui-btn-container">
-        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
+        <%--<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">--%>
             <button class="layui-btn" lay-event="add1"><i class="layui-icon layui-icon-add-1"></i>新增</button>
             <button class="layui-btn layui-btn-warm" lay-event="update1"><i class="layui-icon layui-icon-edit"></i>编辑</button>
             <button class="layui-btn layui-btn-danger" lay-event="delete1"><i class="layui-icon layui-icon-delete"></i>删除</button>
             <button class="layui-btn layui-bg-cyan" lay-event="time1"><i class="layui-icon layui-icon-edit"></i>编辑时间</button>
-        </sec:authorize>
-        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
+        <%--</sec:authorize>--%>
+        <%--<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">--%>
             <button class="layui-btn layui-bg-blue" lay-event="success1"><i class="layui-icon layui-icon-ok"></i>完成</button>
-        </sec:authorize>
+        <%--</sec:authorize>--%>
+    </div>
+</script>
+
+<script type="text/html" id="toolDemo1">
+    <div class="layui-btn-container">
     </div>
 </script>
 
 <script>
     var username = "<%=session.getAttribute("account")%>";
+    var account = "<%=session.getAttribute("username")%>";
     var projectID = "<%=session.getAttribute("ID")%>";
 </script>
 <script src="js/crud.js"></script>

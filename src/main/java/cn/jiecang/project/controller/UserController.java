@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -148,11 +149,33 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 
 
 
+
+    @RequestMapping("/changePassword")
+    public void changePassword(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String user = request.getParameter("user");
+        String pass1 = request.getParameter("pass1");
+        String pass2 = request.getParameter("pass2");
+        Map<String,Object> map = new HashMap<>();
+        map.put("user",user);
+        map.put("pass2",pass2);
+        String password = userService.getUserPassword(map);
+        String msg = "0";
+        if(pass1.equals(password)){
+            //进行修改秘密
+            userService.changePassword(map);
+            msg = "1";
+            logger.info("密码修改完成");
+        }else{
+            logger.error("输入的密码不正确");
+        }
+        JSONObject obj = new JSONObject();
+        obj.put("msg", msg);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().println(obj.toString());
+    }
 
 }

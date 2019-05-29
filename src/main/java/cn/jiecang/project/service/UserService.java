@@ -20,4 +20,12 @@ public class UserService {
     public Map<String,Object> getFileList(Map<String,Object> map){
         return userMapper.getFileList(map);
     }
+
+    public String getUserPassword(Map<String,Object> map){
+        return userMapper.getUserPassword(map);
+    }
+
+    public void changePassword(Map<String,Object> map){
+        userMapper.changePassword(map);
+    }
 }

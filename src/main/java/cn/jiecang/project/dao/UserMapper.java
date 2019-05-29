@@ -15,4 +15,8 @@ public interface UserMapper {
     List<Map<String,Object>> findUserName(Map<String,Object> map);
 
     Map<String,Object> getFileList(Map<String,Object> map);
+
+    String getUserPassword(Map<String,Object> map);
+
+    void changePassword(Map<String,Object> map);
 }

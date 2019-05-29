@@ -22,4 +22,6 @@ public interface ExtraMapper {
     void successExtra(Map<String,Object> map);
 
     void changeExtraTime(Map<String,Object> map);
+
+    List<Map<String,Object>> getExtraHtml(Map<String,Object> map);
 }

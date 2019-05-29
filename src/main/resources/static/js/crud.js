@@ -1,8 +1,7 @@
 //全局变量
 //项目id
 var project;
-//弹出层的层索引
-var node;
+
 //关键节点id
 var event;
 //项目完成数
@@ -203,7 +202,7 @@ window.onload=function () {
         });
 
 
-        //待办事项
+        //个人待办事项
         table.render({
             elem: '#fourHtml'
             , url: '/getExtraList?id=' + project + '&username='+username
@@ -231,6 +230,43 @@ window.onload=function () {
             ]
             , id: 'extraReload'
             , page: false
+            ,done:function () {
+                element.render();
+            }
+        });
+
+
+        //全部待办事项
+        table.render({
+            elem: '#fourTable'
+            , url: '/getExtraHtml?id='+ project
+            , toolbar: '#toolDemo1'
+            , title: '用户数据表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'extra_ID', title: 'ID', hide: true, width: 60, align: 'center'}
+                    , {field: 'extra_name', title: '事件节点名称', width: 200}
+                    , {field: 'extra_person', title: '负责人', width: 150}
+                    , {field: 'extra_add', title: '创建人', width: 150}
+                    , {field: 'extra_time', title: '时间', width: 120, align: 'center'}
+                    , {
+                    field: 'extra_success', title: '状态', width: 120, align: 'center'
+                    , templet: function (d) {
+                        if (d.extra_success === 0) {
+                            return "完成";
+                        } else if (d.extra_success === 1) {
+                            return "未完成";
+                        }
+                    }
+                }
+                ]
+            ]
+            , id: 'extra'
+            , page: false
+            ,done:function () {
+                element.render();
+            }
         });
 
 
@@ -241,7 +277,7 @@ window.onload=function () {
             } else {
                 var type = obj.event;
                 if (type === "add") {
-                    node = layer.open({
+                    var node = layer.open({
                         title: '添加节点'
                         , type: 1
                         , shift: 4
@@ -259,7 +295,7 @@ window.onload=function () {
                             ID += o.event_id + ",";
                         });
                         ID = ID.substring(0, ID.length - 1);
-                        node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                        var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
                             btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -313,7 +349,7 @@ window.onload=function () {
                         $("#event_description").val(event_description);
                         $("#change_state").val(event_success);
                         $("#select").find("option[value=" + event_state + "]").attr("selected", true);
-                        node = layer.open({
+                        var node = layer.open({
                             title: '编辑节点'
                             , type: 1
                             , shift: 5
@@ -330,7 +366,7 @@ window.onload=function () {
                         layer.alert('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].event_id;
-                        node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
+                        var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
                             btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -367,7 +403,7 @@ window.onload=function () {
                         var during_time = start_time + " - " + end_Time;
                         $("#time").val(during_time);
                         $("#select1 option[value='1']").attr("selected", "true");
-                        node = layer.open({
+                        var node = layer.open({
                             title: '编辑时间'
                             , type: 1
                             , shift: 4
@@ -387,7 +423,7 @@ window.onload=function () {
                         event = checkRow.data[0].event_id;
                         var event_progress = checkRow.data[0].event_progress;
                         $("#progressNum").val(event_progress);
-                        node = layer.open({
+                        var node = layer.open({
                             title: '编辑进度条'
                             , type: 1
                             , shift: 4
@@ -404,6 +440,10 @@ window.onload=function () {
         })
 
 
+        table.on('toolbar(fourTable)', function (obj) {
+
+        })
+
         //待办理事件头工具栏事件
         table.on('toolbar(fourHtml)', function (obj) {
             if (project === undefined) {
@@ -411,7 +451,7 @@ window.onload=function () {
             } else {
                 var type = obj.event;
                 if (type === "add1") {
-                    node = layer.open({
+                    var node = layer.open({
                         title: '添加待办理事件'
                         , type: 1
                         , shift: 4
@@ -425,35 +465,49 @@ window.onload=function () {
                     var checkRow = table.checkStatus('extraReload');
                     if (checkRow.data.length > 0) {
                         var ID = "";
+                        var addPerson = "";
                         $.each(checkRow.data, function (i, o) {
                             ID += o.extra_ID + ",";
+                            addPerson += o.extra_add + ",";
                         });
-                        ID = ID.substring(0, ID.length - 1);
-                        node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
-                            btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
-                                $.ajax({
-                                    type: "post",
-                                    url: 'deleteExtra?id=' + ID,
-                                    dataType: "json",
-                                    async: false,
-                                    success: function (data) {
-                                        layer.close(node);
-                                        layer.msg('删除成功', {icon: 1});
-                                        table.reload('extraReload', {
-                                            url: '/getExtraList?id=' + project + '&username=' + username,
-                                            method: 'post',
-                                        });
-                                    }
-                                })
-                            },
-                            btn2: function (index, layero) {
-                                layer.close(node);
-                                table.reload('extraReload', {
-                                    url: '/getExtraList?id=' + project + '&username=' + username,
-                                    method: 'post',
-                                });
-                            }
-                        });
+                        if(addPerson.indexOf(account)===-1){
+                            layer.alert('不是创建人，无法删除', {icon: 2});
+                        }else{
+                            ID = ID.substring(0, ID.length - 1);
+                            var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                                btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
+                                    $.ajax({
+                                        type: "post",
+                                        url: 'deleteExtra?id=' + ID,
+                                        dataType: "json",
+                                        async: false,
+                                        success: function (data) {
+                                            layer.close(node);
+                                            layer.msg('删除成功', {icon: 1});
+                                            table.reload('extraReload', {
+                                                url: '/getExtraList?id=' + project + '&username=' + username,
+                                                method: 'post',
+                                            });
+                                            table.reload('extra', {
+                                                url: '/getExtraHtml?id=' + project,
+                                                method: 'post',
+                                            });
+                                        }
+                                    })
+                                },
+                                btn2: function (index, layero) {
+                                    layer.close(node);
+                                    table.reload('extraReload', {
+                                        url: '/getExtraList?id=' + project + '&username=' + username,
+                                        method: 'post',
+                                    });
+                                    table.reload('extra', {
+                                        url: '/getExtraHtml?id=' + project,
+                                        method: 'post',
+                                    });
+                                }
+                            });
+                        }
                     } else {
                         layer.alert('请选择至少一个事件', {icon: 2});
                     }
@@ -462,31 +516,36 @@ window.onload=function () {
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
                         layer.alert('选择一个事件进行编辑操作', {icon: 2});
                     } else {
-                        var extra_name = checkRow.data[0].extra_name;
-                        var extra_person = checkRow.data[0].extra_person;
-                        var extra_time = checkRow.data[0].extra_time;
-                        var extra_success = checkRow.data[0].extra_success;
-                        if (extra_success === 0) {
-                            extra_success = "完成";
-                        } else {
-                            extra_success = "未完成";
+                        var extra_add = checkRow.data[0].extra_add;
+                        if(extra_add!=account){
+                            layer.alert('不是创建人，无法更改', {icon: 2});
+                        }else{
+                            var extra_name = checkRow.data[0].extra_name;
+                            var extra_person = checkRow.data[0].extra_person;
+                            var extra_time = checkRow.data[0].extra_time;
+                            var extra_success = checkRow.data[0].extra_success;
+                            if (extra_success === 0) {
+                                extra_success = "完成";
+                            } else {
+                                extra_success = "未完成";
+                            }
+                            event = checkRow.data[0].extra_ID;
+                            $("#extra_name").val(extra_name);
+                            $("#extra_person option:contains('"+extra_person+"')").attr("selected",true);
+                            form.render();
+                            $("#extra_time").val(extra_time);
+                            $("#extra_success").val(extra_success);
+                            var node = layer.open({
+                                title: '编辑节点'
+                                , type: 1
+                                , shift: 5
+                                , area: ['700px', '380px'] //宽高
+                                , content: $('#updateExtra')
+                            });
+                            $("#close_1").click(function () {
+                                layer.close(node);
+                            });
                         }
-                        event = checkRow.data[0].extra_ID;
-                        $("#extra_name").val(extra_name);
-                        $("#extra_person option:contains('"+extra_person+"')").attr("selected",true);
-                        form.render();
-                        $("#extra_time").val(extra_time);
-                        $("#extra_success").val(extra_success);
-                        node = layer.open({
-                            title: '编辑节点'
-                            , type: 1
-                            , shift: 5
-                            , area: ['700px', '380px'] //宽高
-                            , content: $('#updateExtra')
-                        });
-                        $("#close_1").click(function () {
-                            layer.close(node);
-                        });
                     }
                 } else if (type == "success1") {
                     var checkRow = table.checkStatus('extraReload');
@@ -494,7 +553,7 @@ window.onload=function () {
                         layer.alert('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].extra_ID;
-                        node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
+                        var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
                             btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -508,6 +567,10 @@ window.onload=function () {
                                             url: '/getExtraList?id=' + project+"&username="+username,
                                             method: 'post',
                                         });
+                                        table.reload('extra', {
+                                            url: '/getExtraHtml?id=' + project,
+                                            method: 'post',
+                                        });
                                     }
                                 })
                             },
@@ -515,6 +578,10 @@ window.onload=function () {
                                 layer.close(node);
                                 table.reload('extraReload', {
                                     url: '/getExtraList?id=' + project+"&username="+username,
+                                    method: 'post',
+                                });
+                                table.reload('extra', {
+                                    url: '/getExtraHtml?id=' + project,
                                     method: 'post',
                                 });
                             }
@@ -525,20 +592,24 @@ window.onload=function () {
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
                         layer.alert('选择一个事件进行编辑时间操作', {icon: 2});
                     } else {
-                        event = checkRow.data[0].extra_ID;
-                        var extra_time = checkRow.data[0].extra_time;
-                        $("#time1").val(extra_time);
-                        node = layer.open({
-                            title: '编辑时间'
-                            , type: 1
-                            , shift: 4
-                            , area: ['700px', '250px'] //宽高
-                            , content: $('#time_time')
-                        });
-                        $("#close_time1").click(function () {
-                            layer.close(node);
-                        });
-
+                        var extra_add = checkRow.data[0].extra_add;
+                        if(extra_add!=account){
+                            layer.alert('不是创建人，无法编辑时间', {icon: 2});
+                        }else{
+                            event = checkRow.data[0].extra_ID;
+                            var extra_time = checkRow.data[0].extra_time;
+                            $("#time1").val(extra_time);
+                            var node = layer.open({
+                                title: '编辑时间'
+                                , type: 1
+                                , shift: 4
+                                , area: ['700px', '250px'] //宽高
+                                , content: $('#time_time')
+                            });
+                            $("#close_time1").click(function () {
+                                layer.close(node);
+                            });
+                        }
                     }
                 }
             }
@@ -642,6 +713,10 @@ function getDataList(id){
             url: '/getExtraList?id=' + project + '&username='+ username,
             method: 'post',
         });
+        table.reload('extra', {
+            url: '/getExtraHtml?id=' + project,
+            method: 'post',
+        });
         element.render();
     })
 
@@ -658,7 +733,6 @@ function getDataList(id){
         success:function(data){
             var supplier = data.supplier;
             var demand = data.demand;
-            console.log(supplier);
             for(var i=0;i<supplier.length;i++){
                 supplierLi += '<li style="text-align: center"><a href="'+supplier[i].filepath+'" download="'+supplier[i].filename+'">'+supplier[i].filename+'(下载)</a></li>'
             }
@@ -1030,6 +1104,10 @@ function addExtra() {
                         url: '/getExtraList?id=' + project + '&username='+username,
                         method: 'post',
                     });
+                    table.reload('extra', {
+                        url: '/getExtraHtml?id=' + project,
+                        method: 'post',
+                    });
                 }
             });
         }
@@ -1116,6 +1194,10 @@ function updateExtra() {
                     layer.msg('修改成功', {icon: 1});
                     table.reload('extraReload', {
                         url: '/getExtraList?id=' + project + "&username="+username,
+                        method: 'post',
+                    });
+                    table.reload('extra', {
+                        url: '/getExtraHtml?id=' + project,
                         method: 'post',
                     });
                 }
@@ -1219,9 +1301,55 @@ function changeExtraTime() {
                         url: '/getExtraList?id=' + project+"&username="+username,
                         method: 'post',
                     });
+                    table.reload('extra', {
+                        url: '/getExtraHtml?id=' + project,
+                        method: 'post',
+                    });
                 }
             });
         }
+    })
+}
+
+
+function setPassword() {
+    layui.use('layer', function () {
+        var node = layer.open({
+            title: '修改密码'
+            , type: 1
+            , shift: 4
+            , area: ['650px', '300px'] //宽高
+            , content: $('#passwordHtml')
+        });
+        $("#close_time2").click(function () {
+            $("#password1").val("");
+            $("#password2").val("");
+            layer.close(node);
+        });
+    })
+}
+
+function changePassword(){
+    layui.use('layer', function () {
+        var pass1 = $("#password1").val();
+        var pass2 = $("#password2").val();
+        $.ajax({
+            url:'/changePassword',
+            data:{'pass1':pass1,"pass2":pass2,"user":username},
+            success:function (data) {
+                data = JSON.parse(data);
+                if(data.msg==="0"){
+                    $("#password1").val("");
+                    $("#password2").val("");
+                    layer.alert("原密码错误",{icon: 2});
+                }else{
+                    layer.closeAll();
+                    layer.alert("成功,3秒后重新登录",{icon: 1});
+                    setTimeout('location.href="/"',3000); //跳转
+                }
+
+            }
+        })
     })
 }
 

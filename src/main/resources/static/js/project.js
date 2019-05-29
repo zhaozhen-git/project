@@ -729,3 +729,46 @@ function sentMsg(){
         }
     })
 }
+
+
+
+function setPassword() {
+    layui.use('layer', function () {
+        var node = layer.open({
+            title: '修改密码'
+            , type: 1
+            , shift: 4
+            , area: ['650px', '300px'] //宽高
+            , content: $('#passwordHtml')
+        });
+        $("#close_time2").click(function () {
+            $("#password1").val("");
+            $("#password2").val("");
+            layer.close(node);
+        });
+    })
+}
+
+function changePassword(){
+    layui.use('layer', function () {
+        var pass1 = $("#password1").val();
+        var pass2 = $("#password2").val();
+        $.ajax({
+            url:'/changePassword',
+            data:{'pass1':pass1,"pass2":pass2,"user":username},
+            success:function (data) {
+                data = JSON.parse(data);
+                if(data.msg==="0"){
+                    $("#password1").val("");
+                    $("#password2").val("");
+                    layer.alert("原密码错误",{icon: 2});
+                }else{
+                    layer.closeAll();
+                    layer.alert("成功,3秒后重新登录",{icon: 1});
+                    setTimeout('location.href="/"',3000); //跳转
+                }
+
+            }
+        })
+    })
+}

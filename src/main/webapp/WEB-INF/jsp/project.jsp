@@ -30,8 +30,7 @@
                     <%=session.getAttribute("username")%>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><span onclick="setPassword()" style="color: #007DDB;cursor: pointer">安全设置</span></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/">退出登录</a></li>
@@ -370,6 +369,36 @@
 </div>
 </div>
 
+
+<!--修改密码-->
+<div class="modal-dialog" id="passwordHtml" style="display: none;">
+    <form class="form-horizontal" method="post" action="">
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">原密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password1" name="" style="margin-top: 7px;" placeholder="请输入原密码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">新密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password2" name="" style="margin-top: 7px;" placeholder="请输入新密码">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="close_time2" data-dismiss="modal">取消
+        </button>
+        <button type="button" class="btn btn-primary" onclick="changePassword()">
+            确定
+        </button>
+    </div>
+</div>
 
 
 
