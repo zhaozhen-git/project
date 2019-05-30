@@ -26,4 +26,32 @@
         update user set user_password = #{pass2} where user_account = #{user}
     </update>
 
+    <select id="getUser" resultType="map">
+        select pu.*,d.departmentName,u.user_name from project_user pu left join user u on pu.user_account = u.user_account left join department d on pu.departmentID = d.departmentID where pu.project_ID = #{id}
+    </select>
+
+    <delete id="deleteUser" parameterType="map">
+        delete from project_user where (user_account,project_ID) in
+        <foreach collection="list" item="li" open="("
+                 separator="," close=")">
+            (#{li.ID},#{li.project})
+        </foreach>
+    </delete>
+
+    <select id="getDepartmentData" resultType="map">
+        select * from department
+    </select>
+
+    <select id="getDepartmentUser" resultType="map">
+        select * from user where departmentID = #{department}
+    </select>
+
+    <insert id="insertUser">
+        insert into project_user(project_ID,user_account,departmentID) values(#{id},#{user},#{department})
+    </insert>
+
+    <select id="boolUser" resultType="int">
+        select count(*) from project_user where project_ID = #{id} and user_account = #{user} and departmentID = #{department}
+    </select>
+
 </mapper>

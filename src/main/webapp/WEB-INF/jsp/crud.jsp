@@ -36,6 +36,9 @@
         .selected{
             background-color:#d500ff80;
         }
+        .layui-table-tool{
+            min-height: 60px;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -103,6 +106,7 @@
                 <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_USER','ROLE_MANAGER')">
                     <li id="page_4">沟通事项</li>
                 </sec:authorize>
+                <li id="page_5">项目成员</li>
             </ul>
             <div class="layui-tab-content">
                 <%--<!-- 第一个页面 -->--%>
@@ -239,7 +243,13 @@
                     <div style="display: inline-block;width: 49%;vertical-align:top">
                         <table class="layui-hide" id="fourTable" lay-filter="fourTable"></table>
                     </div>
+                </div>
 
+                <!--第五个页面-->
+                <div class="layui-tab-item" id="five">
+                    <div>
+                        <table class="layui-hide" id="fiveHtml" lay-filter="fiveHtml"></table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -314,9 +324,6 @@
                     <option value="">直接选中或搜索选择</option>
                 </select>
             </div>
-            <%--<div class="col-xs-6">--%>
-                <%--<input autocomplete="off" type="text" class="form-control input-sm" id="groupLeader" style="margin-top: 7px;" placeholder="请在这里输入任务负责人名称">--%>
-            <%--</div>--%>
         </div>
         <!-- 计划任务完成周期: -->
         <div class="form-group">
@@ -376,17 +383,7 @@
                     <%--<option value="">直接选择或搜索选择</option>--%>
                 </select>
             </div>
-            <%--<div class="col-xs-6">--%>
-                <%--<input autocomplete="off" type="text" class="form-control input-sm" id="group_leader" style="margin-top: 7px;" placeholder="请在这里输入任务负责人名称">--%>
-            <%--</div>--%>
         </div>
-        <!--&lt;!&ndash; 负责人电话: &ndash;&gt;-->
-        <!--<div class="form-group">-->
-        <!--<label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px">*</i>负责组长电话:</label>-->
-        <!--<div class="col-xs-6">-->
-        <!--<input autocomplete="off" type="text" class="form-control input-sm" id="phone_number" style="margin-top: 7px;" placeholder="请在这里输入负责人电话">-->
-        <!--</div>-->
-        <!--</div>-->
         <!-- 计划任务完成周期: -->
         <div class="form-group">
             <label class="col-xs-4 control-label">节点周期:</label>
@@ -394,7 +391,6 @@
                 <input autocomplete="off" type="" class="form-control input-sm" value="" id="during_time" name="" style="margin-top: 7px;" placeholder=" - " disabled="disabled">
             </div>
         </div>
-
         <div class="form-group">
             <label class="col-xs-4 control-label">事件状态:</label>
             <div class="col-xs-6">
@@ -562,9 +558,6 @@
                     <option value="">直接选择或搜索选择</option>
                 </select>
             </div>
-            <%--<div class="col-xs-6">--%>
-                <%--<input autocomplete="off" type="text" class="form-control input-sm" id="extra_person" style="margin-top: 7px;" placeholder="请在这里输入任务负责人名称">--%>
-            <%--</div>--%>
         </div>
         <div class="form-group">
             <label class="col-xs-4 control-label">时间:</label>
@@ -647,6 +640,30 @@
 </div>
 
 
+<!--员工插入-->
+<div class="modal-dialog" id="userHtml" style="display: none;">
+    <div style="display: inline-block">选择员工:</div>
+    <div class="layui-input-inline layui-form" lay-filter="Department" style="display: inline-block">
+        <select id="department" lay-filter="department" lay-search>
+            <option value="">请选择部门</option>
+        </select>
+    </div>
+    <div style="display: inline-block" class="layui-input-inline layui-form">
+        <select id="user" lay-search>
+            <option value="">请选择用户</option>
+        </select>
+    </div>
+
+    <div class="modal-footer" style="margin-top: 250px">
+        <button type="button" class="btn btn-default" id="close_user" data-dismiss="modal">取消
+        </button>
+        <button type="button" class="btn btn-primary" onclick="insertUser()">
+            确定
+        </button>
+    </div>
+</div>
+
+
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
@@ -674,6 +691,14 @@
         <%--<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">--%>
             <button class="layui-btn layui-bg-blue" lay-event="success1"><i class="layui-icon layui-icon-ok"></i>完成</button>
         <%--</sec:authorize>--%>
+    </div>
+</script>
+
+<!--员工插入工具-->
+<script type="text/html" id="userDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+        <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
     </div>
 </script>
 

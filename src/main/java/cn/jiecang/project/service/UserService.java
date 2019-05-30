@@ -28,4 +28,28 @@ public class UserService {
     public void changePassword(Map<String,Object> map){
         userMapper.changePassword(map);
     }
+
+    public List<Map<String,Object>> getUser(Map<String,Object> map){
+        return userMapper.getUser(map);
+    }
+
+    public void deleteUser(List<Map<String,Object>> list){
+        userMapper.deleteUser(list);
+    }
+
+    public List<Map<String,Object>> getDepartmentData(){
+        return userMapper.getDepartmentData();
+    }
+
+    public List<Map<String,Object>> getDepartmentUser(Map<String,Object> map){
+        return userMapper.getDepartmentUser(map);
+    }
+
+    public void insertUser(Map<String,Object> map){
+        userMapper.insertUser(map);
+    }
+
+    public int boolUser(Map<String,Object> map){
+        return userMapper.boolUser(map);
+    }
 }

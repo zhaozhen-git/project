@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -176,6 +177,113 @@ public class UserController {
         obj.put("msg", msg);
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().println(obj.toString());
+    }
+
+
+
+
+    @ResponseBody
+    @RequestMapping("/getUserList")
+    public Map<String,Object> getUserList(HttpServletResponse response,HttpServletRequest request){
+        String id = request.getParameter("id");
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        Map<String,Object> resultMap = new HashMap<>();
+        try{
+            List<Map<String,Object>> list = userService.getUser(map);
+            logger.info("成功获取该项目下得所有用户");
+            resultMap.put("data", list);
+            resultMap.put("code", "0");
+            resultMap.put("msg", "");
+            resultMap.put("count", "1");
+        }catch (Exception e){
+            logger.error("获取该项目下所有用户失败");
+            e.printStackTrace();
+        }
+        return  resultMap;
+    }
+
+
+    @RequestMapping("/deleteUser")
+    public void deleteUser(HttpServletRequest request,HttpServletResponse response){
+        String id = request.getParameter("id");
+        String project = request.getParameter("project");
+        String ID[] = id.split("[,]");
+        List<Map<String,Object>> list = new ArrayList<>();
+        for(int i =0;i<ID.length;i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("ID",ID[i]);
+            map.put("project",project);
+            list.add(map);
+        }
+        try {
+            userService.deleteUser(list);
+            JSONObject obj = new JSONObject();
+            obj.put("msg", 0);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    //获取部门列表
+    @RequestMapping("/getDepartmentData")
+    public void getDepartmentData(HttpServletResponse response){
+        try{
+            List<Map<String,Object>> list = userService.getDepartmentData();
+            JSONObject obj = new JSONObject();
+            obj.put("list", list);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //获取部门下得用户
+    @RequestMapping("/getDepartmentUser")
+    public void getDepartmentUser(HttpServletResponse response,HttpServletRequest request){
+        String department = request.getParameter("departmentID");
+        Map<String,Object> map = new HashMap<>();
+        map.put("department",department);
+        try{
+            List<Map<String,Object>> list = userService.getDepartmentUser(map);
+            JSONObject obj = new JSONObject();
+            obj.put("list", list);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @RequestMapping("/insertUser")
+    public void insertUser(HttpServletRequest request,HttpServletResponse response){
+        String id = request.getParameter("id");
+        String department = request.getParameter("department");
+        String user = request.getParameter("user");
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        map.put("department",department);
+        map.put("user",user);
+        try{
+            JSONObject obj = new JSONObject();
+            //判断是否已经存在该用户
+            int x = userService.boolUser(map);
+            if(x>0){
+                obj.put("msg", 1);
+            }else{
+                userService.insertUser(map);
+                obj.put("msg", 0);
+            }
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

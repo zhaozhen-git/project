@@ -19,4 +19,16 @@ public interface UserMapper {
     String getUserPassword(Map<String,Object> map);
 
     void changePassword(Map<String,Object> map);
+
+    List<Map<String,Object>> getUser(Map<String,Object> map);
+
+    void deleteUser(List<Map<String,Object>> list);
+
+    List<Map<String,Object>> getDepartmentData();
+
+    List<Map<String,Object>> getDepartmentUser(Map<String,Object> map);
+
+    void insertUser(Map<String,Object> map);
+
+    int boolUser(Map<String,Object> map);
 }

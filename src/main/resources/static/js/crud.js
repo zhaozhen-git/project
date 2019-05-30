@@ -37,6 +37,18 @@ layui.use('element', function(){
             });
         }
     });
+
+    //获取部门
+    $.ajax({
+        url: "/getDepartmentData",
+        dataType: 'json',
+        success: function (result) {
+            var list = result.list;
+            $.each(list,function (i,item) {
+                $("#department").append("<option value="+item.departmentID+">"+item.departmentName+"</option>");
+            })
+        }
+    });
     element.render();
 });
 
@@ -143,6 +155,24 @@ window.onload=function () {
         var layer = layui.layer;
         var form = layui.form;
         var element = layui.element;
+
+        //当选中部门后，联动加载用户
+        form.on('select(department)',function (data) {
+            $.ajax({
+                url:"/getDepartmentUser",
+                dataType:"json",
+                data:{"departmentID":data.value},
+                success:function (result) {
+                    var list = result.list;
+                    $("#user").html("");
+                    $.each(list,function (i,item) {
+                        $("#user").append("<option value="+item.user_account+">"+item.user_name+"</option>");
+                    })
+                    form.render();
+                }
+            })
+        })
+
         table.render({
             elem: '#test'
             , url: '/getBrandList?id=' + project + '&username='+username
@@ -263,6 +293,30 @@ window.onload=function () {
                 ]
             ]
             , id: 'extra'
+            , page: false
+            ,done:function () {
+                element.render();
+            }
+        });
+
+
+        //项目员工
+        table.render({
+            elem: '#fiveHtml'
+            , url: '/getUserList?id=' + project
+            , toolbar: '#userDemo'
+            , title: '用户数据表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'project_ID', title: 'ID', hide: true, width: 60, align: 'center'}
+                    , {field: 'departmentID', title: '部门id', hide: true, width: 60, align: 'center'}
+                    , {field: 'user_account', title: '工号', hide: true, width: 120, align: 'center'}
+                    , {field: 'departmentName', title: '部门名称', width: 120,align:'center'}
+                    , {field: 'user_name', title: '姓名', width: 120,align:'center'}
+                ]
+            ]
+            , id: 'userReload'
             , page: false
             ,done:function () {
                 element.render();
@@ -614,6 +668,64 @@ window.onload=function () {
                 }
             }
         })
+
+        table.on('toolbar(fiveHtml)', function (obj) {
+            if (project === undefined) {
+                layer.alert('请选择一个用户', {icon: 2});
+            } else {
+                var type = obj.event;
+                if (type === "add") {
+                    var node = layer.open({
+                        title: '添加用户'
+                        , type: 1
+                        , shift: 4
+                        , area: ['750px', '500px'] //宽高
+                        , content: $('#userHtml')
+                    });
+                    $("#close_user").click(function () {
+                        layer.close(node);
+                    });
+                } else if (type === "delete") {
+                    var checkRow = table.checkStatus('userReload');
+                    if (checkRow.data.length > 0) {
+                        var ID = "";
+                        $.each(checkRow.data, function (i, o) {
+                            ID += o.user_account + ",";
+                        });
+                        ID = ID.substring(0, ID.length - 1);
+                        var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                            btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
+                                $.ajax({
+                                    type: "post",
+                                    url: 'deleteUser?id=' + ID+"&project="+project,
+                                    dataType: "json",
+                                    async: false,
+                                    success: function (data) {
+                                        layer.close(node);
+                                        layer.msg('删除成功', {icon: 1});
+                                        table.reload('userReload', {
+                                            url: '/getUserList?id=' + project,
+                                            method: 'post',
+                                        });
+                                    }
+                                })
+                            },
+                            btn2: function (index, layero) {
+                                layer.close(node);
+                                table.reload('userReload', {
+                                    url: '/getUserList?id=' + project,
+                                    method: 'post',
+                                });
+                            }
+                        });
+                    } else {
+                        layer.alert('请选择至少一个事件', {icon: 2});
+                    }
+                }
+            }
+        })
+
+
     })
     $('#calendar').fullCalendar({
         header: {
@@ -715,6 +827,10 @@ function getDataList(id){
         });
         table.reload('extra', {
             url: '/getExtraHtml?id=' + project,
+            method: 'post',
+        });
+        table.reload('userReload', {
+            url: '/getUserList?id=' + project,
             method: 'post',
         });
         element.render();
@@ -1348,6 +1464,38 @@ function changePassword(){
                     setTimeout('location.href="/"',3000); //跳转
                 }
 
+            }
+        })
+    })
+}
+
+
+
+
+
+
+
+function insertUser() {
+    layui.use(['layer','table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var department = $('#department option:selected').val()
+        var user = $("#user option:selected").val();
+        $.ajax({
+            url:'/insertUser',
+            data:{'department':department,"user":user,"id":project},
+            success:function (data) {
+                data = JSON.parse(data);
+                if(data.msg===1){
+                    layer.alert("用户已经存在,插入失败",{icon:2});
+                }else if(data.msg===0){
+                    layer.closeAll();
+                    layer.alert("添加成功",{icon:1});
+                    table.reload('userReload', {
+                        url: '/getUserList?id=' + project,
+                        method: 'post',
+                    });
+                }
             }
         })
     })
