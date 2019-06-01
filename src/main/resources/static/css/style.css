@@ -1,0 +1,107 @@
+#information_display{
+  width: 400px;
+  height: 100px;
+}
+#project_header{
+  width: 600px;
+  height: 60px;
+  margin: 60px 40px 40px 200px;
+  background-color: #9F9F9F;
+  border-radius: 10px;
+}
+#projectN{
+  display: inline-block;
+  margin-left: 20px;
+  margin-top: 6px;
+  font-size: 35px;
+  font-weight: bold;
+}
+#show_project{
+  width: 310px;
+  height: 100px;
+  line-height: 22px;
+  float: left;
+  position: absolute;
+  left: 1150px;
+  top:30px;
+  border-radius: 10px;
+  background-color: #9F9F9F;
+
+}
+#show_project:hover,#project_header:hover{
+  border-radius: 10px;
+  box-shadow: 7px 15px 30px #285a63;
+  transition: all 0.5s linear;/*0.3s过渡时间*/
+  -moz-transition: all 0.5s linear; /* Firefox 4 */
+  -webkit-transition: all 0.5s linear;
+
+}
+#show_project ul{
+  margin-left: 20px;
+  margin-top: 10px;
+  font-size:16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#process_success,#process_primary,#process_danger,#process_info{
+  margin-left: 35px;
+}
+#square_success{
+  margin-right: 15px;
+  background-color: #5FB878;
+}
+#square_primary{
+  margin-right: 15px;
+  background-color:#d58512;
+}
+#square_danger{
+  margin-right: 15px;
+  background-color: #e4393c;
+}
+#square_info{
+  margin-right: 15px;
+  background-color: #00FFFF;
+}
+#main_list{
+  overflow-y: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: 10px;
+  border:3px solid #9d9d9d;
+  border-radius: 5px;
+}
+#form_header li,#list_parts li{
+  display: inline-table;
+  vertical-align: top;
+  width: 180px;
+  height: 40px;
+  line-height: 50px;
+  text-align: center;
+  outline: 1px solid #92B8B1;
+  margin-left:-4px;
+  background-color: #F2F2F2;
+}
+#department{
+  display: inline-block;
+  width: 242px;
+  text-align: center;
+  border-right: 2px solid #0C0C0C;
+}
+#dep_person{
+  display: inline-block;
+  width: 242px;
+  text-align: center;
+  border-right: 2px solid #0C0C0C;
+}
+.date_time{
+  background-color: #00FFFF;
+}
+.gantt{
+  width: 1600px;
+  margin: 10px auto;
+  border: 14px solid #ddd;
+  position: relative;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
