@@ -31,4 +31,6 @@ public interface UserMapper {
     void insertUser(Map<String,Object> map);
 
     int boolUser(Map<String,Object> map);
+
+    List<Map<String,Object>> getProjectUser(Map<String,Object> map);
 }

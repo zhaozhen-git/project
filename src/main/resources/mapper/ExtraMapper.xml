@@ -13,9 +13,18 @@
     </select>
 
     <insert id="insertExtra" parameterType="map">
-        insert into extra(project_ID,extra_name,extra_person,extra_time,extra_add)
-        values(#{project_ID},#{extraName},#{groupLeader},#{duringTime},#{addPerson})
+        insert into extra(project_ID,extra_ID,extra_name,extra_person,extra_time,extra_add)
+        values(#{project_ID},#{id},#{extraName},#{groupLeader},#{duringTime},#{addPerson})
     </insert>
+
+
+    <select id="getNum" resultType="String">
+         select extra_ID from extra order by project_ID desc limit 1
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from extra
+    </select>
 
 
     <delete id="deleteExtra" parameterType="map">
@@ -36,7 +45,7 @@
     </update>
 
     <update id="changeExtraTime">
-        update extra set extra_time=#{time} where extra_ID = #{extra_id}
+        update extra set extra_time=#{time},extra_tab=#{select} where extra_ID = #{extra_id}
     </update>
 
 
@@ -44,4 +53,11 @@
         select * from extra where project_ID = #{id}
     </select>
 
+
+    <select id="getThing" resultType="map">
+        select d.departmentName,e.extra_time,e.extra_person,e.extra_name from project_user pu
+        left join department d on pu.departmentID = d.departmentID
+        left join extra e on pu.project_ID = e.project_ID
+        where e.extra_ID = #{id}
+    </select>
 </mapper>

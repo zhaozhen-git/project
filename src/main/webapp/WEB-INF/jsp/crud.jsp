@@ -7,6 +7,7 @@
     <title>项目详情</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/crud.css">
     <link href='css/fullcalendar.print.css' rel='stylesheet' />
     <link href='css/fullcalendar.css' rel='stylesheet' />
     <script src="js/jquery-1.11.3.js"></script>
@@ -39,6 +40,12 @@
         .layui-table-tool{
             min-height: 60px;
         }
+        .radio-inline + .radio-inline, .checkbox-inline + .checkbox-inline{
+            margin-left:26px;
+        }
+        .btn{
+            padding:8px 16px;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -49,12 +56,12 @@
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item layui-this"><a href="/crud">项目详情</a></li>
             <li class="layui-nav-item"><a href="/project">项目管理</a></li>
-            <li class="layui-nav-item">
-                <a class="" href="javascript:;">进行中的计划任务</a>
-                <dl class="layui-nav-child" id="unfinish">
+            <%--<li class="layui-nav-item">--%>
+                <%--<a class="" href="javascript:;">进行中的计划任务</a>--%>
+                <%--<dl class="layui-nav-child" id="unfinish">--%>
 
-                </dl>
-            </li>
+                <%--</dl>--%>
+            <%--</li>--%>
         </ul>
 
         <ul class="layui-nav layui-layout-right">
@@ -72,32 +79,26 @@
     </div>
     <!-- --------------------------------------------------------------------------- -->
 
-    <%--<div class="layui-side layui-bg-black">--%>
-        <%--<div class="layui-side-scroll">--%>
-            <%--<!-- 左侧导航区域（可配合layui已有的垂直导航） -->--%>
-            <%--<ul class="layui-nav layui-nav-tree"  lay-filter="test" id="item">--%>
-                <%--<li class="layui-nav-item layui-nav-itemed">--%>
-                    <%--<a class="" href="javascript:;">进行中的计划任务</a>--%>
-                    <%--<dl class="layui-nav-child" id="unfinish">--%>
-
-                    <%--</dl>--%>
-                <%--</li>--%>
-                <%--<li class="layui-nav-item">--%>
-                    <%--<a href="javascript:;">已完成的计划任务</a>--%>
-                    <%--<dl class="layui-nav-child" id="finish">--%>
-
-                    <%--</dl>--%>
-                <%--</li>--%>
-            <%--</ul>--%>
-        <%--</div>--%>
-    <%--</div>--%>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test" id="item">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">进行中的计划任务</a>
+                    <dl class="layui-nav-child" id="unfinish">
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
 
     <!-- --------------------------------------------------------------------------- -->
 
-    <div class="layui-body" style="left:0px">
+    <div class="layui-body">
         <!-- 内容主体区域 -->
         <div class="layui-tab layui-tab-brief" lay-filter="demo" style="padding: 10px;">
             <ul class="layui-tab-title">
+                <li id="page_1">详情</li>
                 <%--<sec:authorize access="hasRole('ROLE_ADMIN')">--%>
                     <%--<li id="page_1">创建计划任务</li>--%>
                 <%--</sec:authorize>--%>
@@ -109,7 +110,109 @@
                 <li id="page_5">项目成员</li>
             </ul>
             <div class="layui-tab-content">
-                <%--<!-- 第一个页面 -->--%>
+
+                <!--第一个页面-->
+                <div class="layui-tab-item" id="one">
+                    <!--项目名称  id=projectName -->
+                    <div class="row">
+                        <div id="information_display">
+                            <div id="project_header">
+                                <span id="projectN">项目名称：<label id="projectName"></label></span>
+                            </div>
+                            <div id="show_project">
+                                <ul class="list-unstyled">
+                                    <li><label>计划项目负责人:</label><span id="projectManager"></span></li>
+                                    <li><label>供应方:</label><span id="supplierName"></span></li>
+                                    <li><label>供应方电话:</label><span id="supplierPhone"></span></li>
+                                    <li><label>需求方:</label><span id="demandName"></span></li>
+                                    <li><label>需求方电话:</label><span id="demandPhone"></span></li>
+                                    <li><label>计划项目周期:</label><span id="projectDuringTime"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--进度条-->
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <label style="width: 800px;height: 20px;"><i>项目总进程</i>
+                                <span id="process_success"><span id="square_success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span>    进度正常</span>
+                                </span>
+                                <span id="process_primary"><span id="square_primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span>    进度延期</span>
+                                </span>
+                                <span id="process_danger"><span id="square_danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span>    进度加急</span>
+                                </span>
+                                <span id="process_info"><span id="square_info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span>    日期时间</span>
+                                </span>
+                            </label>
+
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 40%;">
+                                    <span class="sr-only">40% 完成</span>
+                                </div>
+                                <div class="progress-bar progress-bar-warning" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 30%;">
+                                    <span class="sr-only">30% 完成（信息）</span>
+                                </div>
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 20%;">
+                                    <span class="sr-only">20% 完成（警告）</span>
+                                </div>
+                                <div class="progress-bar progress-bar-info" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 10%;">
+                                    <span class="sr-only">10% 完成（）</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gantt" >
+                        <div id="main_list">
+                            <%--<div id="form_header">--%>
+                                <%--<ul class="list-unstyled">--%>
+                                    <%--<li><b>项目负责部门</b></li>--%>
+                                    <%--<li><b>部门负责人</b></li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                    <%--<li class="date_time">日期</li>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
+                            <%--<div id="list_parts">--%>
+                                <%--<ul class="list-unstyled">--%>
+                                    <%--<li>信息部</li>--%>
+                                    <%--<li>赵圳</li>--%>
+                                    <%--<li>买的</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                    <%--<li>1</li>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
+                        </div>
+                    </div>
+                </div>
+
                 <%--<sec:authorize access="hasRole('ROLE_ADMIN')">--%>
                     <%--<div class="layui-tab-item" id="one">--%>
                         <%--<div class="modal-dialog">--%>
@@ -170,7 +273,6 @@
 
 
                 <!-- 第二个页面 -->
-                <div></div>
                 <div class="layui-tab-item layui-show" id="two">
                     <div><span id="project_name" style="margin-left:4%;font-size: 30px;color: #009688">未选择项目</span></div>
                     <div id="calendar_body">
@@ -264,6 +366,61 @@
 
 
 <!----------------------------------------------------------------------------------------------------------------------------->
+<div class="modal-dialog" style="margin-top: 30px;display: none" id="myDialog">
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-horizontal" method="post" action="">
+                        <!-- 任务周具体日期 -->
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label class="col-xs-4 control-label">本周任务日期:</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control input-sm" id="EventDate" name="" style="margin-top: 3px;" readonly="readonly">
+                            </div>
+                        </div>
+                        <!-- 负责部门 -->
+                        <div class="form-group" style="margin-top: 30px;">
+                            <label class="col-xs-4 control-label">负责部门 :</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control input-sm" value="" id="EventDep" name="" style="margin-top: 7px;" readonly="readonly">
+                            </div>
+                        </div>
+                        <!--负责人姓名-->
+                        <div class="form-group" style="margin-top: 30px;">
+                            <label class="col-xs-4 control-label">负责人姓名:</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control input-sm" id="EventP" style="margin-top: 3px;" readonly="readonly">
+                            </div>
+                        </div>
+                        <!--任务事件内容-->
+                        <div class="form-group" style="margin-top: 30px;">
+                            <label class="col-xs-4 control-label">任务事件内容:</label>
+                            <div class="col-xs-5">
+                                <input type="text" class="form-control input-sm" id="EventM" style="margin-top: 3px;" readonly="readonly">
+                            </div>
+                        </div>
+                        <!-- 事件发生原因 -->
+                        <div class="form-group" style="margin-top: 30px;">
+                            <label class="col-xs-4 control-label">事件问题原因:</label>
+                            <div class="col-xs-7">
+                                <input type="text" class="form-control input-sm" id="EventReason" style="margin-top: 3px;" readonly="readonly">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <div class="row" style="margin-left: 155px;margin-bottom: 10px;">
+                <div class="col-md-3 pull-right">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="Event_button" style="margin-right: 5px;">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!--事件详情预览-->
 <div class="modal-dialog_1" style="margin-top: 30px;display: none">
@@ -584,7 +741,7 @@
 
 
 
-<!--编辑待完成时间节点-->
+<!--编辑沟通时间节点-->
 <div class="modal-dialog" id="time_time" style="display: none;">
     <!-- 事件节点名称: -->
     <form class="form-horizontal" method="post" action="">
@@ -595,6 +752,16 @@
                 <div class="layui-input-inline">
                     <input autocomplete="off" type="" class="form-control input-sm" value="" id="time1" name="" style="margin-top: 7px;" placeholder=" - ">
                 </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-4 control-label">事件状态:</label>
+            <div class="col-xs-6">
+                <select lay-search="" id="select2" style="height: 30px">
+                    <option value="0">时间选错了</option>
+                    <option value="1">延期</option>
+                </select>
             </div>
         </div>
     </form>
@@ -643,8 +810,8 @@
 <!--员工插入-->
 <div class="modal-dialog" id="userHtml" style="display: none;">
     <div style="display: inline-block">选择员工:</div>
-    <div class="layui-input-inline layui-form" lay-filter="Department" style="display: inline-block">
-        <select id="department" lay-filter="department" lay-search>
+    <div class="layui-input-inline layui-form" style="display: inline-block">
+        <select id="dep" lay-filter="department" lay-search>
             <option value="">请选择部门</option>
         </select>
     </div>

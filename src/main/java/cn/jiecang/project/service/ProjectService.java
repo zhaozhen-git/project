@@ -66,4 +66,25 @@ public class ProjectService {
         return projectMapper.getAccount(map);
     }
 
+    public List<Map<String,Object>> getExcelList(Map<String,Object> map){
+        return projectMapper.getExcelList(map);
+    }
+
+    public List<Map<String,Object>> getExtraList(Map<String,Object> map){
+        return projectMapper.getExtraList(map);
+    }
+
+
+    public List<Map<String,Object>> getProjectMsg(Map<String,Object> map){
+        return projectMapper.getProjectMsg(map);
+    }
+
+    public int getEventCount(Map<String,Object> map){
+        return projectMapper.getEventCount(map);
+    }
+
+    public  int getExtraCount(Map<String,Object> map){
+        return projectMapper.getExtraCount(map);
+    }
+
 }

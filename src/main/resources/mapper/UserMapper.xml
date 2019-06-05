@@ -53,5 +53,10 @@
     <select id="boolUser" resultType="int">
         select count(*) from project_user where project_ID = #{id} and user_account = #{user} and departmentID = #{department}
     </select>
+    
+    
+    <select id="getProjectUser" resultType="map">
+        select p.user_account,u.user_ID from project_user p left join user u on p.user_account = u.user_account where p.project_ID = #{id}
+    </select>
 
 </mapper>

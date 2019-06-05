@@ -54,12 +54,26 @@ public class extraController {
 
     @RequestMapping("/insertExtraList")
     public void insertExtraList(HttpServletRequest request,HttpServletResponse response) throws IOException{
+        //判断是否有数据
+        int x = extraService.getCount();
+        String num;
+        if(x==0){
+            num = "ex0";
+        }else{
+            //获取最大的项目id
+            num = extraService.getNum();
+            num = num.substring(2);
+            num = String.valueOf(Integer.valueOf(num) + 1);
+        }
+        //项目id
+        String id = num;
         String project_ID = request.getParameter("project_ID");
         String extraName = request.getParameter("extraName");
         String groupLeader = request.getParameter("groupLeader");
         String addPerson = request.getParameter("addPerson");
         String duringTime = request.getParameter("duringTime");
         Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
         map.put("project_ID",project_ID);
         map.put("extraName",extraName);
         map.put("groupLeader",groupLeader);
@@ -146,9 +160,11 @@ public class extraController {
     public void changeExtraTime(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String extra_id = request.getParameter("extra_id");
         String time = request.getParameter("time");
+        String select = request.getParameter("select");
         Map<String,Object> map = new HashMap<>();
         map.put("extra_id",extra_id);
         map.put("time",time);
+        map.put("select",select);
         try{
             extraService.changeExtraTime(map);
             logger.info("更改待完成时间成功");

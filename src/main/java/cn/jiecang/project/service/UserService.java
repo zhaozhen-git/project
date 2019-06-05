@@ -52,4 +52,8 @@ public class UserService {
     public int boolUser(Map<String,Object> map){
         return userMapper.boolUser(map);
     }
+
+    public List<Map<String,Object>> getProjectUser(Map<String,Object> map){
+        return userMapper.getProjectUser(map);
+    }
 }

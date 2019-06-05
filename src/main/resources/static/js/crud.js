@@ -12,32 +12,6 @@ var event;
 // 创建加载后台布局函数
 layui.use('element', function(){
     var element = layui.element;
-    //加载用户列表
-    $.ajax({
-        type: "post",
-        url: "/getUser",//对应controller的URL
-        async: false,
-        dataType: 'json',
-        success: function (data) {
-            var userList = data.user;
-            var supplierList = data.supplier;
-            var demandList = data.demand;
-            var managerList = data.manager;
-            $.each(userList, function (i, item) {
-                $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-            });
-            $.each(managerList, function (i, item) {
-                $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-            });
-        }
-    });
-
     //获取部门
     $.ajax({
         url: "/getDepartmentData",
@@ -45,7 +19,7 @@ layui.use('element', function(){
         success: function (result) {
             var list = result.list;
             $.each(list,function (i,item) {
-                $("#department").append("<option value="+item.departmentID+">"+item.departmentName+"</option>");
+                $("#dep").append("<option value="+item.departmentID+">"+item.departmentName+"</option>");
             })
         }
     });
@@ -363,6 +337,8 @@ window.onload=function () {
                                             url: '/getBrandList?id=' + project,
                                             method: 'post',
                                         });
+                                        //重现加载用户详情页面
+                                        load();
                                     }
                                 })
                             },
@@ -434,6 +410,8 @@ window.onload=function () {
                                             url: '/getBrandList?id=' + project,
                                             method: 'post',
                                         });
+                                        //重现加载用户详情页面
+                                        load();
                                     }
                                 })
                             },
@@ -546,6 +524,8 @@ window.onload=function () {
                                                 url: '/getExtraHtml?id=' + project,
                                                 method: 'post',
                                             });
+                                            //重现加载用户详情页面
+                                            load();
                                         }
                                     })
                                 },
@@ -625,6 +605,8 @@ window.onload=function () {
                                             url: '/getExtraHtml?id=' + project,
                                             method: 'post',
                                         });
+                                        //重现加载用户详情页面
+                                        load();
                                     }
                                 })
                             },
@@ -653,6 +635,7 @@ window.onload=function () {
                             event = checkRow.data[0].extra_ID;
                             var extra_time = checkRow.data[0].extra_time;
                             $("#time1").val(extra_time);
+                            $("#select2 option[value='1']").attr("selected", "true");
                             var node = layer.open({
                                 title: '编辑时间'
                                 , type: 1
@@ -701,12 +684,35 @@ window.onload=function () {
                                     dataType: "json",
                                     async: false,
                                     success: function (data) {
+                                        //加载用户列表
+                                        $.ajax({
+                                            type: "post",
+                                            url: "/getProjectUser?id="+project,//对应controller的URL
+                                            async: false,
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                var userList = data.list;
+                                                $("#groupLeader").html("");
+                                                $("#group_leader").html("");
+                                                $("#extraPerson").html("");
+                                                $("#extra_person").html("");
+                                                $.each(userList, function (i, item) {
+                                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                                });
+                                                form.render();
+                                            }
+                                        });
                                         layer.close(node);
                                         layer.msg('删除成功', {icon: 1});
                                         table.reload('userReload', {
                                             url: '/getUserList?id=' + project,
                                             method: 'post',
                                         });
+                                        //重现加载用户详情页面
+                                        load();
                                     }
                                 })
                             },
@@ -799,6 +805,135 @@ function First() {
 }
 
 
+//加载员工详情
+function load() {
+    $.ajax({
+        type:"post",
+        url:"/getExcelList?id="+project,
+        success:function (data) {
+            data = JSON.parse(data);
+            $("#projectName").text("");
+            $("#projectManager").text("");
+            $("#supplierName").text("");
+            $("#supplierPhone").text("");
+            $("#demandName").text("");
+            $("#demandPhone").text("");
+            $("#projectDuringTime").text("");
+            $("#main_list").html("");
+            if(data.projectList!=""){
+                var projectList = data.projectList;
+                $("#projectName").text(projectList[0].projectName);
+                $("#projectManager").text(projectList[0].projectDirector);
+                $("#supplierName").text(projectList[0].supplier);
+                $("#supplierPhone").text(projectList[0].supplierPhone);
+                $("#demandName").text(projectList[0].demand);
+                $("#demandPhone").text(projectList[0].demandPhone);
+                $("#projectDuringTime").text(projectList[0].projectTime);
+                var time = projectList[0].projectTime;
+                var startDay = time.substring(0,10);
+                var endDay = time.substring(13);
+                //获取开始任务的时间是星期几
+                var startDate = new Date(startDay).getDay();
+                //判断第一周还余多少天
+                var firstWeek = (8 - startDate)%7;
+                startDay= startDay.replace(new RegExp("-","gm"),"/");
+                endDay= endDay.replace(new RegExp("-","gm"),"/");
+                startDay = (new Date(startDay)).getTime(); //得到毫秒数
+                endDay = (new Date(endDay)).getTime(); //得到毫秒数
+                var firstDate = startDay + firstWeek*1000*24*60*60;
+                //以7天为一个周期，获取有几个周期,不足7天的向上取余
+                var days = Math.ceil((endDay-firstDate)/(1000*60*60*24*7))+1;
+                var first = '<div id="form_header"><ul class="list-unstyled"><li><b>项目负责部门</b></li><li><b>项目负责人</b></li>';
+                var time = startDay;
+                //定义一个毫秒数的数组
+                var timeString = new Array();
+                for(var i=0;i<days;i++){
+                    var sTime = time;
+                    time = firstDate+i*1000*24*60*60*7;
+                    timeString[i] = time;
+                    if(time>=endDay){
+                        time = endDay;
+                    }
+                    var time1 = new Date(sTime);
+                    var time2 = new Date(time);
+                    var month1 = (time1.getMonth()+1);
+                    var month2 = (time2.getMonth()+1);
+                    if(month1.toString().length==1){
+                        month1 = "0"+month1;
+                    }
+                    if(month2.toString().length==1){
+                        month2 = "0"+month2;
+                    }
+                    var date1 = time1.getDate();
+                    var date2 = time2.getDate();
+                    if(i+1!=days){
+                        date2 = date2 - 1;
+                    }
+                    if(date1.toString().length==1){
+                        date1 = "0"+date1;
+                    }
+                    if(date2.toString().length==1){
+                        date2 = "0"+date2;
+                    }
+                    time1 = time1.getFullYear()+ "/" + month1 + "/" + date1;
+                    time2 = time2.getFullYear()+ "/" + month2 + "/" + date2;
+                    var msg = time1+"-"+time2;
+                    var weekid = "week"+i;
+                    first+='<li class="date_time" style="background-color: #00FFFF" id="'+weekid+'" onmouseover="tip(\''+msg+'\',\''+weekid+'\')" onmouseout="offTip()">第'+(i+1)+'周</li>';
+                }
+                first+='</ul></div>';
+                $("#main_list").html(first);
+                if(data.list!=undefined){
+                    var data1 = data.list;
+                    for(var j=0;j<data1.length;j++){
+                        first += '<div id="list_parts"><ul class="list-unstyled"><li><b>'+ data1[j].name +'</b></li><li><b>'+ data1[j].desc +'</b></li>';
+                        for(var k=0;k<days;k++){
+                            first +='<li id="'+j+k+'"><b></b></li>';
+                        }
+                        $("#main_list").html(first);
+                        //循环事件
+                        for(var s=0;s<data1[j].values.length;s++){
+                            //开始时间
+                            var timeFrom = data1[j].values[s].from;
+                            //结束时间
+                            var timeTo = data1[j].values[s].to;
+                            var color = data1[j].values[s].color;
+                            var event_id = data1[j].values[s].event_id;
+                            var label = data1[j].values[s].label;
+                            for(var n=0;n<timeString.length;n++){
+                                var sub = new Array();
+                                //在第一周完成
+                                if(timeTo<timeString[0]){
+                                    sub = first.split('id="'+j+'0">');
+                                    first = sub[0]+'id="'+j+'0"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                }else{
+                                    //在一周内完成
+                                    if(timeFrom<timeString[n] && timeTo<timeString[n]){
+                                        sub = first.split('id="'+j+n+'">');
+                                        first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                        break;
+                                    }else{
+                                        //在几周内完成
+                                        if(timeFrom<timeString[n] && timeTo>=timeString[n]){
+                                            sub = first.split('id="'+j+n+'">');
+                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                        }else if(timeTo<timeString[n]){
+                                            sub = first.split('id="'+j+n+'">');
+                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        first+='</ul></div>';
+                        $("#main_list").html(first);
+                    }
+                }
+            }
+        }
+    })
+}
+
 //单击项目
 function getDataList(id){
     //单击未完成项目
@@ -813,9 +948,11 @@ function getDataList(id){
     // });
 
     project = id;
-    layui.use(['table','element'], function() {
+
+    layui.use(['table','element','form'], function() {
         var table = layui.table;
         var element = layui.element;
+        var form = layui.form;
         //执行重载
         table.reload('textReload', {
             url: '/getBrandList?id=' + project + '&username='+ username,
@@ -833,9 +970,33 @@ function getDataList(id){
             url: '/getUserList?id=' + project,
             method: 'post',
         });
+
+        //加载用户列表
+        $.ajax({
+            type: "post",
+            url: "/getProjectUser?id="+project,//对应controller的URL
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                var userList = data.list;
+                $("#groupLeader").html("");
+                $("#group_leader").html("");
+                $("#extraPerson").html("");
+                $("#extra_person").html("");
+                $.each(userList, function (i, item) {
+                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                });
+                form.render();
+            }
+        });
         element.render();
     })
 
+    //加载员工详情
+    load();
 
     //文件显示
     $('#supplier_file').empty();
@@ -1176,6 +1337,8 @@ function addEvent() {
                         url: '/getBrandList?id=' + project + '&username='+username,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1224,6 +1387,8 @@ function addExtra() {
                         url: '/getExtraHtml?id=' + project,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1270,6 +1435,8 @@ function updateEvent() {
                         url: '/getBrandList?id=' + project + '&username='+username,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1316,6 +1483,8 @@ function updateExtra() {
                         url: '/getExtraHtml?id=' + project,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1350,6 +1519,8 @@ function changeTime() {
                         url: '/getBrandList?id=' + project + '&username='+ username,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1385,6 +1556,8 @@ function changeProgress() {
                         url: '/getBrandList?id=' + project + '&username='+username,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1398,6 +1571,7 @@ function changeExtraTime() {
         var layer = layui.layer;
         var table = layui.table;
         var time = $("#time1").val();
+        var select = $("#select2 option:selected").val();
         if(time===""){
             layer.msg("时间必填");
         }else{
@@ -1407,6 +1581,7 @@ function changeExtraTime() {
                 data: {
                     "extra_id": event,
                     "time": time,
+                    "select":select
                 },
                 async: false,
                 dataType: 'json',
@@ -1421,6 +1596,8 @@ function changeExtraTime() {
                         url: '/getExtraHtml?id=' + project,
                         method: 'post',
                     });
+                    //重现加载用户详情页面
+                    load();
                 }
             });
         }
@@ -1471,33 +1648,103 @@ function changePassword(){
 
 
 
+function tip(msg,id) {
+    layui.use('layer',function () {
+        var layer = layui.layer;
+        layer.tips(msg,'#'+id,{tips:[1,'#0FA6d8']});
+    })
+}
 
+function offTip() {
+    layui.use('layer',function () {
+        var layer = layui.layer;
+        layer.closeAll();
+    })
+}
 
 
 
 function insertUser() {
-    layui.use(['layer','table'], function () {
+    layui.use(['layer','table','form'], function () {
         var layer = layui.layer;
         var table = layui.table;
-        var department = $('#department option:selected').val()
+        var form = layui.form;
+        var department = $('#dep option:selected').val()
         var user = $("#user option:selected").val();
-        $.ajax({
-            url:'/insertUser',
-            data:{'department':department,"user":user,"id":project},
-            success:function (data) {
-                data = JSON.parse(data);
-                if(data.msg===1){
-                    layer.alert("用户已经存在,插入失败",{icon:2});
-                }else if(data.msg===0){
-                    layer.closeAll();
-                    layer.alert("添加成功",{icon:1});
-                    table.reload('userReload', {
-                        url: '/getUserList?id=' + project,
-                        method: 'post',
-                    });
+        if(department!="" && user!=""){
+            $.ajax({
+                url:'/insertUser',
+                data:{'department':department,"user":user,"id":project},
+                success:function (data) {
+                    data = JSON.parse(data);
+                    if(data.msg===1){
+                        layer.alert("用户已经存在,插入失败",{icon:2});
+                    }else if(data.msg===0){
+                        //加载用户列表
+                        $.ajax({
+                            type: "post",
+                            url: "/getProjectUser?id="+project,//对应controller的URL
+                            async: false,
+                            dataType: 'json',
+                            success: function (data) {
+                                var userList = data.list;
+                                $("#groupLeader").html("");
+                                $("#group_leader").html("");
+                                $("#extraPerson").html("");
+                                $("#extra_person").html("");
+                                $.each(userList, function (i, item) {
+                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                });
+                                form.render();
+                            }
+                        });
+                        layer.closeAll();
+                        layer.alert("添加成功",{icon:1});
+                        table.reload('userReload', {
+                            url: '/getUserList?id=' + project,
+                            method: 'post',
+                        });
+                        //重现加载用户详情页面
+                        load();
+                    }
                 }
+            })
+        }else{
+            layer.msg("部门或者用户不能为空");
+        }
+    })
+}
+
+
+function onSpan(id) {
+    layui.use('layer',function () {
+        var layer = layui.layer;
+        $.ajax({
+            type: "post",
+            url: "getThing/?id="+id,//对应controller的URL
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                var data = data.list[0];
+                $("#EventDate").val(data.time);
+                $("#EventDep").val(data.departmentName);
+                $("#EventP").val(data.person);
+                $("#EventM").val(data.description);
+                layer.open({
+                    title: '周任务详情'
+                    , type: 1
+                    , shift: 4
+                    , area: ['750px', '600px'] //宽高
+                    , content: $('#myDialog')
+                });
             }
         })
+        $("#Event_button").click(function () {
+            layer.closeAll();
+        });
     })
 }
 

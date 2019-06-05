@@ -32,8 +32,6 @@ layui.use('element', function(){
             var demandList = data.demand;
             var managerList = data.manager;
             $.each(userList, function (i, item) {
-                $("#projectPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#project_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
             });
             $.each(supplierList, function (i, item) {
                 $("#project_supplier").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
@@ -338,7 +336,6 @@ layui.use(['table','layer','form'], function() {
                 , {field: 'project_name', title: '项目名称', width: 180,align:'center'}
                 , {field: 'project_director', title: '项目负责人', width: 180,align:'center'}
                 , {field: 'project_time', title: '任务完成周期', width: 240, align: 'center'}
-                , {field: 'project_person', title: '项目成员', width: 240, align: 'center'}
                 , {field: 'project_detail', title: '备注', width: 300,align:'center'}
                 , {
                 field: 'project_state', title: '状态', width: 120, align: 'center'
@@ -419,7 +416,6 @@ layui.use(['table','layer','form'], function() {
                         $("#project_name").attr("readonly","readonly")
                         $("#project_director").attr("disabled","disabled");
                         $("#project_time").attr("readonly","readonly");
-                        $("#project_person").attr("disabled","disabled");
                         $("#project_supplier").attr("disabled","disabled");
                         $("#supplier_phone").attr("readonly","readonly");
                         $("#project_demand").attr("disabled","disabled");
@@ -429,7 +425,6 @@ layui.use(['table','layer','form'], function() {
                     var project_name = checkRow.data[0].project_name;
                     var project_director = checkRow.data[0].project_director;
                     var project_time = checkRow.data[0].project_time;
-                    var project_person = checkRow.data[0].project_person;
                     var project_supplier = checkRow.data[0].project_supplier;
                     var supplier_phone = checkRow.data[0].supplier_phone;
                     var project_demand = checkRow.data[0].project_demand;
@@ -440,7 +435,6 @@ layui.use(['table','layer','form'], function() {
                     project = checkRow.data[0].project_ID;
                     $("#project_name").val(project_name);
                     $("#project_director option:contains('"+project_director+"')").attr("selected",true);
-                    $("#project_person option:contains('"+project_person+"')").attr("selected",true);
                     $("#project_supplier option:contains('"+project_supplier+"')").attr("selected",true);
                     $("#project_demand option:contains('"+project_demand+"')").attr("selected",true);
                     form.render();
@@ -617,7 +611,6 @@ function updateProject() {
         var project_name = $("#project_name").val();
         var project_director = $("#project_director option:selected").val();
         var project_time = $("#project_time").val();
-        var project_person = $("#project_person option:selected").val();
         var project_supplier = $("#project_supplier option:selected").val();
         var supplier_phone = $("#supplier_phone").val();
         var project_demand = $("#project_demand option:selected").val();
@@ -629,8 +622,6 @@ function updateProject() {
             layer.msg("负责人不能为空");
         }else if (project_time === "") {
             layer.msg("项目周期不能为空");
-        }else if (project_person === "") {
-            layer.msg("项目组成员不能为空");
         }else if (project_supplier === "") {
             layer.msg("供应商联系人不能为空");
         }else if (supplier_phone === "") {
@@ -644,7 +635,6 @@ function updateProject() {
                     "project_name": project_name,
                     "project_director": $("#project_director option:selected").text(),
                     "project_time": project_time,
-                    "project_person": $("#project_person option:selected").text(),
                     "project_supplier":$("#project_supplier option:selected").text(),
                     "supplier_phone":supplier_phone,
                     "project_demand":$("#project_demand option:selected").text(),
@@ -680,7 +670,6 @@ function sentMsg(){
         var projectName = $("#projectName").val();
         var projectDirector = $("#projectDirector option:selected").val();
         var projectTime = $("#projectTime").val();
-        var projectPerson = $("#projectPerson").val();
         var projectSupplier = $("#projectDirector option:selected").val();
         var supplierPhone = $("#supplierPhone").val();
         var projectDemand = $("#projectDemand option:selected").val();
@@ -692,8 +681,6 @@ function sentMsg(){
             layer.msg("负责人不能为空");
         }else if(projectTime===""){
             layer.msg("完成周期不能为空");
-        }else if(projectPerson==="") {
-            layer.msg("项目成员不能为空")
         }else if(projectSupplier==="") {
             layer.msg("供应商联系人不能为空")
         }else if(supplierPhone==="") {
@@ -708,7 +695,6 @@ function sentMsg(){
                     "projectName":projectName,
                     "projectDirector":$("#projectDirector option:selected").text(),
                     "projectTime":projectTime,
-                    "projectPerson":$("#projectPerson option:selected").text(),
                     "projectSupplier":$("#projectSupplier option:selected").text(),
                     "supplierPhone":supplierPhone,
                     "projectDemand":$("#projectDemand option:selected").text(),

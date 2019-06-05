@@ -1,5 +1,6 @@
 package cn.jiecang.project.dao;
 
+import com.sun.corba.se.spi.ior.ObjectKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,10 @@ public interface ExtraMapper {
 
     void insertExtra(Map<String,Object> map);
 
+    int getCount();
+
+    String getNum();
+
     void deleteExtra(List<Map<String,Object>> list);
 
     void updateExtra(Map<String,Object> map);
@@ -24,4 +29,6 @@ public interface ExtraMapper {
     void changeExtraTime(Map<String,Object> map);
 
     List<Map<String,Object>> getExtraHtml(Map<String,Object> map);
+
+    List<Map<String, Object>> getThing(Map<String,Object> map);
 }

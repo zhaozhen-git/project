@@ -29,4 +29,10 @@ public interface BrandMapper {
 
     void changeProgress(Map<String,Object> map);
 
+    int getCount();
+
+    String getNum();
+
+    List<Map<String,Object>> getThing(Map<String,Object> map);
+
 }

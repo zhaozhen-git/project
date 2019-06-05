@@ -86,17 +86,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- 项目组成员: -->
-                            <div class="form-group">
-                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>项目组成员：</label>
-                                <div class="col-xs-5">
-                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
-                                        <select name="modules" id="project_person" lay-search>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
                             <!--供应商联系人: -->
                             <div class="form-group">
                                 <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>供应商联系人:</label>
@@ -245,17 +234,6 @@
                                 <div class="col-xs-6">
                                     <div class="layui-input-inline">
                                         <input type="text" class="form-control input-sm" value="" id="projectTime" style="margin-top: 7px;" placeholder=" - ">
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 项目组成员: -->
-                            <div class="form-group">
-                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>项目组成员：</label>
-                                <div class="col-xs-5">
-                                    <div class="layui-input-inline layui-form" style="margin-left:2px">
-                                        <select name="modules" id="projectPerson" lay-search>
-                                            <option></option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>

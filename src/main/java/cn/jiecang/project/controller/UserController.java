@@ -286,4 +286,23 @@ public class UserController {
         }
     }
 
+
+
+    @RequestMapping("/getProjectUser")
+    public void getProjectUser(HttpServletResponse response,HttpServletRequest request){
+        String id = request.getParameter("id");
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        JSONObject obj = new JSONObject();
+        try{
+            List<Map<String,Object>> list = userService.getProjectUser(map);
+            obj.put("list", list);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 }

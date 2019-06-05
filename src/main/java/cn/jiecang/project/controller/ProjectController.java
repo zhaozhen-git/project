@@ -1,5 +1,9 @@
 package cn.jiecang.project.controller;
 
+import cn.jiecang.project.dao.BrandMapper;
+import cn.jiecang.project.dao.ExtraMapper;
+import cn.jiecang.project.service.BrandService;
+import cn.jiecang.project.service.ExtraService;
 import cn.jiecang.project.service.ProjectService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,6 +31,12 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
+    @Autowired
+    ExtraService extraService;
+
+    @Autowired
+    BrandService brandService;
+
 
 
     /**
@@ -53,8 +63,6 @@ public class ProjectController {
         String projectDirector = request.getParameter("projectDirector");
         //计划任务完成周期
         String time = request.getParameter("projectTime");
-        //项目成员
-        String projectPerson = request.getParameter("projectPerson");
         //供应商联系人
         String projectSupplier = request.getParameter("projectSupplier");
         //供应商电话
@@ -95,7 +103,6 @@ public class ProjectController {
         map.put("projectName",projectName);
         map.put("projectDirector",projectDirector);
         map.put("time",time);
-        map.put("projectPerson",projectPerson);
         map.put("projectSupplier",projectSupplier);
         map.put("supplierPhone",supplierPhone);
         map.put("projectDemand",projectDemand);
@@ -310,7 +317,6 @@ public class ProjectController {
         String project_name = request.getParameter("project_name");
         String project_director = request.getParameter("project_director");
         String project_time = request.getParameter("project_time");
-        String project_person = request.getParameter("project_person");
         String project_supplier = request.getParameter("project_supplier");
         String supplier_phone = request.getParameter("supplier_phone");
         String project_demand = request.getParameter("project_demand");
@@ -338,7 +344,6 @@ public class ProjectController {
         map.put("project_name",project_name);
         map.put("project_director",project_director);
         map.put("project_time",project_time);
-        map.put("project_person",project_person);
         map.put("project_supplier",project_supplier);
         map.put("supplier_phone",supplier_phone);
         map.put("project_demand",project_demand);
@@ -429,5 +434,228 @@ public class ProjectController {
         }
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().println(obj.toString());
+    }
+
+
+
+
+    @RequestMapping("/getExcelList")
+    public void getExcelList(HttpServletRequest request,HttpServletResponse response){
+        //项目id
+        String id = request.getParameter("id");
+        //用户名
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        JSONObject obj = new JSONObject();
+        try{
+            //获取事件项目是否有数据
+            int x = projectService.getEventCount(map);
+            //获取额外事件是否有
+            int y = projectService.getExtraCount(map);
+            //获取项目的信息
+            List<Map<String,Object>> projectMsg = projectService.getProjectMsg(map);
+            //获取事件得数据
+            List<Map<String,Object>> list = projectService.getExcelList(map);
+            //获取额外节点事件数据
+            List<Map<String,Object>> list1 = projectService.getExtraList(map);
+            //该项目得主要信息
+            if(projectMsg.size()!=0){
+                Map<String,Object> map1 = new HashMap<>();
+                //项目名
+                String projectName = projectMsg.get(0).get("project_name").toString();
+                //项目负责人
+                String projectDirector = projectMsg.get(0).get("project_director").toString();
+                //项目周期
+                String projectTime = projectMsg.get(0).get("project_time").toString();
+                //项目供应商
+                String supplier = projectMsg.get(0).get("project_supplier").toString();
+                //供应商电话
+                String suppliePhone = projectMsg.get(0).get("supplier_phone").toString();
+                //需求方
+                String demand = projectMsg.get(0).get("project_demand").toString();
+                //需求方电话
+                String demandPhone = projectMsg.get(0).get("demand_phone").toString();
+                //详情
+                String project_detail = projectMsg.get(0).get("project_detail").toString();
+                //供应方文件
+                String supplier_data = projectMsg.get(0).get("supplier_data").toString();
+                //需求方文件
+                String demand_data = projectMsg.get(0).get("demand_data").toString();
+                map1.put("projectName",projectName);
+                map1.put("projectDirector",projectDirector);
+                map1.put("projectTime",projectTime);
+                map1.put("supplier",supplier);
+                map1.put("suppliePhone",suppliePhone);
+                map1.put("demand",demand);
+                map1.put("demandPhone",demandPhone);
+                map1.put("project_detail",project_detail);
+                map1.put("supplier_data",supplier_data);
+                map1.put("demand_data",demand_data);
+                if(x!=0 || y!=0) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    //项目里面员工得任务
+                    List<Map<String, Object>> list2 = new ArrayList<>();
+                    if(x!=0){
+                        for (int i = 0; i < list.size(); i++) {
+                            Map<String, Object> map2 = new HashMap<>();
+                            Map<String, Object> map3 = new HashMap<>();
+                            String name = list.get(i).get("departmentName").toString();
+                            String desc = list.get(i).get("user_name").toString();
+                            String user_id = list.get(i).get("user_ID").toString();
+                            if(list.get(i).size()>3){
+                                String event_state = list.get(i).get("event_state").toString();
+                                String event_tab = list.get(i).get("event_tab").toString();
+                                String event_id = list.get(i).get("event_id").toString();
+                                String color = "#5FB878";
+                                if(!event_state.equals("0")){
+                                    color = "#e4393c";
+                                }else{
+                                    if(!event_tab.equals("0")){
+                                        color = "#d58512";
+                                    }
+                                }
+                                map3.put("color",color);
+                                map3.put("event_id",event_id);
+                            }
+                            map2.put("name", name);
+                            map2.put("desc", desc);
+                            map2.put("user_ID", user_id);
+                            List<Map<String, Object>> list4 = new ArrayList<>();
+                            if (!list.get(i).containsKey("event_startTime") && !list.get(i).containsKey("event_endTime")) {
+                                map2.put("values","");
+                                list2.add(map2);
+                                continue;
+                            }
+                            String startTime = list.get(i).get("event_startTime").toString();
+                            String endTime = list.get(i).get("event_endTime").toString();
+                            startTime = String.valueOf(simpleDateFormat.parse(startTime).getTime());
+                            endTime = String.valueOf(simpleDateFormat.parse(endTime).getTime());
+                            map3.put("from", startTime);
+                            map3.put("to", endTime);
+                            map3.put("label", list.get(i).get("event_name"));
+                            list4.add(map3);
+                            //将相同得人得事件加起来
+                            if (list2.size() != 0) {
+                                for (int j = 0; j < list2.size(); j++) {
+                                    String name1 = list2.get(j).get("name").toString();
+                                    String desc1 = list2.get(j).get("desc").toString();
+                                    if (name1.equals(name) && desc1.equals(desc)) {
+                                        Map<String, Object> map4 = new HashMap<>();
+                                        //获取对象，要转换为list-------------------------------------------l
+                                        Object object = list2.get(j).get("values");
+                                        List<Map<String, Object>> list5 = (List<Map<String, Object>>) object;
+                                        list4.addAll(list5);
+                                        list2.remove(j);
+                                        j--;
+                                    }
+                                }
+                            }
+                            map2.put("values", list4);
+                            list2.add(map2);
+                        }
+                    }
+                    //额外事件
+                    if (list1.size() != 0) {
+                        for (int k = 0; k < list1.size(); k++) {
+                            if (!list1.get(k).containsKey("extra_ID")) {
+                                continue;
+                            }
+                            String user_ID = list1.get(k).get("user_ID").toString();
+                            String extra_name = list1.get(k).get("extra_name").toString();
+                            String extra_time = list1.get(k).get("extra_time").toString();
+                            String extra_success = list1.get(k).get("extra_success").toString();
+                            String extra_tab = list1.get(k).get("extra_tab").toString();
+                            String extra_id = list1.get(k).get("extra_ID").toString();
+                            String color = "#5FB878";
+                            if(!extra_success.equals("0")) {
+                                if (!extra_tab.equals("0")) {
+                                    color = "#d58512";
+                                }
+                            }
+                            String time = String.valueOf(simpleDateFormat.parse(extra_time).getTime());
+                            if (list2.size() != 0) {
+                                for (int s = 0; s < list2.size(); s++) {
+                                    String userid = list2.get(s).get("user_ID").toString();
+                                    String username = list2.get(s).get("name").toString();
+                                    String desc = list2.get(s).get("desc").toString();
+                                    if (user_ID.equals(userid)) {
+                                        List<Map<String, Object>> list5 = new ArrayList<>();
+                                        Map<String, Object> map2 = new HashMap<>();
+                                        map2.put("from", time);
+                                        map2.put("to", time);
+                                        map2.put("color",color);
+                                        map2.put("event_id",extra_id);
+                                        map2.put("label", extra_name);
+                                        list5.add(map2);
+                                        Map<String, Object> map3 = new HashMap<>();
+                                        map3.put("name", username);
+                                        map3.put("desc", desc);
+                                        map3.put("user_ID", userid);
+                                        //判断是否包含
+                                        if (!list1.get(s).containsKey("extra_name")) {
+
+                                        } else {
+                                            Map<String, Object> map4 = new HashMap<>();
+                                            Object object = list2.get(s).get("values");
+                                            List<Map<String, Object>> list6 = (List<Map<String, Object>>) object;
+                                            list5.addAll(list6);
+                                            list2.remove(s);
+                                        }
+                                        map3.put("values", list5);
+                                        list2.add(map3);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    obj.put("list", list2);
+                }
+                List<Map<String, Object>> list3 = new ArrayList<>();
+                list3.add(map1);
+                obj.put("projectList", list3);
+            }else{
+                obj.put("list","");
+                obj.put("projectList","");
+            }
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @RequestMapping("/getThing")
+    public void getThing(HttpServletRequest request,HttpServletResponse response) throws IOException{
+        String id = request.getParameter("id");
+        List<Map<String,Object>> list = new ArrayList<>();
+        List<Map<String,Object>> list1 = new ArrayList<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        if(id.contains("ex")){
+            list = extraService.getThing(map);
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("departmentName",list.get(0).get("departmentName"));
+            map1.put("time",list.get(0).get("extra_time"));
+            map1.put("person",list.get(0).get("extra_person"));
+            map1.put("description",list.get(0).get("extra_name"));
+            list1.add(map1);
+        }else{
+            list = brandService.getThing(map);
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("departmentName",list.get(0).get("departmentName"));
+            String start = String.valueOf(list.get(0).get("event_startTime"));
+            String end = String.valueOf(list.get(0).get("event_endTime"));
+            map1.put("time",start+" - "+end);
+            map1.put("person",list.get(0).get("event_groupLeader"));
+            map1.put("description",list.get(0).get("event_description"));
+            list1.add(map1);
+        }
+        JSONObject obj = new JSONObject();
+        obj.put("list",list1);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().println(obj);
     }
 }

@@ -11,6 +11,9 @@
               <if test="id!=null and id!=''">
               project_ID,
               </if>
+              <if test="event_id!=null and event_id!=''">
+              event_id,
+              </if>
               <if test="eventName!=null and eventName!=''">
               event_name,
               </if>
@@ -40,6 +43,9 @@
         <trim suffixOverrides=",">
             <if test="id!=null and id!=''">
                 #{id},
+            </if>
+            <if test="event_id!=null and event_id!=''">
+                #{event_id},
             </if>
             <if test="eventName!=null and eventName!=''">
                 #{eventName},
@@ -117,4 +123,19 @@
     <update id="changeProgress">
         update event set event_progress = #{event_progress} where event_id = #{event_id}
     </update>
+
+    <select id="getNum" resultType="String">
+         select event_id from event order by project_ID desc limit 1
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(*) from event
+    </select>
+
+    <select id="getThing" resultType="map">
+        select d.departmentName,e.event_startTime,e.event_endTime,e.event_groupLeader,e.event_description from project_user pu
+        left join department d on pu.departmentID = d.departmentID
+        left join event e on pu.project_ID = e.project_ID
+        where e.event_id = #{id}
+    </select>
 </mapper>

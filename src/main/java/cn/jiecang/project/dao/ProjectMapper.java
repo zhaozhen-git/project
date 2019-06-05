@@ -36,4 +36,14 @@ public interface ProjectMapper {
 
     Map<String,Object> getAccount(Map<String,Object> map);
 
+    List<Map<String,Object>> getExcelList(Map<String,Object> map);
+
+    List<Map<String,Object>> getExtraList(Map<String,Object> map);
+
+    List<Map<String,Object>> getProjectMsg(Map<String,Object> map);
+
+    int getEventCount(Map<String,Object> map);
+
+    int getExtraCount(Map<String,Object> map);
+
 }

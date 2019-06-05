@@ -50,4 +50,16 @@ public class BrandService {
     public void changeProgress(Map<String,Object> map){
         brandMapper.changeProgress(map);
     }
+
+    public int getCount(){
+        return brandMapper.getCount();
+    }
+
+    public String getNum(){
+        return brandMapper.getNum();
+    }
+
+    public List<Map<String,Object>> getThing(Map<String,Object> map){
+        return brandMapper.getThing(map);
+    }
 }

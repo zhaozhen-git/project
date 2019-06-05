@@ -47,9 +47,6 @@
             <if test="time!=null and time!=''">
                 project_time,
             </if>
-            <if test="projectPerson!=null and projectPerson!=''">
-                project_person,
-            </if>
             <if test="projectSupplier!=null and projectSupplier!=''">
                 project_supplier,
             </if>
@@ -85,9 +82,6 @@
             </if>
             <if test="time!=null and time!=''">
                 #{time},
-            </if>
-            <if test="projectPerson!=null and projectPerson!=''">
-                #{projectPerson},
             </if>
             <if test="projectSupplier!=null and projectSupplier!=''">
                 #{projectSupplier},
@@ -172,7 +166,9 @@
 
 
     <delete id="deleteProject" parameterType="map">
-        delete p.*,e.* from projects p left join event e on p.project_ID = e.project_ID where p.project_ID in
+        delete p.*,e.*,ex.*,pu.* from projects p left join event e on p.project_ID = e.project_ID
+         left join extra ex on p.project_ID = ex.project_ID
+         left join project_user pu on p.project_ID = pu.project_ID where p.project_ID in
         <foreach collection="list" item="li" open="("
                  separator="," close=")">
             #{li.ID}
@@ -190,9 +186,6 @@
         </if>
         <if test="project_time!=null and project_time!=''">
             project_time = #{project_time},
-        </if>
-        <if test="project_person!=null and project_person!=''">
-            project_person = #{project_person},
         </if>
         <if test="project_supplier!=null and project_supplier!=''">
             project_supplier = #{project_supplier},
@@ -229,6 +222,38 @@
 
     <select id="getAccount" resultType="map">
         select u.user_name,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id  where user_account=#{name}
+    </select>
+
+    <select id="getExcelList" resultType="map">
+        select d.departmentName,u.user_name,u.user_ID,e.event_id,
+        e.event_name,e.event_startTime,e.event_endTime,e.event_description,e.event_state,e.event_tab
+        from project_user pu
+        left join department d on pu.departmentID = d.departmentID
+        left join user u on pu.user_account = u.user_account
+        left join projects p on pu.project_ID = p.project_ID
+        left join event e on pu.project_ID = e.project_ID and u.user_account = e.event_groupLeader
+        where pu.project_ID = #{id}
+    </select>
+
+    <select id="getExtraList" resultType="map">
+        select u.user_ID,ex.extra_ID,ex.extra_name,ex.extra_time,ex.extra_tab,ex.extra_success
+        from project_user pu
+        left join user u on pu.user_account = u.user_account
+        left join extra ex on pu.project_ID = ex.project_ID and u.user_account = ex.extra_person
+        where pu.project_ID = #{id}
+    </select>
+
+    <select id="getProjectMsg" resultType="map">
+        select * from projects where project_ID = #{id}
+    </select>
+
+
+    <select id="getEventCount" resultType="int">
+        select count(event_id) from event where project_ID = #{id}
+    </select>
+
+    <select id="getExtraCount" resultType="int">
+        select count(extra_ID) from extra where project_ID = #{id}
     </select>
 
 </mapper>

@@ -31,6 +31,19 @@ public class BrandController {
      */
     @RequestMapping("insertBrandList")
     public void insert(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        //判断是否有数据
+        int x = brandService.getCount();
+        String num;
+        if(x==0){
+            num = "e0";
+        }else{
+            //获取最大的项目id
+            num = String.valueOf(brandService.getNum());
+            num = num.substring(1);
+            num = "e"+(Integer.valueOf(num) + 1);
+        }
+        //项目id
+        String event_id = num;
         String id = request.getParameter("project_ID");
         String eventName = request.getParameter("eventName");
         String groupLeader = request.getParameter("groupLeader");
@@ -47,6 +60,7 @@ public class BrandController {
         long time = end.getTime()-start.getTime();
         long days = time/(1000*60*60*24);
         Map<String,Object> map = new HashMap<>();
+        map.put("event_id",event_id);
         map.put("id",id);
         map.put("eventName",eventName);
         map.put("groupLeader",groupLeader);

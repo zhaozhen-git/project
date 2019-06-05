@@ -18,12 +18,12 @@
 }
 #show_project{
   width: 310px;
-  height: 100px;
+  height: 180px;
   line-height: 22px;
   float: left;
   position: absolute;
   left: 1150px;
-  top:30px;
+  top:70px;
   border-radius: 10px;
   background-color: #9F9F9F;
 
@@ -75,7 +75,7 @@
   vertical-align: top;
   width: 180px;
   height: 40px;
-  line-height: 50px;
+  line-height: 40px;
   text-align: center;
   outline: 1px solid #92B8B1;
   margin-left:-4px;
@@ -97,7 +97,6 @@
   background-color: #00FFFF;
 }
 .gantt{
-  width: 1600px;
   margin: 10px auto;
   border: 14px solid #ddd;
   position: relative;

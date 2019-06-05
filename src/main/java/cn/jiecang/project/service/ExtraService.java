@@ -23,6 +23,13 @@ public class ExtraService {
         extraMapper.insertExtra(map);
     }
 
+    public int getCount(){
+        return extraMapper.getCount();
+    }
+
+    public String getNum(){
+        return extraMapper.getNum();
+    }
 
     public void deleteExtra(List<Map<String,Object>> list){
         extraMapper.deleteExtra(list);
@@ -44,6 +51,10 @@ public class ExtraService {
 
     public List<Map<String,Object>> getExtraHtml(Map<String,Object> map){
         return extraMapper.getExtraHtml(map);
+    }
+
+    public List<Map<String,Object>> getThing(Map<String,Object> map){
+        return extraMapper.getThing(map);
     }
 
 }
