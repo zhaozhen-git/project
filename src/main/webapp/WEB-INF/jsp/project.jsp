@@ -110,10 +110,10 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <form class="form-horizontal" method="post" action="" style="margin-right: 178px;">
+                        <form class="form-horizontal" method="post" action="">
                             <!--需求方联系人: -->
                             <div class="form-group">
-                                <label class="col-xs-4 control-label">需求方联系人:</label>
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>需求方联系人:</label>
                                 <div class="col-xs-5">
                                     <div class="layui-input-inline layui-form" style="margin-left:2px">
                                         <select name="modules" id="project_demand" lay-search>
@@ -124,7 +124,7 @@
                             </div>
                             <!--联系人电话-->
                             <div class="form-group">
-                                <label class="col-xs-4 control-label">需求方电话:</label>
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>需求方电话:</label>
                                 <div class="col-xs-7">
                                     <input type="text" class="form-control input-sm" id="demand_phone" style="margin-top: 7px;" placeholder="请输入供应商联系人电话">
                                 </div>
@@ -213,7 +213,7 @@
                         <form class="form-horizontal" method="post" action="">
                             <div class="form-group">
                                 <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务名称:</label>
-                                <div class="col-xs-6">
+                                <div class="col-xs-5">
                                     <input type="text" class="form-control input-sm" id="projectName" style="margin-top: 7px;" placeholder="请在这里输入计划任务名称">
                                 </div>
                             </div>
@@ -231,7 +231,7 @@
                             <!-- 计划任务完成周期: -->
                             <div class="form-group">
                                 <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>计划任务完成周期:</label>
-                                <div class="col-xs-6">
+                                <div class="col-xs-5">
                                     <div class="layui-input-inline">
                                         <input type="text" class="form-control input-sm" value="" id="projectTime" style="margin-top: 7px;" placeholder=" - ">
                                     </div>
@@ -261,10 +261,10 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <form class="form-horizontal" method="post" action="" style="margin-right: 178px;">
+                        <form class="form-horizontal" method="post" action="">
                             <!--需求方联系人: -->
                             <div class="form-group">
-                                <label class="col-xs-4 control-label">需求方联系人:</label>
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>需求方联系人:</label>
                                 <div class="col-xs-5">
                                     <div class="layui-input-inline layui-form" style="margin-left:2px">
                                         <select name="modules" id="projectDemand" lay-search>
@@ -275,8 +275,8 @@
                             </div>
                             <!--联系人电话-->
                             <div class="form-group">
-                                <label class="col-xs-4 control-label">需求方电话:</label>
-                                <div class="col-xs-7">
+                                <label class="col-xs-4 control-label"><i style="color:red;margin-right: 2px;">*</i>需求方电话:</label>
+                                <div class="col-xs-5">
                                     <input type="text" class="form-control input-sm" id="demandPhone" style="margin-top: 7px;" placeholder="请输入供应商联系人电话">
                                 </div>
                             </div>

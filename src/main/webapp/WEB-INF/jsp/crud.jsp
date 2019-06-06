@@ -104,9 +104,7 @@
                 <%--</sec:authorize>--%>
                 <li id="page_2" class="layui-this" onclick="calendar()">计划任务事件预览</li>
                 <li id="page_3">计划任务事件节点</li>
-                <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_USER','ROLE_MANAGER')">
-                    <li id="page_4">沟通事项</li>
-                </sec:authorize>
+                <li id="page_4">沟通事项</li>
                 <li id="page_5">项目成员</li>
             </ul>
             <div class="layui-tab-content">
@@ -374,7 +372,7 @@
                     <form class="form-horizontal" method="post" action="">
                         <!-- 任务周具体日期 -->
                         <div class="form-group" style="margin-top: 10px;">
-                            <label class="col-xs-4 control-label">本周任务日期:</label>
+                            <label class="col-xs-4 control-label">任务日期:</label>
                             <div class="col-xs-4">
                                 <input type="text" class="form-control input-sm" id="EventDate" name="" style="margin-top: 3px;" readonly="readonly">
                             </div>
@@ -400,20 +398,20 @@
                                 <input type="text" class="form-control input-sm" id="EventM" style="margin-top: 3px;" readonly="readonly">
                             </div>
                         </div>
-                        <!-- 事件发生原因 -->
-                        <div class="form-group" style="margin-top: 30px;">
-                            <label class="col-xs-4 control-label">事件问题原因:</label>
-                            <div class="col-xs-7">
-                                <input type="text" class="form-control input-sm" id="EventReason" style="margin-top: 3px;" readonly="readonly">
-                            </div>
-                        </div>
+                        <%--<!-- 事件发生原因 -->--%>
+                        <%--<div class="form-group" style="margin-top: 30px;">--%>
+                            <%--<label class="col-xs-4 control-label">事件问题原因:</label>--%>
+                            <%--<div class="col-xs-7">--%>
+                                <%--<input type="text" class="form-control input-sm" id="EventReason" style="margin-top: 3px;" readonly="readonly">--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                     </form>
                 </div>
             </div>
             <hr>
             <div class="row" style="margin-left: 155px;margin-bottom: 10px;">
                 <div class="col-md-3 pull-right">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="Event_button" style="margin-right: 5px;">确定
+                    <button type="button" class="btn btn-primary"  id="Event_button" style="margin-right: 5px;">确定
                     </button>
                 </div>
             </div>

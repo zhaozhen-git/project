@@ -63,7 +63,7 @@ public class extraController {
             //获取最大的项目id
             num = extraService.getNum();
             num = num.substring(2);
-            num = String.valueOf(Integer.valueOf(num) + 1);
+            num = "ex"+(Integer.valueOf(num) + 1);
         }
         //项目id
         String id = num;

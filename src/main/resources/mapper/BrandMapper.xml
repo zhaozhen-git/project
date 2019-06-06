@@ -79,7 +79,7 @@
     <select id="getBrandList" resultType="map">
             select e.* from event e left join projects p on e.project_ID = p.project_ID where
             <if test="username!='' and username!=null and username!='admin'">
-                 e.event_groupLeader = #{username} or p.project_director = #{username} or p.project_supplier = #{username} or p.project_demand = #{username} and
+                (e.event_groupLeader = #{username} or p.project_director = #{username} or p.project_supplier = #{username} or p.project_demand = #{username}) and
             </if>
             e.project_ID = #{id} order by e.event_startTime asc
     </select>
@@ -125,7 +125,7 @@
     </update>
 
     <select id="getNum" resultType="String">
-         select event_id from event order by project_ID desc limit 1
+         select event_id from event order by event_id desc limit 1
     </select>
 
     <select id="getCount" resultType="int">

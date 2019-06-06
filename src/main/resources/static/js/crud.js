@@ -905,21 +905,22 @@ function load() {
                                 //在第一周完成
                                 if(timeTo<timeString[0]){
                                     sub = first.split('id="'+j+'0">');
-                                    first = sub[0]+'id="'+j+'0"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                    first = sub[0]+'id="'+j+'0"><span onmouseover="tip(\''+label+'\',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                    break;
                                 }else{
                                     //在一周内完成
                                     if(timeFrom<timeString[n] && timeTo<timeString[n]){
                                         sub = first.split('id="'+j+n+'">');
-                                        first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                        first = sub[0]+'id="'+j+n+'"><span onmouseover="tip(\''+label+'\',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
                                         break;
                                     }else{
                                         //在几周内完成
                                         if(timeFrom<timeString[n] && timeTo>=timeString[n]){
                                             sub = first.split('id="'+j+n+'">');
-                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip(\''+label+'\',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
                                         }else if(timeTo<timeString[n]){
                                             sub = first.split('id="'+j+n+'">');
-                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip('+label+',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
+                                            first = sub[0]+'id="'+j+n+'"><span onmouseover="tip(\''+label+'\',\''+event_id+'\')" onmouseout="offTip()" onclick="onSpan(\''+event_id+'\')" id="'+event_id+'" style="margin-left:4px;display:inline-block;background-color:'+color+';width:40px;height:38px"></span>'+sub[1];
                                         }
                                     }
                                 }
@@ -1646,19 +1647,19 @@ function changePassword(){
     })
 }
 
-
+var index;
 
 function tip(msg,id) {
     layui.use('layer',function () {
         var layer = layui.layer;
-        layer.tips(msg,'#'+id,{tips:[1,'#0FA6d8']});
+        index = layer.tips(msg,'#'+id,{tips:[1,'#0FA6d8']});
     })
 }
 
 function offTip() {
     layui.use('layer',function () {
         var layer = layui.layer;
-        layer.closeAll();
+        layer.close(index);
     })
 }
 
@@ -1733,18 +1734,22 @@ function onSpan(id) {
                 $("#EventDep").val(data.departmentName);
                 $("#EventP").val(data.person);
                 $("#EventM").val(data.description);
-                layer.open({
+                var node = layer.open({
                     title: '周任务详情'
                     , type: 1
                     , shift: 4
                     , area: ['750px', '600px'] //宽高
                     , content: $('#myDialog')
                 });
+                $("#Event_button").click(function () {
+                    $("#EventDate").val("");
+                    $("#EventDep").val("");
+                    $("#EventP").val("");
+                    $("#EventM").val("");
+                    layer.close(node);
+                });
             }
         })
-        $("#Event_button").click(function () {
-            layer.closeAll();
-        });
     })
 }
 

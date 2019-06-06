@@ -485,7 +485,7 @@ public class ProjectController {
                 map1.put("projectDirector",projectDirector);
                 map1.put("projectTime",projectTime);
                 map1.put("supplier",supplier);
-                map1.put("suppliePhone",suppliePhone);
+                map1.put("supplierPhone",suppliePhone);
                 map1.put("demand",demand);
                 map1.put("demandPhone",demandPhone);
                 map1.put("project_detail",project_detail);
@@ -503,15 +503,21 @@ public class ProjectController {
                             String desc = list.get(i).get("user_name").toString();
                             String user_id = list.get(i).get("user_ID").toString();
                             if(list.get(i).size()>3){
+                                String event_success = list.get(i).get("event_success").toString();
                                 String event_state = list.get(i).get("event_state").toString();
                                 String event_tab = list.get(i).get("event_tab").toString();
                                 String event_id = list.get(i).get("event_id").toString();
                                 String color = "#5FB878";
-                                if(!event_state.equals("0")){
-                                    color = "#e4393c";
-                                }else{
-                                    if(!event_tab.equals("0")){
-                                        color = "#d58512";
+                                //如果事件完成，则为绿色；
+                                //事件未完成，则判断状态是正常还是紧急状态。如果是紧急，显示红色；正常则判断是否延期
+                                //如果事件延期，则为黄色
+                                if(!event_success.equals("0")){
+                                    if(!event_state.equals("0")){
+                                        color = "#e4393c";
+                                    }else{
+                                        if(!event_tab.equals("0")){
+                                            color = "#d58512";
+                                        }
                                     }
                                 }
                                 map3.put("color",color);
@@ -566,10 +572,14 @@ public class ProjectController {
                             String extra_success = list1.get(k).get("extra_success").toString();
                             String extra_tab = list1.get(k).get("extra_tab").toString();
                             String extra_id = list1.get(k).get("extra_ID").toString();
+                            //如果判断是否完成，如果完成则为绿色；
+                            //未完成：判断是否延期，延期为红色，不延期为红色
                             String color = "#5FB878";
                             if(!extra_success.equals("0")) {
                                 if (!extra_tab.equals("0")) {
                                     color = "#d58512";
+                                }else{
+                                    color = "#e4393c";
                                 }
                             }
                             String time = String.valueOf(simpleDateFormat.parse(extra_time).getTime());
@@ -597,9 +607,13 @@ public class ProjectController {
                                         } else {
                                             Map<String, Object> map4 = new HashMap<>();
                                             Object object = list2.get(s).get("values");
-                                            List<Map<String, Object>> list6 = (List<Map<String, Object>>) object;
-                                            list5.addAll(list6);
-                                            list2.remove(s);
+                                            if(object.toString().equals("")){
+                                                list2.remove(s);
+                                            }else{
+                                                List<Map<String, Object>> list6 = (List<Map<String, Object>>) object;
+                                                list5.addAll(list6);
+                                                list2.remove(s);
+                                            }
                                         }
                                         map3.put("values", list5);
                                         list2.add(map3);
