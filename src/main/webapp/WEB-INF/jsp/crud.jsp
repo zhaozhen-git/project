@@ -56,6 +56,9 @@
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item layui-this"><a href="/crud">项目详情</a></li>
             <li class="layui-nav-item"><a href="/project">项目管理</a></li>
+            <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
+                <li class="layui-nav-item"><a href="/person">人员管理</a></li>
+            </sec:authorize>
             <%--<li class="layui-nav-item">--%>
                 <%--<a class="" href="javascript:;">进行中的计划任务</a>--%>
                 <%--<dl class="layui-nav-child" id="unfinish">--%>
@@ -71,7 +74,7 @@
                     <%=session.getAttribute("username")%>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
-                    <dd><span onclick="setPassword()" style="color: #007DDB;cursor: pointer">安全设置</span></dd>
+                    <dd><span onclick="setPassword()" style="color: #00db42;cursor: pointer">修改密码</span></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/">退出登录</a></li>
@@ -355,7 +358,7 @@
         </div>
     </div>
 
-    <div class="layui-footer" style="left:0px">
+    <div class="layui-footer" style="left:200px">
         <!-- 底部固定区域 -->
         © 捷昌线性驱动有限公司
     </div>
@@ -535,7 +538,7 @@
             <label class="col-xs-4 control-label"><i style="color: red;margin-right: 2px">*</i>负责人:</label>
             <div class="layui-input-inline layui-form" style="margin-left:15px">
                 <select name="modules" id="group_leader" lay-search>
-                    <%--<option value="">直接选择或搜索选择</option>--%>
+                    <option value="">直接选择或搜索选择</option>
                 </select>
             </div>
         </div>
@@ -667,7 +670,7 @@
         </div>
         <!-- 计划任务完成周期: -->
         <div class="form-group">
-            <label class="col-xs-4 control-label" style="margin-left: 2px;"><i style="color: red;margin-right:2px">*</i>节点时间:</label>
+            <label class="col-xs-4 control-label" style="margin-left: 2px;"><i style="color: red;margin-right:2px">*</i>最后期限:</label>
             <div class="col-xs-6">
                 <div class="layui-input-inline">
                     <input autocomplete="off" type="" class="form-control input-sm" value="" id="extraT" name="" style="margin-top: 7px;" placeholder=" - ">
@@ -715,7 +718,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-4 control-label">时间:</label>
+            <label class="col-xs-4 control-label">最后期限:</label>
             <div class="col-xs-6">
                 <input autocomplete="off" type="" class="form-control input-sm" value="" id="extra_time" name="" style="margin-top: 7px;" placeholder=" - " disabled="disabled">
             </div>
@@ -793,6 +796,14 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">确认新密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password3" name="" style="margin-top: 7px;" placeholder="请输入确认新密码">
+                </div>
+            </div>
+        </div>
     </form>
 
     <div class="modal-footer">
@@ -847,23 +858,27 @@
 <%--沟通事项的工具栏--%>
 <script type="text/html" id="toolDemo">
     <div class="layui-btn-container">
-        <%--<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">--%>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER    ')">
             <button class="layui-btn" lay-event="add1"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+        </sec:authorize>
             <button class="layui-btn layui-btn-warm" lay-event="update1"><i class="layui-icon layui-icon-edit"></i>编辑</button>
             <button class="layui-btn layui-btn-danger" lay-event="delete1"><i class="layui-icon layui-icon-delete"></i>删除</button>
             <button class="layui-btn layui-bg-cyan" lay-event="time1"><i class="layui-icon layui-icon-edit"></i>编辑时间</button>
-        <%--</sec:authorize>--%>
-        <%--<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">--%>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
             <button class="layui-btn layui-bg-blue" lay-event="success1"><i class="layui-icon layui-icon-ok"></i>完成</button>
-        <%--</sec:authorize>--%>
+        </sec:authorize>
     </div>
 </script>
 
 <!--员工插入工具-->
 <script type="text/html" id="userDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
-        <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER')">
+            <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+        </sec:authorize>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
+            <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
+        </sec:authorize>
     </div>
 </script>
 
@@ -873,7 +888,7 @@
 </script>
 
 <script>
-    var username = "<%=session.getAttribute("account")%>";
+    var user_ID = "<%=session.getAttribute("account")%>";
     var account = "<%=session.getAttribute("username")%>";
     var projectID = "<%=session.getAttribute("ID")%>";
 </script>

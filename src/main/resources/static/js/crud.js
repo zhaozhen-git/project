@@ -4,7 +4,8 @@ var project;
 
 //关键节点id
 var event;
-//项目完成数
+
+var Index;
 
 
 
@@ -63,62 +64,62 @@ function calendar(){
 
 
 
-function sentMsg(){
-    var project_name = $("#project_name").val();
-    var project_director = $("#project_director").text();
-    var project_duringtime = $("#project_duringtime").val();
-    if(project_name===""){
-        layer.msg("任务名不能为空");
-    }else if(project_director===""){
-        layer.msg("负责人不能为空");
-    }else if(project_duringtime===""){
-        layer.msg("完成周期不能为空");
-    }else{
-        $.ajax({
-            type: "post",
-            url: "/insertProject",//对应controller的URL
-            async: false,
-            dataType: 'json',
-            data: {
-                "project_name":$("#project_name").val(),
-                "project_director":$("#project_director").text(),
-                "project_duringtime":$("#project_duringtime").val(),
-                "detailed_information":$("#detailed_information").val()
-            },
-            success: function (data) {
-                $("#unfinish").empty();
-                $("#finish").empty();
-                getDataList(data.id);
-                First();
-                $("dl#unfinish dd").removeClass("selected");
-                $("dl#finish dd").removeClass("selected");
-                $("#"+data.id).parent().addClass("selected");
-                project = data.id;
-                layer.open({
-                    content:'<div style="text-align:center;padding:30px;font-size:16px;"><img src="../../img/1234.png"><i>恭喜你创建成功！</br>你可以预览计划日历或者添加事件节点。</i></div>'
-                    ,area:['400px','250px']
-                    ,btn:['预览任务计划','继续编辑事件节点']
-                    ,btn1:function(index){
-                        $('#page_1').removeClass("layui-this");
-                        $('#page_2').addClass("layui-this");
-                        $('#one').toggleClass("layui-show");
-                        $('#two').addClass("layui-show");
-                        layer.close(index);
-                        getDataList(project);
-                    }
-                    ,btn2:function(index,layero){
-                        $('#page_1').removeClass("layui-this");
-                        $('#page_3').addClass("layui-this");
-                        $('#one').toggleClass("layui-show");
-                        $('#three').addClass("layui-show");
-                        layer.close(index);
-                    }
-                });
-            }
-        });
-    }
-
-}
+// function sentMsg(){
+//     var project_name = $("#project_name").val();
+//     var project_director = $("#project_director").text();
+//     var project_duringtime = $("#project_duringtime").val();
+//     if(project_name===""){
+//         layer.msg("任务名不能为空");
+//     }else if(project_director===""){
+//         layer.msg("负责人不能为空");
+//     }else if(project_duringtime===""){
+//         layer.msg("完成周期不能为空");
+//     }else{
+//         $.ajax({
+//             type: "post",
+//             url: "/insertProject",//对应controller的URL
+//             async: false,
+//             dataType: 'json',
+//             data: {
+//                 "project_name":$("#project_name").val(),
+//                 "project_director":$("#project_director").text(),
+//                 "project_duringtime":$("#project_duringtime").val(),
+//                 "detailed_information":$("#detailed_information").val()
+//             },
+//             success: function (data) {
+//                 $("#unfinish").empty();
+//                 $("#finish").empty();
+//                 getDataList(data.id);
+//                 First();
+//                 $("dl#unfinish dd").removeClass("selected");
+//                 $("dl#finish dd").removeClass("selected");
+//                 $("#"+data.id).parent().addClass("selected");
+//                 project = data.id;
+//                 layer.open({
+//                     content:'<div style="text-align:center;padding:30px;font-size:16px;"><img src="../../img/1234.png"><i>恭喜你创建成功！</br>你可以预览计划日历或者添加事件节点。</i></div>'
+//                     ,area:['400px','250px']
+//                     ,btn:['预览任务计划','继续编辑事件节点']
+//                     ,btn1:function(index){
+//                         $('#page_1').removeClass("layui-this");
+//                         $('#page_2').addClass("layui-this");
+//                         $('#one').toggleClass("layui-show");
+//                         $('#two').addClass("layui-show");
+//                         layer.close(index);
+//                         getDataList(project);
+//                     }
+//                     ,btn2:function(index,layero){
+//                         $('#page_1').removeClass("layui-this");
+//                         $('#page_3').addClass("layui-this");
+//                         $('#one').toggleClass("layui-show");
+//                         $('#three').addClass("layui-show");
+//                         layer.close(index);
+//                     }
+//                 });
+//             }
+//         });
+//     }
+//
+// }
 
 
 
@@ -140,7 +141,7 @@ window.onload=function () {
                     var list = result.list;
                     $("#user").html("");
                     $.each(list,function (i,item) {
-                        $("#user").append("<option value="+item.user_account+">"+item.user_name+"</option>");
+                        $("#user").append("<option value="+item.user_ID+">"+item.user_name+"</option>");
                     })
                     form.render();
                 }
@@ -149,7 +150,7 @@ window.onload=function () {
 
         table.render({
             elem: '#test'
-            , url: '/getBrandList?id=' + project + '&username='+username
+            , url: '/getBrandList?id=' + project + '&username='+user_ID
             , toolbar: '#toolbarDemo'
             , title: '用户数据表'
             , cols: [
@@ -158,7 +159,7 @@ window.onload=function () {
                     , {field: 'event_id', title: 'ID', hide: true, width: 60, align: 'center'}
                     , {field: 'event_name', title: '事件节点名称', width: 200}
                     , {field: 'event_description', title: '节点详情描述', width: 340}
-                    , {field: 'event_groupLeader', title: '负责组长', width: 100}
+                    , {field: 'user_name', title: '负责组长', width: 100}
                     // , {field: 'event_phone', title: '电话', width: 180,align:'center'}
                     , {field: 'event_startTime', title: '开始时间', width: 120, align: 'center'}
                     , {
@@ -209,7 +210,7 @@ window.onload=function () {
         //个人待办事项
         table.render({
             elem: '#fourHtml'
-            , url: '/getExtraList?id=' + project + '&username='+username
+            , url: '/getExtraList?id=' + project + '&username='+user_ID
             , toolbar: '#toolDemo'
             , title: '用户数据表'
             , cols: [
@@ -217,7 +218,7 @@ window.onload=function () {
                     {type: 'checkbox', fixed: 'left'}
                     , {field: 'extra_ID', title: 'ID', hide: true, width: 60, align: 'center'}
                     , {field: 'extra_name', title: '事件节点名称', width: 200}
-                    , {field: 'extra_person', title: '负责人', width: 150}
+                    , {field: 'user_name', title: '负责人', width: 150}
                     , {field: 'extra_add', title: '创建人', width: 150}
                     , {field: 'extra_time', title: '时间', width: 120, align: 'center'}
                     , {
@@ -251,7 +252,7 @@ window.onload=function () {
                     {type: 'checkbox', fixed: 'left'}
                     , {field: 'extra_ID', title: 'ID', hide: true, width: 60, align: 'center'}
                     , {field: 'extra_name', title: '事件节点名称', width: 200}
-                    , {field: 'extra_person', title: '负责人', width: 150}
+                    , {field: 'user_name', title: '负责人', width: 150}
                     , {field: 'extra_add', title: '创建人', width: 150}
                     , {field: 'extra_time', title: '时间', width: 120, align: 'center'}
                     , {
@@ -285,7 +286,7 @@ window.onload=function () {
                     {type: 'checkbox', fixed: 'left'}
                     , {field: 'project_ID', title: 'ID', hide: true, width: 60, align: 'center'}
                     , {field: 'departmentID', title: '部门id', hide: true, width: 60, align: 'center'}
-                    , {field: 'user_account', title: '工号', hide: true, width: 120, align: 'center'}
+                    , {field: 'user_ID', title: '工号', hide: true, width: 120, align: 'center'}
                     , {field: 'departmentName', title: '部门名称', width: 120,align:'center'}
                     , {field: 'user_name', title: '姓名', width: 120,align:'center'}
                 ]
@@ -301,7 +302,7 @@ window.onload=function () {
         //头工具栏事件
         table.on('toolbar(test)', function (obj) {
             if (project === undefined) {
-                layer.alert('请选择一个项目', {icon: 2});
+                layer.msg('请选择一个项目', {icon: 2});
             } else {
                 var type = obj.event;
                 if (type === "add") {
@@ -351,12 +352,12 @@ window.onload=function () {
                             }
                         });
                     } else {
-                        layer.alert('请选择至少一个事件', {icon: 2});
+                        layer.msg('请选择至少一个事件', {icon: 2});
                     }
                 } else if (type === "update") {
                     var checkRow = table.checkStatus('textReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑操作', {icon: 2});
+                        layer.msg('选择一个事件进行编辑操作', {icon: 2});
                     } else {
                         var event_name = checkRow.data[0].event_name;
                         var group_leader = checkRow.data[0].event_groupLeader;
@@ -393,7 +394,7 @@ window.onload=function () {
                 } else if (type == "success") {
                     var checkRow = table.checkStatus('textReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行完成操作', {icon: 2});
+                        layer.msg('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].event_id;
                         var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
@@ -427,7 +428,7 @@ window.onload=function () {
                 } else if (type == "time") {
                     var checkRow = table.checkStatus('textReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑时间操作', {icon: 2});
+                        layer.msg('选择一个事件进行编辑时间操作', {icon: 2});
                     } else {
                         event = checkRow.data[0].event_id;
                         var start_time = checkRow.data[0].event_startTime;
@@ -450,7 +451,7 @@ window.onload=function () {
                 }else if (type == "progress") {
                     var checkRow = table.checkStatus('textReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑进度条操作', {icon: 2});
+                        layer.msg('选择一个事件进行编辑进度条操作', {icon: 2});
                     } else {
                         event = checkRow.data[0].event_id;
                         var event_progress = checkRow.data[0].event_progress;
@@ -472,14 +473,11 @@ window.onload=function () {
         })
 
 
-        table.on('toolbar(fourTable)', function (obj) {
-
-        })
 
         //待办理事件头工具栏事件
         table.on('toolbar(fourHtml)', function (obj) {
             if (project === undefined) {
-                layer.alert('请选择一个项目', {icon: 2});
+                layer.msg('请选择一个项目', {icon: 2});
             } else {
                 var type = obj.event;
                 if (type === "add1") {
@@ -503,7 +501,7 @@ window.onload=function () {
                             addPerson += o.extra_add + ",";
                         });
                         if(addPerson.indexOf(account)===-1){
-                            layer.alert('不是创建人，无法删除', {icon: 2});
+                            layer.msg('不是创建人，无法删除', {icon: 2});
                         }else{
                             ID = ID.substring(0, ID.length - 1);
                             var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
@@ -517,7 +515,7 @@ window.onload=function () {
                                             layer.close(node);
                                             layer.msg('删除成功', {icon: 1});
                                             table.reload('extraReload', {
-                                                url: '/getExtraList?id=' + project + '&username=' + username,
+                                                url: '/getExtraList?id=' + project + '&username=' + user_ID,
                                                 method: 'post',
                                             });
                                             table.reload('extra', {
@@ -532,7 +530,7 @@ window.onload=function () {
                                 btn2: function (index, layero) {
                                     layer.close(node);
                                     table.reload('extraReload', {
-                                        url: '/getExtraList?id=' + project + '&username=' + username,
+                                        url: '/getExtraList?id=' + project + '&username=' + user_ID,
                                         method: 'post',
                                     });
                                     table.reload('extra', {
@@ -543,16 +541,16 @@ window.onload=function () {
                             });
                         }
                     } else {
-                        layer.alert('请选择至少一个事件', {icon: 2});
+                        layer.msg('请选择至少一个事件', {icon: 2});
                     }
                 } else if (type === "update1") {
                     var checkRow = table.checkStatus('extraReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑操作', {icon: 2});
+                        layer.msg('选择一个事件进行编辑操作', {icon: 2});
                     } else {
                         var extra_add = checkRow.data[0].extra_add;
                         if(extra_add!=account){
-                            layer.alert('不是创建人，无法更改', {icon: 2});
+                            layer.msg('不是创建人，无法更改', {icon: 2});
                         }else{
                             var extra_name = checkRow.data[0].extra_name;
                             var extra_person = checkRow.data[0].extra_person;
@@ -584,7 +582,7 @@ window.onload=function () {
                 } else if (type == "success1") {
                     var checkRow = table.checkStatus('extraReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行完成操作', {icon: 2});
+                        layer.msg('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].extra_ID;
                         var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
@@ -598,7 +596,7 @@ window.onload=function () {
                                         layer.close(node);
                                         layer.msg('更改成功', {icon: 1});
                                         table.reload('extraReload', {
-                                            url: '/getExtraList?id=' + project+"&username="+username,
+                                            url: '/getExtraList?id=' + project+"&username="+user_ID,
                                             method: 'post',
                                         });
                                         table.reload('extra', {
@@ -613,7 +611,7 @@ window.onload=function () {
                             btn2: function (index, layero) {
                                 layer.close(node);
                                 table.reload('extraReload', {
-                                    url: '/getExtraList?id=' + project+"&username="+username,
+                                    url: '/getExtraList?id=' + project+"&username="+user_ID,
                                     method: 'post',
                                 });
                                 table.reload('extra', {
@@ -626,11 +624,11 @@ window.onload=function () {
                 } else if (type == "time1") {
                     var checkRow = table.checkStatus('extraReload');
                     if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                        layer.alert('选择一个事件进行编辑时间操作', {icon: 2});
+                        layer.msg('选择一个事件进行编辑时间操作', {icon: 2});
                     } else {
                         var extra_add = checkRow.data[0].extra_add;
                         if(extra_add!=account){
-                            layer.alert('不是创建人，无法编辑时间', {icon: 2});
+                            layer.msg('不是创建人，无法编辑时间', {icon: 2});
                         }else{
                             event = checkRow.data[0].extra_ID;
                             var extra_time = checkRow.data[0].extra_time;
@@ -654,7 +652,7 @@ window.onload=function () {
 
         table.on('toolbar(fiveHtml)', function (obj) {
             if (project === undefined) {
-                layer.alert('请选择一个用户', {icon: 2});
+                layer.msg('请选择一个用户', {icon: 2});
             } else {
                 var type = obj.event;
                 if (type === "add") {
@@ -673,7 +671,7 @@ window.onload=function () {
                     if (checkRow.data.length > 0) {
                         var ID = "";
                         $.each(checkRow.data, function (i, o) {
-                            ID += o.user_account + ",";
+                            ID += o.user_ID + ",";
                         });
                         ID = ID.substring(0, ID.length - 1);
                         var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
@@ -697,10 +695,10 @@ window.onload=function () {
                                                 $("#extraPerson").html("");
                                                 $("#extra_person").html("");
                                                 $.each(userList, function (i, item) {
-                                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
                                                 });
                                                 form.render();
                                             }
@@ -725,7 +723,7 @@ window.onload=function () {
                             }
                         });
                     } else {
-                        layer.alert('请选择至少一个事件', {icon: 2});
+                        layer.msg('请选择至少一个事件', {icon: 2});
                     }
                 }
             }
@@ -778,7 +776,7 @@ function First() {
     //未完成的项目
     $.ajax({
         type: "post",
-        url: "/getProjectList?username="+username,//对应controller的URL
+        url: "/getProjectList?username="+user_ID,//对应controller的URL
         async: false,
         dataType: 'json',
         success: function(data) {
@@ -939,6 +937,7 @@ function load() {
 function getDataList(id){
     //单击未完成项目
     $("dl#unfinish dd").click(function(){
+        $("dl#unfinish dd a").removeClass("selected");
         $(this).addClass("selected").siblings().removeClass("selected");
         // $("dl#finish dd").removeClass("selected");
     });
@@ -956,11 +955,11 @@ function getDataList(id){
         var form = layui.form;
         //执行重载
         table.reload('textReload', {
-            url: '/getBrandList?id=' + project + '&username='+ username,
+            url: '/getBrandList?id=' + project + '&username='+ user_ID,
             method: 'post',
         });
         table.reload('extraReload', {
-            url: '/getExtraList?id=' + project + '&username='+ username,
+            url: '/getExtraList?id=' + project + '&username='+ user_ID,
             method: 'post',
         });
         table.reload('extra', {
@@ -985,10 +984,10 @@ function getDataList(id){
                 $("#extraPerson").html("");
                 $("#extra_person").html("");
                 $.each(userList, function (i, item) {
-                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_name +"("+item.departmentName+")</option>");
+                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
                 });
                 form.render();
             }
@@ -1036,14 +1035,17 @@ function getDataList(id){
             for(var i=0;i<data[0].length;i++){
                 var obj = data[0];
                 $("#project_name").text(obj[i].project_name);
+                var project_start = obj[i].project_time.substring(0,11);
+                var project_end = obj[i].project_time.substring(11);
+                if(obj[i].user_cancel===0){
+                    continue;
+                }
                 var id = obj[i].event_id;
                 var event_name = obj[i].event_name;
-                var event_groupLeader = obj[i].event_groupLeader;
+                var user_name = obj[i].user_name;
                 var event_start = obj[i].event_startTime;
                 var event_end = obj[i].event_endTime;
                 var event_state = obj[i].event_state;
-                var project_start = obj[i].project_time.substring(0,11);
-                var project_end = obj[i].project_time.substring(11);
                 var event_success = obj[i].event_success;
                 var event_tab = obj[i].event_tab;
                 var event_progress = obj[i].event_progress;
@@ -1057,7 +1059,7 @@ function getDataList(id){
                 list.id  = id;
                 list.start = event_start;
                 list.end = event_end;
-                list.title = event_groupLeader+" ："+event_name;
+                list.title = user_name+" ："+event_name;
                 list.color = color;
                 dataList[i]=list;
                 if(event_start!=undefined){
@@ -1306,7 +1308,7 @@ function addEvent() {
         var table = layui.table;
 
         var eventName = $("#eventName").val();
-        var groupLeader = $("#groupLeader option:selected").text();
+        var groupLeader = $("#groupLeader option:selected").val();
         var dutingTime = $("#duringTime").val();
         if (eventName === "") {
             layer.msg("事件名称不能为空");
@@ -1335,7 +1337,7 @@ function addEvent() {
                     layer.closeAll();
                     layer.msg('添加成功', {icon: 1});
                     table.reload('textReload', {
-                        url: '/getBrandList?id=' + project + '&username='+username,
+                        url: '/getBrandList?id=' + project + '&username='+user_ID,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1355,7 +1357,7 @@ function addExtra() {
         var layer = layui.layer;
         var table = layui.table;
         var eventName = $("#extraName").val();
-        var groupLeader = $("#extraPerson option:selected").text();
+        var groupLeader = $("#extraPerson option:selected").val();
         var duringTime = $("#extraT").val();
         var addPerson = $("#addPerson").val();
         if (eventName === "") {
@@ -1381,7 +1383,7 @@ function addExtra() {
                     layer.closeAll();
                     layer.msg('添加成功', {icon: 1});
                     table.reload('extraReload', {
-                        url: '/getExtraList?id=' + project + '&username='+username,
+                        url: '/getExtraList?id=' + project + '&username='+user_ID,
                         method: 'post',
                     });
                     table.reload('extra', {
@@ -1421,7 +1423,7 @@ function updateEvent() {
                 data: {
                     "event_id": event,
                     "event_name": $("#event_name").val(),
-                    "group_leader": $("#group_leader option:selected").text(),
+                    "group_leader": $("#group_leader option:selected").val(),
                     // "phone_number": $("#phone_number").val(),
                     "during_time": $("#during_time").val(),
                     "event_description": $("#event_description").val(),
@@ -1433,7 +1435,7 @@ function updateEvent() {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
-                        url: '/getBrandList?id=' + project + '&username='+username,
+                        url: '/getBrandList?id=' + project + '&username='+user_ID,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1468,7 +1470,7 @@ function updateExtra() {
                 data: {
                     "extra_id": event,
                     "extra_name": extra_name,
-                    "extra_person": $("#extra_person option:selected").text(),
+                    "extra_person": $("#extra_person option:selected").val(),
                     "extra_time": extra_time,
                 },
                 async: false,
@@ -1477,7 +1479,7 @@ function updateExtra() {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('extraReload', {
-                        url: '/getExtraList?id=' + project + "&username="+username,
+                        url: '/getExtraList?id=' + project + "&username="+user_ID,
                         method: 'post',
                     });
                     table.reload('extra', {
@@ -1517,7 +1519,7 @@ function changeTime() {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
-                        url: '/getBrandList?id=' + project + '&username='+ username,
+                        url: '/getBrandList?id=' + project + '&username='+ user_ID,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1554,7 +1556,7 @@ function changeProgress() {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
-                        url: '/getBrandList?id=' + project + '&username='+username,
+                        url: '/getBrandList?id=' + project + '&username='+user_ID,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1590,7 +1592,7 @@ function changeExtraTime() {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('extraReload', {
-                        url: '/getExtraList?id=' + project+"&username="+username,
+                        url: '/getExtraList?id=' + project+"&username="+user_ID,
                         method: 'post',
                     });
                     table.reload('extra', {
@@ -1612,12 +1614,13 @@ function setPassword() {
             title: '修改密码'
             , type: 1
             , shift: 4
-            , area: ['650px', '300px'] //宽高
+            , area: ['700px', '400px'] //宽高
             , content: $('#passwordHtml')
         });
         $("#close_time2").click(function () {
             $("#password1").val("");
             $("#password2").val("");
+            $("#password3").val("");
             layer.close(node);
         });
     })
@@ -1625,41 +1628,49 @@ function setPassword() {
 
 function changePassword(){
     layui.use('layer', function () {
+        var layer = layui.layer;
         var pass1 = $("#password1").val();
         var pass2 = $("#password2").val();
-        $.ajax({
-            url:'/changePassword',
-            data:{'pass1':pass1,"pass2":pass2,"user":username},
-            success:function (data) {
-                data = JSON.parse(data);
-                if(data.msg==="0"){
-                    $("#password1").val("");
-                    $("#password2").val("");
-                    layer.alert("原密码错误",{icon: 2});
-                }else{
-                    layer.closeAll();
-                    layer.alert("成功,3秒后重新登录",{icon: 1});
-                    setTimeout('location.href="/"',3000); //跳转
-                }
+        var pass3 = $("#password3").val();
+        if(pass2!=pass3){
+            layer.msg("二次输入新密码不一致",{icon:2});
+            $("#password1").val("");
+            $("#password2").val("");
+            $("#password3").val("");
+        }else{
+            $.ajax({
+                url:'/changePassword',
+                data:{'pass1':pass1,"pass2":pass2,"user":user_ID},
+                success:function (data) {
+                    data = JSON.parse(data);
+                    if(data.msg==="0"){
+                        $("#password1").val("");
+                        $("#password2").val("");
+                        layer.msg("原密码错误",{icon: 2});
+                    }else{
+                        layer.closeAll();
+                        layer.msg("成功,3秒后重新登录",{icon: 1});
+                        setTimeout('location.href="/"',3000); //跳转
+                    }
 
-            }
-        })
+                }
+            })
+        }
     })
 }
 
-var index;
 
 function tip(msg,id) {
     layui.use('layer',function () {
         var layer = layui.layer;
-        index = layer.tips(msg,'#'+id,{tips:[1,'#0FA6d8']});
+        Index = layer.tips(msg,'#'+id,{tips:[1,'#0FA6d8']});
     })
 }
 
 function offTip() {
     layui.use('layer',function () {
         var layer = layui.layer;
-        layer.close(index);
+        layer.close(Index);
     })
 }
 
@@ -1679,7 +1690,7 @@ function insertUser() {
                 success:function (data) {
                     data = JSON.parse(data);
                     if(data.msg===1){
-                        layer.alert("用户已经存在,插入失败",{icon:2});
+                        layer.msg("用户已经存在,插入失败",{icon:2});
                     }else if(data.msg===0){
                         //加载用户列表
                         $.ajax({
@@ -1694,16 +1705,16 @@ function insertUser() {
                                 $("#extraPerson").html("");
                                 $("#extra_person").html("");
                                 $.each(userList, function (i, item) {
-                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                                    $("#groupLeader").append("<option value=" + item.user_ID + ">" + item.user_name +"("+item.departmentName+")</option>");
+                                    $("#group_leader").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                                    $("#extraPerson").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                                    $("#extra_person").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
                                 });
                                 form.render();
                             }
                         });
                         layer.closeAll();
-                        layer.alert("添加成功",{icon:1});
+                        layer.msg("添加成功",{icon:1});
                         table.reload('userReload', {
                             url: '/getUserList?id=' + project,
                             method: 'post',
@@ -1720,6 +1731,7 @@ function insertUser() {
 }
 
 
+//查看详情
 function onSpan(id) {
     layui.use('layer',function () {
         var layer = layui.layer;

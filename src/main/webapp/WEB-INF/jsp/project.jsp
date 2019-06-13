@@ -22,6 +22,9 @@
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a href="/crud">项目详情</a></li>
             <li class="layui-nav-item layui-this"><a href="/project">项目管理</a></li>
+            <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
+                <li class="layui-nav-item"><a href="/person">人员管理</a></li>
+            </sec:authorize>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -30,7 +33,7 @@
                     <%=session.getAttribute("username")%>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
-                    <dd><span onclick="setPassword()" style="color: #007DDB;cursor: pointer">安全设置</span></dd>
+                    <dd><span onclick="setPassword()" style="color: #00db42;cursor: pointer">修改密码</span></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/">退出登录</a></li>
@@ -46,6 +49,11 @@
                 <table id="test" lay-filter="test"></table>
             </div>
         </div>
+    </div>
+
+    <div class="layui-footer" style="left:0px">
+        <!-- 底部固定区域 -->
+        © 捷昌线性驱动有限公司
     </div>
 
 </div>
@@ -367,6 +375,14 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-xs-4 control-label" style="margin-left: 2px;">确认新密码:</label>
+            <div class="col-xs-6">
+                <div class="layui-input-inline">
+                    <input autocomplete="off" type="password" id="password3" name="" style="margin-top: 7px;" placeholder="请输入确认新密码">
+                </div>
+            </div>
+        </div>
     </form>
 
     <div class="modal-footer">
@@ -382,9 +398,13 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_DEMAND')">
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_MANAGER')">
             <button class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+        </sec:authorize>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER','ROLE_DEMAND','ROLE_MANAGER')">
             <button class="layui-btn layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+        </sec:authorize>
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPPLIER')">
             <button class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</button>
         </sec:authorize>
         <sec:authorize access="hasAnyRole('ROLE_DEMAND','ROLE_ADMIN')">
@@ -395,7 +415,7 @@
 
 </body>
 <script>
-    var username = "<%=session.getAttribute("account")%>";
+    var user_ID = "<%=session.getAttribute("account")%>";
     var rolename = "<%=session.getAttribute("rolename")%>";
 </script>
 <script src="js/project.js"></script>

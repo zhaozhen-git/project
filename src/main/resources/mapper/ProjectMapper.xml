@@ -8,7 +8,7 @@
     <select id="getProjectList" resultType="map">
         select distinct p.* from projects p left join project_user pu on p.project_ID = pu.project_ID where
         <if test="username!='admin'">
-            p.project_director=#{username} or p.project_supplier=#{username} or p.project_person=#{username} or p.project_demand=#{username} or pu.user_account=#{username} and
+            p.project_director=#{username} or p.project_supplier=#{username} or p.project_person=#{username} or p.project_demand=#{username} or pu.user_ID=#{username} and
         </if>
         p.project_state = 0
     </select>
@@ -18,7 +18,10 @@
     </select>
 
     <select id="getProjectOne" resultType="map">
-        select p.*,b.event_id,b.event_name,b.event_groupLeader,b.event_startTime,b.event_endTime,b.event_state,b.event_success,b.event_tab,b.event_progress from projects p left join event b on p.project_ID = b.project_ID where p.project_ID=#{id}
+        select p.*,u.user_name,u.user_cancel,b.event_id,b.event_name,b.event_startTime,b.event_endTime,b.event_state,b.event_success,b.event_tab,b.event_progress from projects p
+        left join event b on p.project_ID = b.project_ID
+        left join user u on b.event_groupLeader = u.user_ID
+        where p.project_ID=#{id}
         order by b.event_startTime asc
     </select>
 
@@ -158,9 +161,11 @@
 
 
     <select id="getAllProject" resultType="map">
-        select distinct p.* from projects p left join project_user pu on p.project_ID = pu.project_ID
+        select distinct p.*,u.user_name from projects p
+        left join project_user pu on p.project_ID = pu.project_ID
+        left join user u on p.project_director = u.user_ID
         <if test="username!='admin'">
-          where p.project_director=#{username} or p.project_supplier=#{username} or p.project_person=#{username} or p.project_demand=#{username} or pu.user_account=#{username}
+          where p.project_director=#{username} or p.project_supplier=#{username} or p.project_person=#{username} or p.project_demand=#{username} or pu.user_ID=#{username}
         </if>
     </select>
 
@@ -221,7 +226,7 @@
     </update>
 
     <select id="getAccount" resultType="map">
-        select u.user_name,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id  where user_account=#{name}
+        select u.user_name,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id  where u.user_ID=#{name}
     </select>
 
     <select id="getExcelList" resultType="map">
@@ -229,18 +234,18 @@
         e.event_name,e.event_startTime,e.event_endTime,e.event_description,e.event_state,e.event_tab,e.event_success
         from project_user pu
         left join department d on pu.departmentID = d.departmentID
-        left join user u on pu.user_account = u.user_account
+        left join user u on pu.user_ID = u.user_ID
         left join projects p on pu.project_ID = p.project_ID
-        left join event e on pu.project_ID = e.project_ID and u.user_account = e.event_groupLeader
-        where pu.project_ID = #{id}
+        left join event e on pu.project_ID = e.project_ID and u.user_ID = e.event_groupLeader
+        where pu.project_ID = #{id} and u.user_cancel=1
     </select>
 
     <select id="getExtraList" resultType="map">
         select u.user_ID,ex.extra_ID,ex.extra_name,ex.extra_time,ex.extra_tab,ex.extra_success
         from project_user pu
-        left join user u on pu.user_account = u.user_account
-        left join extra ex on pu.project_ID = ex.project_ID and u.user_account = ex.extra_person
-        where pu.project_ID = #{id}
+        left join user u on pu.user_ID= u.user_ID
+        left join extra ex on pu.project_ID = ex.project_ID and u.user_ID = ex.extra_person
+        where pu.project_ID = #{id} and u.user_cancel=1
     </select>
 
     <select id="getProjectMsg" resultType="map">

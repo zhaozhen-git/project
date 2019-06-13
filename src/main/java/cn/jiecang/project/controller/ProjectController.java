@@ -1,7 +1,5 @@
 package cn.jiecang.project.controller;
 
-import cn.jiecang.project.dao.BrandMapper;
-import cn.jiecang.project.dao.ExtraMapper;
 import cn.jiecang.project.service.BrandService;
 import cn.jiecang.project.service.ExtraService;
 import cn.jiecang.project.service.ProjectService;
@@ -241,6 +239,29 @@ public class ProjectController {
         response.getWriter().println(obj.toString());
     }
 
+
+
+
+    @RequestMapping("/person")
+    public String getPersonHtml(HttpSession session){
+        try{
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            Map<String,Object> map = new HashMap<>();
+            map.put("name",name);
+            Map<String,Object> username = projectService.getAccount(map);
+            session.setAttribute("username",username.get("user_name"));
+            session.setAttribute("account",name);
+            session.setAttribute("rolename",username.get("name"));
+            logger.info("加载用户名成功");
+        }catch (Exception e){
+            logger.error("加载用户名失败");
+            return "redirect:/login";
+        }
+        return "/jsp/person";
+    }
 
 
 
@@ -602,10 +623,9 @@ public class ProjectController {
                                         map3.put("desc", desc);
                                         map3.put("user_ID", userid);
                                         //判断是否包含
-                                        if (!list1.get(s).containsKey("extra_name")) {
+                                        if (!list1.get(k).containsKey("extra_name")) {
 
                                         } else {
-                                            Map<String, Object> map4 = new HashMap<>();
                                             Object object = list2.get(s).get("values");
                                             if(object.toString().equals("")){
                                                 list2.remove(s);

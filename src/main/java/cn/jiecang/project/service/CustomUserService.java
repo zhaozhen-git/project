@@ -34,7 +34,7 @@ public class CustomUserService implements UserDetailsService {
             String role = list.get(0).get("name").toString();
             String password = list.get(0).get("user_password").toString();
             Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(role);
-            return new User(list.get(0).get("user_account").toString(),password, authorities);
+            return new User(list.get(0).get("user_ID").toString(),password, authorities);
         }
     }
 }

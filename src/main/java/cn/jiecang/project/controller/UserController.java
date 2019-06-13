@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -184,7 +185,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/getUserList")
-    public Map<String,Object> getUserList(HttpServletResponse response,HttpServletRequest request){
+    public Map<String,Object> getUserList(HttpServletRequest request){
         String id = request.getParameter("id");
         Map<String,Object> map = new HashMap<>();
         map.put("id",id);
@@ -288,6 +289,7 @@ public class UserController {
 
 
 
+    //获取项目成员
     @RequestMapping("/getProjectUser")
     public void getProjectUser(HttpServletResponse response,HttpServletRequest request){
         String id = request.getParameter("id");
@@ -296,6 +298,174 @@ public class UserController {
         JSONObject obj = new JSONObject();
         try{
             List<Map<String,Object>> list = userService.getProjectUser(map);
+            obj.put("list", list);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //获取所有人员
+    @ResponseBody
+    @RequestMapping("/getPersonList")
+    public Map<String,Object> getPersonList(){
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            List<Map<String,Object>> list = userService.getPersonList();
+            resultMap.put("data", list);
+            resultMap.put("code", "0");
+            resultMap.put("msg", "");
+            resultMap.put("count", "1");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultMap;
+    }
+
+
+    //插入单个用户
+    @RequestMapping("/insertPerson")
+    public void insertPerson(HttpServletRequest request,HttpServletResponse response){
+        String userId = request.getParameter("user_id");
+        String username = request.getParameter("user_name");
+        String departmentId = request.getParameter("department_id");
+        String role = request.getParameter("role");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userId",userId);
+        map.put("username",username);
+        map.put("departmentId",departmentId);
+        map.put("role",role);
+        JSONObject obj = new JSONObject();
+        try {
+            //判断工号是否已经占用
+            int x = userService.boolPerson(map);
+            if(x>0){
+                obj.put("msg","0");
+            }else{
+                userService.insertPerson(map);
+                userService.insertRole(map);
+                obj.put("msg","1");
+            }
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //更改用户信息
+    @RequestMapping("/updatePerson")
+    public void updatePerson(HttpServletResponse response,HttpServletRequest request){
+        String user_id = request.getParameter("user_id");
+        String user_name = request.getParameter("user_name");
+        String department_id = request.getParameter("department_id");
+        String role = request.getParameter("role");
+        Map<String,Object> map = new HashMap<>();
+        map.put("user_id",user_id);
+        map.put("user_name",user_name);
+        map.put("department_name",department_id);
+        map.put("role",role);
+        JSONObject obj = new JSONObject();
+        try{
+            userService.updatePerson(map);
+            userService.updateRole(map);
+            obj.put("msg","成功");
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //删除用户
+    @RequestMapping("/deletePerson")
+    public void deletePerson(HttpServletRequest request,HttpServletResponse response){
+        String id = request.getParameter("id");
+        String ID[] = id.split("[,]");
+        List<Map<String,Object>> list = new ArrayList<>();
+        for(int i =0;i<ID.length;i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("ID",ID[i]);
+            list.add(map);
+        }
+        try {
+            JSONObject obj = new JSONObject();
+            int x = userService.boolProject(list);
+            if(x>0){
+                obj.put("msg", 1);
+            }else{
+                userService.deletePerson(list);
+                userService.deleteRole(list);
+                obj.put("msg", 0);
+            }
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //注销用户
+    @RequestMapping("/cancelPerson")
+    public void cancelPerson(HttpServletRequest request,HttpServletResponse response){
+        String id = request.getParameter("id");
+        String ID[] = id.split("[,]");
+        List<Map<String,Object>> list = new ArrayList<>();
+        for(int i =0;i<ID.length;i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("ID",ID[i]);
+            list.add(map);
+        }
+        try {
+            userService.cancelPerson(list);
+            JSONObject obj = new JSONObject();
+            obj.put("msg", 0);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    //启用用户
+    @RequestMapping("/usePerson")
+    public void usePerson(HttpServletRequest request,HttpServletResponse response){
+        String id = request.getParameter("id");
+        String ID[] = id.split("[,]");
+        List<Map<String,Object>> list = new ArrayList<>();
+        for(int i =0;i<ID.length;i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("ID",ID[i]);
+            list.add(map);
+        }
+        try {
+            userService.usePerson(list);
+            JSONObject obj = new JSONObject();
+            obj.put("msg", 0);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println(obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @RequestMapping("/getRole")
+    public void getRole(HttpServletResponse response){
+        try{
+            List<Map<String,Object>> list = userService.getRole();
+            JSONObject obj = new JSONObject();
             obj.put("list", list);
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().println(obj.toString());

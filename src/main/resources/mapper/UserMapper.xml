@@ -6,11 +6,15 @@
 
 
     <select id="getUserList" resultType="map">
-        select u.*,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id where u.user_cancel=1
+        select u.*,r.name,d.departmentName from user u
+        left join user_role ur on u.user_ID = ur.user_ID
+        left join role r on ur.role_ID = r.id
+        left join department d on u.departmentID = d.departmentID
+        where u.user_cancel=1
     </select>
 
     <select id="findUserName" resultType="map">
-        select u.user_account,u.user_password,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id where u.user_account = #{username}
+        select u.user_ID,u.user_password,r.name from user u left join user_role ur on u.user_ID = ur.user_ID left join role r on ur.role_ID = r.id where u.user_ID = #{username} and u.user_cancel=1
     </select>
 
 
@@ -19,19 +23,19 @@
     </select>
 
     <select id="getUserPassword" resultType="String">
-        select user_password from user where user_account = #{user}
+        select user_password from user where user_ID = #{user}
     </select>
 
     <update id="changePassword">
-        update user set user_password = #{pass2} where user_account = #{user}
+        update user set user_password = #{pass2} where user_ID = #{user}
     </update>
 
     <select id="getUser" resultType="map">
-        select pu.*,d.departmentName,u.user_name from project_user pu left join user u on pu.user_account = u.user_account left join department d on pu.departmentID = d.departmentID where pu.project_ID = #{id}
+        select pu.*,d.departmentName,u.user_name from project_user pu left join user u on pu.user_ID = u.user_ID left join department d on pu.departmentID = d.departmentID where pu.project_ID = #{id} and u.user_cancel=1
     </select>
 
     <delete id="deleteUser" parameterType="map">
-        delete from project_user where (user_account,project_ID) in
+        delete from project_user where (user_ID,project_ID) in
         <foreach collection="list" item="li" open="("
                  separator="," close=")">
             (#{li.ID},#{li.project})
@@ -43,20 +47,114 @@
     </select>
 
     <select id="getDepartmentUser" resultType="map">
-        select * from user where departmentID = #{department}
+        select * from user where departmentID = #{department} and user_cancel=1
     </select>
 
     <insert id="insertUser">
-        insert into project_user(project_ID,user_account,departmentID) values(#{id},#{user},#{department})
+        insert into project_user(project_ID,user_ID,departmentID) values(#{id},#{user},#{department})
     </insert>
 
     <select id="boolUser" resultType="int">
-        select count(*) from project_user where project_ID = #{id} and user_account = #{user} and departmentID = #{department}
+        select count(*) from project_user where project_ID = #{id} and user_ID = #{user} and departmentID = #{department}
     </select>
     
     
     <select id="getProjectUser" resultType="map">
-        select p.user_account,u.user_ID from project_user p left join user u on p.user_account = u.user_account where p.project_ID = #{id}
+        select u.user_name,u.user_ID,d.departmentName from project_user p left join user u on p.user_ID = u.user_ID left join department d on p.departmentID = d.departmentID where p.project_ID = #{id} and u.user_cancel=1
     </select>
 
+    <select id="getPersonList" resultType="map">
+        select u.user_ID,u.user_name as username,u.user_cancel,d.departmentName as department,r.role_ID as role,ro.name from user u
+        left join department d on u.departmentID=d.departmentID
+        left join user_role r on u.user_ID = r.user_ID
+        left join role ro on r.role_ID = ro.id
+    </select>
+
+    <insert id="insertPerson">
+        insert into user(user_ID,user_name,user_password,departmentID) values(#{userId},#{username},'123',#{departmentId})
+    </insert>
+
+    <update id="updatePerson">
+        update user set user_name=#{user_name},departmentID=#{department_name} where user_ID = #{user_id}
+    </update>
+
+    <delete id="deletePerson" parameterType="map">
+        delete from user where user_ID in
+        <foreach collection="list" item="li" open="(" separator="," close=")">
+            #{li.ID}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRole" parameterType="map">
+        delete from user_role where user_ID in
+        <foreach collection="list" item="li" open="(" separator="," close=")">
+            #{li.ID}
+        </foreach>
+    </delete>
+
+    <select id="boolPerson" resultType="int">
+        select count(*) from user where user_ID = #{userId}
+    </select>
+
+    <select id="getDepartmentID" resultType="String">
+        select departmentID from department where departmentName = #{department}
+    </select>
+
+    <insert id="info">
+        insert into user(user_ID,user_name,user_password,departmentID) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.user_id},#{item.user_name},'123',#{item.departmentID})
+        </foreach>
+    </insert>
+
+    <insert id="infoRole">
+        insert into user_role(user_ID,role_ID) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.user_id},'2')
+        </foreach>
+    </insert>
+
+    <select id="getRole" resultType="map">
+        select * from role
+    </select>
+    
+    
+    <insert id="insertRole">
+        insert into user_role(user_ID,role_ID) values (#{userId},#{role});
+    </insert>
+
+    <update id="updateRole" parameterType="map">
+        update user_role set role_ID = #{role} where user_ID = #{user_id}
+    </update>
+
+    <update id="cancelPerson" parameterType="map">
+          update user set user_cancel=0 where user_ID in
+          <foreach collection="list" item="item" index="index" separator="," open="("  close=")">
+            #{item.ID}
+          </foreach>
+    </update>
+
+
+    <update id="usePerson" parameterType="map">
+        update user set user_cancel=1 where user_ID in
+        <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+            #{item.ID}
+        </foreach>
+    </update>
+
+
+    <select id="boolProject" resultType="int">
+        select count(*) from projects where project_director in
+        <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+            #{item.ID}
+        </foreach>
+        or project_supplier in
+        <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+            #{item.ID}
+        </foreach>
+        or project_demand in
+        <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+            #{item.ID}
+        </foreach>
+    </select>
 </mapper>

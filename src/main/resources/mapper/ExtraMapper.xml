@@ -6,7 +6,7 @@
 
 
     <select id="getExtra" resultType="map">
-        select e.* from extra e left join projects p on e.project_ID = p.project_ID where e.project_ID = #{id}
+        select e.*,u.user_name from extra e left join projects p on e.project_ID = p.project_ID left join user u on e.extra_person = u.user_ID where e.project_ID = #{id} and u.user_cancel=1
         <if test="username!='admin' and username!='' and username!=null and id!='undefined'">
             and (e.extra_person = #{username} or p.project_director = #{username} or p.project_supplier = #{username})
         </if>
@@ -50,7 +50,7 @@
 
 
     <select id="getExtraHtml" resultType="map">
-        select * from extra where project_ID = #{id}
+        select ex.*,u.user_name from extra ex left join user u on ex.extra_person = u.user_ID where project_ID = #{id} and u.user_cancel=1
     </select>
 
 

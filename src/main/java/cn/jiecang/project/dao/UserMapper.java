@@ -33,4 +33,34 @@ public interface UserMapper {
     int boolUser(Map<String,Object> map);
 
     List<Map<String,Object>> getProjectUser(Map<String,Object> map);
+
+    List<Map<String,Object>> getPersonList();
+
+    void insertPerson(Map<String,Object> map);
+
+    void insertRole(Map<String,Object> map);
+
+    int boolPerson(Map<String,Object> map);
+
+    void updatePerson(Map<String,Object> map);
+
+    void updateRole(Map<String,Object> map);
+
+    int boolProject(List<Map<String,Object>> list);
+
+    void deletePerson(List<Map<String,Object>> list);
+
+    void deleteRole(List<Map<String,Object>> list);
+
+    void cancelPerson(List<Map<String,Object>> list);
+
+    void usePerson(List<Map<String,Object>> list);
+
+    List<Map<String,Object>> getRole();
+
+    void info(List<Map<String,Object>> list);
+
+    void infoRole(List<Map<String,Object>> list);
+
+    String getDepartmentID(Map<String,Object> map);
 }

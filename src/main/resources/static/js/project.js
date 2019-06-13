@@ -34,16 +34,16 @@ layui.use('element', function(){
             $.each(userList, function (i, item) {
             });
             $.each(supplierList, function (i, item) {
-                $("#project_supplier").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#projectSupplier").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                $("#project_supplier").append("<option value=" + item.user_ID + ">" + item.user_name +"("+item.departmentName+")</option>");
+                $("#projectSupplier").append("<option value=" + item.user_ID + ">" + item.user_name +"("+item.departmentName+")</option>");
             });
             $.each(demandList, function (i, item) {
-                $("#project_demand").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#projectDemand").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                $("#project_demand").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                $("#projectDemand").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
             });
             $.each(managerList, function (i, item) {
-                $("#project_director").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
-                $("#projectDirector").append("<option value=" + item.user_ID + ">" + item.user_account + "</option>");
+                $("#project_director").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
+                $("#projectDirector").append("<option value=" + item.user_ID + ">" + item.user_name + "("+item.departmentName+")</option>");
             });
         }
     });
@@ -326,7 +326,7 @@ layui.use(['table','layer','form'], function() {
     var form = layui.form;
     table.render({
         elem: '#test'
-        , url: '/getAllProject?username='+username
+        , url: '/getAllProject?username='+user_ID
         , toolbar: '#toolbarDemo'
         , title: '用户数据表'
         , cols: [
@@ -334,7 +334,7 @@ layui.use(['table','layer','form'], function() {
                 {type: 'checkbox', fixed: 'left'}
                 , {field: 'project_ID', title: 'ID', hide: true, width: 60, align: 'center'}
                 , {field: 'project_name', title: '项目名称', width: 180,align:'center'}
-                , {field: 'project_director', title: '项目负责人', width: 180,align:'center'}
+                , {field: 'user_name', title: '项目负责人', width: 180,align:'center'}
                 , {field: 'project_time', title: '任务完成周期', width: 240, align: 'center'}
                 , {field: 'project_detail', title: '备注', width: 300,align:'center'}
                 , {
@@ -390,7 +390,7 @@ layui.use(['table','layer','form'], function() {
                                     layer.close(node);
                                     layer.msg('删除成功', {icon: 1});
                                     table.reload('textReload', {
-                                        url: '/getAllProject?username='+username,
+                                        url: '/getAllProject?username='+user_ID,
                                         method: 'post'
                                     });
                                 }
@@ -399,7 +399,7 @@ layui.use(['table','layer','form'], function() {
                         btn2: function (index, layero) {
                             layer.close(node);
                             table.reload('textReload', {
-                                url: '/getAllProject?username='+username,
+                                url: '/getAllProject?username='+user_ID,
                                 method: 'post'
                             });
                         }
@@ -423,7 +423,7 @@ layui.use(['table','layer','form'], function() {
                         $("#project_detail").attr("readonly","readonly");
                     }
                     var project_name = checkRow.data[0].project_name;
-                    var project_director = checkRow.data[0].project_director;
+                    var user_name = checkRow.data[0].user_name;
                     var project_time = checkRow.data[0].project_time;
                     var project_supplier = checkRow.data[0].project_supplier;
                     var supplier_phone = checkRow.data[0].supplier_phone;
@@ -434,9 +434,9 @@ layui.use(['table','layer','form'], function() {
                     var demand_data = checkRow.data[0].demand_data;
                     project = checkRow.data[0].project_ID;
                     $("#project_name").val(project_name);
-                    $("#project_director option:contains('"+project_director+"')").attr("selected",true);
-                    $("#project_supplier option:contains('"+project_supplier+"')").attr("selected",true);
-                    $("#project_demand option:contains('"+project_demand+"')").attr("selected",true);
+                    $("#project_director option:contains('"+user_name+"')").attr("selected",true);
+                    $("#project_supplier option[value="+project_supplier+"]").attr("selected",true);
+                    $("#project_demand option[value="+project_demand+"]").attr("selected",true);
                     form.render();
                     $("#supplier_phone").val(supplier_phone);
                     $("#demand_phone").val(demand_phone);
@@ -452,7 +452,6 @@ layui.use(['table','layer','form'], function() {
                         async: false,
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
                             var supplierData = data.list;
                             var demandData = data.list1;
                             if(supplierData!=undefined){
@@ -476,11 +475,17 @@ layui.use(['table','layer','form'], function() {
                                 , area: ['1200px', 'auto'] //宽高
                                 , content: $('#kkkkk')
                                 ,cancel:function () {
-                                    location.reload();
+                                    table.reload('textReload', {
+                                        url: '/getAllProject?username='+user_ID,
+                                        method: 'post'
+                                    });
                                 }
                             });
                             $("#close").click(function () {
-                                location.reload();
+                                table.reload('textReload', {
+                                    url: '/getAllProject?username='+user_ID,
+                                    method: 'post'
+                                });
                                 layer.close(node);
                             });
                         }
@@ -507,7 +512,7 @@ layui.use(['table','layer','form'], function() {
                                         layer.close(node);
                                         layer.msg('更改成功', {icon: 1});
                                         table.reload('textReload', {
-                                            url: '/getAllProject?username='+username,
+                                            url: '/getAllProject?username='+user_ID,
                                             method: 'post'
                                         });
                                     }
@@ -517,7 +522,7 @@ layui.use(['table','layer','form'], function() {
                         btn2: function (index, layero) {
                             layer.close(node);
                             table.reload('textReload', {
-                                url: '/getAllProject?username=' + username,
+                                url: '/getAllProject?username=' + user_ID,
                                 method: 'post'
                             });
                         }
@@ -603,8 +608,6 @@ function demandDel(index){
 
 //编辑项目
 function updateProject() {
-    console.log(suData+data1);
-    console.log(deData+data2);
     layui.use(['layer', 'table'], function () {
         var layer = layui.layer;
         var table = layui.table;
@@ -647,10 +650,9 @@ function updateProject() {
                 dataType: 'json',
                 success: function (data) {
                     layer.closeAll();
-                    location.reload();
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
-                        url: '/getAllProject?username='+username,
+                        url: '/getAllProject?username='+user_ID,
                         method: 'post'
                     });
                 }
@@ -693,11 +695,11 @@ function sentMsg(){
                 dataType: 'json',
                 data: {
                     "projectName":projectName,
-                    "projectDirector":$("#projectDirector option:selected").text(),
+                    "projectDirector":projectDirector,
                     "projectTime":projectTime,
-                    "projectSupplier":$("#projectSupplier option:selected").text(),
+                    "projectSupplier":projectSupplier,
                     "supplierPhone":supplierPhone,
-                    "projectDemand":$("#projectDemand option:selected").text(),
+                    "projectDemand":projectDemand,
                     "demandPhone":demandPhone,
                     "projectDetail":projectDetail,
                     "data1":data1,
@@ -705,9 +707,8 @@ function sentMsg(){
                 },
                 success: function (data) {
                     layer.closeAll();
-                    location.reload();
                     table.reload('textReload', {
-                        url: '/getAllProject?username='+username,
+                        url: '/getAllProject?username='+user_ID,
                         method: 'post'
                     });
                 }
@@ -724,12 +725,13 @@ function setPassword() {
             title: '修改密码'
             , type: 1
             , shift: 4
-            , area: ['650px', '300px'] //宽高
+            , area: ['700px', '400px'] //宽高
             , content: $('#passwordHtml')
         });
         $("#close_time2").click(function () {
             $("#password1").val("");
             $("#password2").val("");
+            $("#password3").val("");
             layer.close(node);
         });
     })
@@ -737,24 +739,34 @@ function setPassword() {
 
 function changePassword(){
     layui.use('layer', function () {
+        var layer = layui.layer;
         var pass1 = $("#password1").val();
         var pass2 = $("#password2").val();
-        $.ajax({
-            url:'/changePassword',
-            data:{'pass1':pass1,"pass2":pass2,"user":username},
-            success:function (data) {
-                data = JSON.parse(data);
-                if(data.msg==="0"){
-                    $("#password1").val("");
-                    $("#password2").val("");
-                    layer.alert("原密码错误",{icon: 2});
-                }else{
-                    layer.closeAll();
-                    layer.alert("成功,3秒后重新登录",{icon: 1});
-                    setTimeout('location.href="/"',3000); //跳转
-                }
+        var pass3 = $("#password3").val();
+        if(pass2!=pass3){
+            layer.msg("二次输入新密码不一致",{icon:2});
+            $("#password1").val("");
+            $("#password2").val("");
+            $("#password3").val("");
+        }else{
+            $.ajax({
+                url:'/changePassword',
+                data:{'pass1':pass1,"pass2":pass2,"user":user_ID},
+                success:function (data) {
+                    data = JSON.parse(data);
+                    if(data.msg==="0"){
+                        $("#password1").val("");
+                        $("#password2").val("");
+                        layer.msg("原密码错误",{icon: 2});
+                    }else{
+                        layer.closeAll();
+                        layer.msg("成功,3秒后重新登录",{icon: 1});
+                        setTimeout('location.href="/"',3000); //跳转
+                    }
 
-            }
-        })
+                }
+            })
+        }
+
     })
 }

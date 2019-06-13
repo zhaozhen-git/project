@@ -1,8 +1,11 @@
 package cn.jiecang.project.controller;
+import cn.jiecang.project.service.UserService;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -10,13 +13,19 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
 public class UploadController {
 
+
+    @Autowired
+    UserService userService;
 
     private static Logger logger = Logger.getLogger(UploadController.class);
 
@@ -63,5 +72,25 @@ public class UploadController {
             }
         }
         return res;
+    }
+
+
+
+
+    @RequestMapping(value="/uploadFile")
+    public void uploadFile(@RequestParam("file") MultipartFile file, HttpServletResponse response) throws Exception{
+        String fileName = file.getOriginalFilename();
+        JSONObject obj = new JSONObject();
+        response.setContentType("text/html;charset=UTF-8");
+        try{
+            userService.info(fileName,file);
+            obj.put("res","0");
+            response.getWriter().println(obj);
+        }catch (Exception e){
+            obj.put("res",e.getCause().getMessage());
+            response.getWriter().println(obj);
+            e.printStackTrace();
+        }
+
     }
 }
