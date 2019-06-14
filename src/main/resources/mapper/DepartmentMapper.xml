@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.DepartmentMapper">
+
+
+    <select id="getDepartment" resultType="map">
+        select * from department
+    </select>
+
+
+    <select id="boolId" resultType="int">
+        select count(*) from department where departmentID = #{department_id}
+    </select>
+
+    <insert id="insertDepartment">
+        insert into department(departmentID,departmentName) values(#{department_id},#{department_name})
+    </insert>
+
+    <update id="updateDepartment">
+        update department set departmentName = #{departmentName} where departmentID = #{departmentID}
+    </update>
+
+
+    <delete id="deleteDepartment">
+        delete from department where departmentID in
+        <foreach collection="list" item="li" open="(" separator="," close=")">
+            #{li.ID}
+        </foreach>
+    </delete>
+</mapper>

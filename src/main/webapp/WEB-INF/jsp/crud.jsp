@@ -59,6 +59,9 @@
             <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
                 <li class="layui-nav-item"><a href="/person">人员管理</a></li>
             </sec:authorize>
+            <sec:authorize access="hasAnyRole('ROLE_ADMIN')">
+                <li class="layui-nav-item"><a href="/department">部门管理</a></li>
+            </sec:authorize>
             <%--<li class="layui-nav-item">--%>
                 <%--<a class="" href="javascript:;">进行中的计划任务</a>--%>
                 <%--<dl class="layui-nav-child" id="unfinish">--%>

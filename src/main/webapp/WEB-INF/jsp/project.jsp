@@ -25,6 +25,9 @@
             <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">
                 <li class="layui-nav-item"><a href="/person">人员管理</a></li>
             </sec:authorize>
+            <sec:authorize access="hasAnyRole('ROLE_ADMIN')">
+                <li class="layui-nav-item"><a href="/department">部门管理</a></li>
+            </sec:authorize>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
