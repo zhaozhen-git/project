@@ -23,11 +23,11 @@
                             <div style="text-align: center"><span style="color: #c9302c;font-size: 30px;">登录错误</span></div>
                             <div class="form-group">
                                 <label for="username">请输入账号：</label>
-                                <input type="text"  class="form-control" name="username" id="username" placeholder="请在此输入账号" style="width: 280px;display: inline-block;"/>
+                                <input type="text"  class="form-control" name="username" id="username" placeholder="请在此输入账号" style="width: 280px;display: inline-block;" autocomplete="off"/>
                             </div>
                             <div class="form-group">
                                 <label for="password">请输入密码：</label>
-                                <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码" autocomplete="off">
                             </div>
                             <input type="submit" value="Login" class="btn btn-success btn-lg" style="float: right;margin-top: 50px"/>
                         </form>
