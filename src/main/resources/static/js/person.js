@@ -1,8 +1,9 @@
-layui.use(['table','layer','form','upload'], function() {
+layui.use(['table','layer','form','upload','element'], function() {
     var table = layui.table;
     var layer = layui.layer;
     var form = layui.form;
     var upload = layui.upload;
+    var element = layui.element;
 
     //获取部门
     $.ajax({

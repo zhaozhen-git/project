@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>人员管理</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -23,7 +24,6 @@
                 <li class="layui-nav-item layui-this"><a href="/person">人员管理</a></li>
             </sec:authorize>
         </ul>
-
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
