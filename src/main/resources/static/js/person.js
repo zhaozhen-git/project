@@ -64,7 +64,7 @@ layui.use(['table','layer','form','upload','element'], function() {
                         if (d.user_cancel === 0) {
                             return "<span style='color: #FF5722'>注销</span>";
                         } else if (d.user_cancel === 1) {
-                            return "<span style='color: #00FF00'>正常</span>";
+                            return "<span style='color: #009688'>正常</span>";
                         }
                     }}
             ]
@@ -434,3 +434,31 @@ function changePassword(){
 
     })
 }
+
+
+
+layui.use(['table','layer'],function () {
+    var table = layui.table;
+    var layer = layui.layer;
+    var active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+            //执行重载
+            var index = layer.msg("查询中，请稍后...",{icon:16});
+            setTimeout(function () {
+                table.reload('textReload', {
+                    where: {
+                        username: demoReload.val(),
+                        department:demoReload.val()
+                    }
+                });
+                layer.close(index);
+            },800);
+        }
+    };
+
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+})

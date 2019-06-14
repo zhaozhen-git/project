@@ -67,8 +67,8 @@ public class UserService {
         return userMapper.getProjectUser(map);
     }
 
-    public List<Map<String,Object>> getPersonList(){
-        return userMapper.getPersonList();
+    public List<Map<String,Object>> getPersonList(Map<String,Object> map){
+        return userMapper.getPersonList(map);
     }
 
     public void insertPerson(Map<String,Object> map){

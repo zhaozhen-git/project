@@ -42,10 +42,17 @@
     <div class="layui-body" style="position: static">
         <!-- 内容主体区域 -->
         <div class="layui-tab layui-tab-brief" lay-filter="demo" style="padding: 10px;">
-            <div class="layui-upload">
+            <div class="layui-upload" style="display: inline-block">
                 <button class="layui-btn layui-btn-warm layui-btn-radius" onclick="window.open('content/model.xlsx')"><i class="layui-icon layui-icon-template-1"></i>下载Excel模板</button>
                 <button class="layui-btn layui-btn-normal layui-btn-radius" lay-event="file" id="file"><i class="layui-icon layui-icon-table"></i>选择文件</button><span id="fileName"></span>
                 <button class="layui-btn layui-btn-radius" id="uploadFile" lay-event="uploadFile"><i class="layui-icon layui-icon-upload-circle"></i>开始上传</button>
+            </div>
+            <div class="demoTable" style="float: right;display: inline-block">
+                按姓名/部门：
+                <div class="layui-inline">
+                    <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
             </div>
             <div class="layui-tab-item layui-show" id="table">
                 <table id="test" lay-filter="test"></table>

@@ -34,7 +34,7 @@ public interface UserMapper {
 
     List<Map<String,Object>> getProjectUser(Map<String,Object> map);
 
-    List<Map<String,Object>> getPersonList();
+    List<Map<String,Object>> getPersonList(Map<String,Object> map);
 
     void insertPerson(Map<String,Object> map);
 

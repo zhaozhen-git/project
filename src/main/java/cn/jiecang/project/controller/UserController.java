@@ -311,10 +311,13 @@ public class UserController {
     //获取所有人员
     @ResponseBody
     @RequestMapping("/getPersonList")
-    public Map<String,Object> getPersonList(){
+    public Map<String,Object> getPersonList(HttpServletRequest request){
+        String username = request.getParameter("username");
+        Map<String,Object> map = new HashMap<>();
+        map.put("username",username);
         Map<String,Object> resultMap = new HashMap<>();
         try {
-            List<Map<String,Object>> list = userService.getPersonList();
+            List<Map<String,Object>> list = userService.getPersonList(map);
             resultMap.put("data", list);
             resultMap.put("code", "0");
             resultMap.put("msg", "");
@@ -472,6 +475,12 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    @RequestMapping("/findPerson")
+    public void findPerson(HttpServletRequest request,HttpServletResponse response){
+        String value = request.getParameter("value");
     }
 
 

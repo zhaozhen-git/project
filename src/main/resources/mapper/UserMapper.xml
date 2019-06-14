@@ -68,6 +68,9 @@
         left join department d on u.departmentID=d.departmentID
         left join user_role r on u.user_ID = r.user_ID
         left join role ro on r.role_ID = ro.id
+        <if test="username!=null and username!=''">
+            where u.user_name like CONCAT('%',#{username},'%') or d.departmentName like CONCAT('%',#{username},'%')
+        </if>
     </select>
 
     <insert id="insertPerson">
