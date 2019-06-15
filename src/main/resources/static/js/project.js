@@ -79,35 +79,35 @@ layui.use('upload', function() {
         , auto: false
         , bindAction: '#testListAction1'
         , choose: function (obj) {
-            var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-            //读取本地文件
-            obj.preview(function (index, file, result) {
-                dataNum1 = dataNum1 +1;
-                num1.push(dataNum1);
-                var tr = $(['<tr id="sup' + dataNum1 + '">'
-                    , '<td>' + file.name + '</td>'
-                    , '<td>' + (file.size / 1024).toFixed(1) + 'kb</td>'
-                    , '<td>等待上传</td>'
-                    , '<td>'
-                    , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                    , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete" onclick="del1('+dataNum1+')">删除</button>'
-                    , '</td>'
-                    , '</tr>'].join(''));
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    dataNum1 = dataNum1 +1;
+                    num1.push(dataNum1);
+                    var tr = $(['<tr id="sup' + dataNum1 + '">'
+                        , '<td>' + file.name + '</td>'
+                        , '<td>' + (file.size / 1024).toFixed(1) + 'kb</td>'
+                        , '<td>等待上传</td>'
+                        , '<td>'
+                        , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete" onclick="del1('+dataNum1+')">删除</button>'
+                        , '</td>'
+                        , '</tr>'].join(''));
 
-                //单个重传
-                tr.find('.demo-reload').on('click', function () {
-                    obj.upload(index, file);
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function () {
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function () {
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    demoListView.append(tr);
                 });
-
-                //删除
-                tr.find('.demo-delete').on('click', function () {
-                    delete files[index]; //删除对应的文件
-                    tr.remove();
-                    uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                });
-
-                demoListView.append(tr);
-            });
         }
         , done: function (res, index, upload) {
             if (res.code === 0) { //上传成功
@@ -357,7 +357,7 @@ layui.use(['table','layer','form'], function() {
     //头工具栏事件
     table.on('toolbar(test)', function (obj) {
         if (project === undefined) {
-            layer.alert('请选择一个项目', {icon: 2});
+            layer.msg('请选择一个项目', {icon: 2});
         } else {
             var type = obj.event;
             if (type === "add") {
@@ -405,12 +405,12 @@ layui.use(['table','layer','form'], function() {
                         }
                     });
                 } else {
-                    layer.alert('请选择至少一个事件', {icon: 2});
+                    layer.msg('请选择至少一个事件', {icon: 2});
                 }
             }else if(type==="update") {
                 var checkRow = table.checkStatus('textReload');
                 if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                    layer.alert('选择一个事件进行编辑操作', {icon: 2});
+                    layer.msg('选择一个事件进行编辑操作', {icon: 2});
                 }else{
                     if(rolename==="ROLE_SUPPLIER" || rolename==="ROLE_DEMAND"){
                         $("#project_name").attr("readonly","readonly")
@@ -435,7 +435,7 @@ layui.use(['table','layer','form'], function() {
                     project = checkRow.data[0].project_ID;
                     $("#project_name").val(project_name);
                     $("#project_director option:contains('"+user_name+"')").attr("selected",true);
-                    $("#project_supplier option[value="+project_supplier+"]").attr("selected",true);
+                    $("#project_supplier  option[value="+project_supplier+"]").attr("selected",true);
                     $("#project_demand option[value="+project_demand+"]").attr("selected",true);
                     form.render();
                     $("#supplier_phone").val(supplier_phone);
@@ -452,6 +452,8 @@ layui.use(['table','layer','form'], function() {
                         async: false,
                         dataType: 'json',
                         success: function (data) {
+                            $("#supplierDemo").html("");
+                            $("#demandDemo").html("");
                             var supplierData = data.list;
                             var demandData = data.list1;
                             if(supplierData!=undefined){
@@ -482,11 +484,8 @@ layui.use(['table','layer','form'], function() {
                                 }
                             });
                             $("#close").click(function () {
-                                table.reload('textReload', {
-                                    url: '/getAllProject?username='+user_ID,
-                                    method: 'post'
-                                });
                                 layer.close(node);
+                                location.reload();
                             });
                         }
                     });
@@ -495,7 +494,7 @@ layui.use(['table','layer','form'], function() {
             }else if(type=="success"){
                 var checkRow = table.checkStatus('textReload');
                 if (checkRow.data.length > 1 || checkRow.data.length == 0) {
-                    layer.alert('选择一个项目进行完成操作', {icon: 2});
+                    layer.msg('选择一个项目进行完成操作', {icon: 2});
                 }else {
                     var id = checkRow.data[0].project_ID;
                     var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
@@ -521,10 +520,7 @@ layui.use(['table','layer','form'], function() {
                         },
                         btn2: function (index, layero) {
                             layer.close(node);
-                            table.reload('textReload', {
-                                url: '/getAllProject?username=' + user_ID,
-                                method: 'post'
-                            });
+                            location.reload();
                         }
                     });
                 }
@@ -584,7 +580,7 @@ function supplierDel(index){
     data = data.substring(0,suData.length-1);
     var String = new Array();
     String = data.split(";");
-    String[index] = ";";
+    String[index] = "";
     $("#supEdit"+index).remove();
     suData = "";
     for(var i=0;i<String.length;i++){
@@ -597,7 +593,7 @@ function demandDel(index){
     data = data.substring(0,deData.length-1);
     var String = new Array();
     String = data.split(";");
-    String[index] = ";";
+    String[index] = "";
     $("#demEdit"+index).remove();
     deData = "";
     for(var i=0;i<String.length;i++){
@@ -636,11 +632,11 @@ function updateProject() {
                 data: {
                     "project_id": project,
                     "project_name": project_name,
-                    "project_director": $("#project_director option:selected").text(),
+                    "project_director": project_director,
                     "project_time": project_time,
-                    "project_supplier":$("#project_supplier option:selected").text(),
+                    "project_supplier":project_supplier,
                     "supplier_phone":supplier_phone,
-                    "project_demand":$("#project_demand option:selected").text(),
+                    "project_demand":project_demand,
                     "demand_phone":demand_phone,
                     "project_detail":project_detail,
                     "data1":suData+";"+data1,
@@ -651,10 +647,7 @@ function updateProject() {
                 success: function (data) {
                     layer.closeAll();
                     layer.msg('修改成功', {icon: 1});
-                    table.reload('textReload', {
-                        url: '/getAllProject?username='+user_ID,
-                        method: 'post'
-                    });
+                    location.reload();
                 }
             });
         }
@@ -672,7 +665,7 @@ function sentMsg(){
         var projectName = $("#projectName").val();
         var projectDirector = $("#projectDirector option:selected").val();
         var projectTime = $("#projectTime").val();
-        var projectSupplier = $("#projectDirector option:selected").val();
+        var projectSupplier = $("#projectSupplier option:selected").val();
         var supplierPhone = $("#supplierPhone").val();
         var projectDemand = $("#projectDemand option:selected").val();
         var demandPhone = $("#demandPhone").val();
@@ -707,10 +700,7 @@ function sentMsg(){
                 },
                 success: function (data) {
                     layer.closeAll();
-                    table.reload('textReload', {
-                        url: '/getAllProject?username='+user_ID,
-                        method: 'post'
-                    });
+                    location.reload();
                 }
             });
         }

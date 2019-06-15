@@ -424,7 +424,7 @@ public class ProjectController {
             String data1[] = null;
             data1 = supplier.split(";");
             for(int i=0;i<data1.length;i++){
-                File file = new File(filePath+data1[i]);
+                File file = new File(filePath+"\\uploadFile\\"+data1[i]);
                 String size = String.valueOf(file.length());
                 String filename = data1[i];
                 String name = data1[i].substring(36);

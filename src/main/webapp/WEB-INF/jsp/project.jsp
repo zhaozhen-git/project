@@ -155,7 +155,7 @@
                 <div class="row">
                     <!--文件上传-->
                     <div class="layui-upload">
-                        <button type="button" class="layui-btn layui-btn-normal" id="supplierList">供应方文件上传</button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="supplierList">供应方文件上传(小于50MB)</button>
                         <button type="button" class="layui-btn" id="supplierListAction">开始上传</button>
                         <div class="layui-upload-list">
                             <table class="layui-table">
@@ -177,7 +177,7 @@
                 <div class="row">
                     <!--文件上传-->
                     <div class="layui-upload">
-                        <button type="button" class="layui-btn layui-btn-normal" id="demandList">需求方文件上传</button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="demandList">需求方文件上传(小于50MB)</button>
                         <button type="button" class="layui-btn" id="demandListAction">开始上传</button>
                         <div class="layui-upload-list">
                             <table class="layui-table">
@@ -306,7 +306,7 @@
                 <div class="row">
                     <!--文件上传-->
                     <div class="layui-upload">
-                        <button type="button" class="layui-btn layui-btn-normal" id="testList1">供应方文件上传</button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="testList1">供应方文件上传(小于50MB)</button>
                         <button type="button" class="layui-btn" id="testListAction1">开始上传</button>
                         <div class="layui-upload-list">
                             <table class="layui-table">
@@ -326,7 +326,7 @@
                 <div class="row">
                     <!--文件上传-->
                     <div class="layui-upload">
-                        <button type="button" class="layui-btn layui-btn-normal" id="testList2">需求方文件上传</button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="testList2">需求方文件上传(小于50MB)</button>
                         <button type="button" class="layui-btn" id="testListAction2">开始上传</button>
                         <div class="layui-upload-list">
                             <table class="layui-table">

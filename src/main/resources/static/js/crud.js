@@ -652,7 +652,7 @@ window.onload=function () {
 
         table.on('toolbar(fiveHtml)', function (obj) {
             if (project === undefined) {
-                layer.msg('请选择一个用户', {icon: 2});
+                layer.msg('请选择一个项目', {icon: 2});
             } else {
                 var type = obj.event;
                 if (type === "add") {
@@ -723,7 +723,7 @@ window.onload=function () {
                             }
                         });
                     } else {
-                        layer.msg('请选择至少一个事件', {icon: 2});
+                        layer.msg('请选择至少一个人员', {icon: 2});
                     }
                 }
             }
