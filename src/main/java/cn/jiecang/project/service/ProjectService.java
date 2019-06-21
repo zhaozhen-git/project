@@ -87,4 +87,16 @@ public class ProjectService {
         return projectMapper.getExtraCount(map);
     }
 
+    public String getProjectDirector(Map<String,Object> map){
+        return projectMapper.getProjectDirector(map);
+    }
+
+    public String getSupplier(Map<String,Object> map){
+        return projectMapper.getSupplier(map);
+    }
+
+    public String getDemand(Map<String,Object> map){
+        return projectMapper.getDemand(map);
+    }
+
 }

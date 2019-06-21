@@ -112,6 +112,10 @@
          select * from event where project_ID = #{project_id} and event_id = #{event_id} order by event_startTime asc
     </select>
 
+    <select id="getName" resultType="String">
+        select user_name from user where user_ID = #{event_groupLeader}
+    </select>
+
     <select id="getDate" resultType="String">
         select event_endTime from event where event_id = #{ID}
     </select>
@@ -133,9 +137,14 @@
     </select>
 
     <select id="getThing" resultType="map">
-        select d.departmentName,e.event_startTime,e.event_endTime,e.event_groupLeader,e.event_description from project_user pu
-        left join department d on pu.departmentID = d.departmentID
+        select distinct e.event_startTime,e.event_endTime,e.event_groupLeader,e.event_description from project_user pu
         left join event e on pu.project_ID = e.project_ID
         where e.event_id = #{id}
+    </select>
+
+    <select id="brandService" resultType="map">
+        select u.user_name,d.departmentName from user u
+        left join department d on u.departmentID=d.departmentID
+        where u.user_ID=#{event_groupLeader}
     </select>
 </mapper>

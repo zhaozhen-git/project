@@ -7,14 +7,20 @@
     <title>项目详情</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/crud.css">
+    <link rel="stylesheet" href="css/style.css" />
     <link href='css/fullcalendar.print.css' rel='stylesheet' />
     <link href='css/fullcalendar.css' rel='stylesheet' />
+    <link href="css/prettify.min.css" rel="stylesheet" />
     <script src="js/jquery-1.11.3.js"></script>
     <script src='js/fullcalendar.js'></script>
     <script src="js/jquery-ui.custom.min.js"></script>
     <script src="layui/layui.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.fn.gantt.js"></script>
+    <script src="js/prettify.min.js"></script>
     <style>
         #calendar_body{
             margin-left: 30px;
@@ -112,6 +118,7 @@
                 <li id="page_3">计划任务事件节点</li>
                 <li id="page_4">沟通事项</li>
                 <li id="page_5">项目成员</li>
+                <li id="page_6">最后一页</li>
             </ul>
             <div class="layui-tab-content">
 
@@ -357,7 +364,11 @@
                         <table class="layui-hide" id="fiveHtml" lay-filter="fiveHtml"></table>
                     </div>
                 </div>
-            </div>
+
+                <!--第六个页面-->
+                <div class="layui-tab-item" id="six">
+                    <div id="ganttChart"></div>
+                </div>
         </div>
     </div>
 
@@ -425,6 +436,10 @@
     </div>
 </div>
 
+
+    <div style="display: none;margin: 10px" id="eventHtml">
+        <table class="layui-hide" id="test1" lay-filter="test1"></table>
+    </div>
 
 <!--事件详情预览-->
 <div class="modal-dialog_1" style="margin-top: 30px;display: none">
@@ -524,6 +539,55 @@
     </div>
 </div>
 
+
+
+    <!--新增详情事件-->
+    <div class="modal-dialog" id="addItem" style="display: none;">
+        <!-- 事件节点名称: -->
+        <form class="form-horizontal" method="post" action="">
+            <div class="form-group">
+                <label class="col-xs-4 control-label"><i style="color: red;margin-right:2px">*</i>事件节点名称:</label>
+                <div class="col-xs-6">
+                    <input autocomplete="off" type="text" class="form-control input-sm" id="itemName" name="" style="margin-top: 7px;" placeholder="请在这里输入事件节点名称">
+                </div>
+            </div>
+            <!-- 计划任务完成周期: -->
+            <div class="form-group">
+                <label class="col-xs-4 control-label" style="margin-left: 2px;"><i style="color: red;margin-right:2px">*</i>节点周期:</label>
+                <div class="col-xs-6">
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" type="" class="form-control input-sm" value="" id="itemTime" name="" style="margin-top: 7px;" placeholder=" - ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-4 control-label">事件状态:</label>
+                <div class="col-xs-6">
+                    <select lay-search="" id="itemSelect" style="height: 30px">
+                        <option value="0">正常</option>
+                        <option value="1">紧急</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- 计划任务详细说明: -->
+            <div class="form-group">
+                <label class="col-xs-4 control-label">节点详情描述:</label>
+                <div class="col-xs-6">
+                    <textarea id="itemDes" rows="10" cols="35" style="resize: none;"></textarea>
+                </div>
+            </div>
+        </form>
+        <div class="modal-footer">
+            <button class="btn btn-default" id="item_close" data-dismiss="modal">取消
+            </button>
+            <button type="button" class="btn btn-primary" onclick="insertItem()">
+                确定
+            </button>
+        </div>
+    </div>
 
 
 <!--编辑事件节点-->
@@ -861,7 +925,7 @@
 <%--沟通事项的工具栏--%>
 <script type="text/html" id="toolDemo">
     <div class="layui-btn-container">
-        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER    ')">
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER')">
             <button class="layui-btn" lay-event="add1"><i class="layui-icon layui-icon-add-1"></i>新增</button>
         </sec:authorize>
             <button class="layui-btn layui-btn-warm" lay-event="update1"><i class="layui-icon layui-icon-edit"></i>编辑</button>
@@ -884,6 +948,15 @@
         </sec:authorize>
     </div>
 </script>
+
+    <script type="text/html" id="toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-warm" lay-event="update2"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+            <button class="layui-btn layui-btn-danger" lay-event="delete2"><i class="layui-icon layui-icon-delete"></i>删除</button>
+            <button class="layui-btn layui-bg-cyan" lay-event="time2"><i class="layui-icon layui-icon-edit"></i>编辑时间</button>
+            <button class="layui-btn layui-bg-blue" lay-event="success2"><i class="layui-icon layui-icon-ok"></i>完成</button>
+        </div>
+    </script>
 
 <script type="text/html" id="toolDemo1">
     <div class="layui-btn-container">

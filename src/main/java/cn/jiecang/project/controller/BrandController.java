@@ -240,6 +240,14 @@ public class BrandController {
         map.put("event_id",event_id);
         try{
             List<Map<String,Object>> list = brandService.getBrand(map);
+            map.put("event_groupLeader",list.get(0).get("event_groupLeader"));
+            String name = brandService.getName(map);
+            map.put("event_groupLeader",name);
+            Map<String,Object> map1 = list.get(0);
+            map1.putAll(map);
+            list.clear();
+            list.add(map1);
+            System.out.println(list);
             logger.info("返回事件详情成功");
             JSONObject obj = new JSONObject();
             obj.put("list",list);

@@ -31,4 +31,6 @@ public interface ExtraMapper {
     List<Map<String,Object>> getExtraHtml(Map<String,Object> map);
 
     List<Map<String, Object>> getThing(Map<String,Object> map);
+
+    List<Map<String,Object>> getData(Map<String,Object> map);
 }

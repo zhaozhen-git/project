@@ -38,6 +38,10 @@ public class BrandService {
         return brandMapper.getBrand(map);
     }
 
+    public String getName(Map<String,Object> map){
+        return brandMapper.getName(map);
+    }
+
 
     public String getDate(Map<String,Object> map){
         return brandMapper.getDate(map);
@@ -61,5 +65,9 @@ public class BrandService {
 
     public List<Map<String,Object>> getThing(Map<String,Object> map){
         return brandMapper.getThing(map);
+    }
+
+    public List<Map<String,Object>> getDepartment(Map<String,Object> map){
+        return brandMapper.brandService(map);
     }
 }

@@ -46,4 +46,10 @@ public interface ProjectMapper {
 
     int getExtraCount(Map<String,Object> map);
 
+    String getProjectDirector(Map<String,Object> map);
+
+    String getSupplier(Map<String,Object> map);
+
+    String getDemand(Map<String,Object> map);
+
 }

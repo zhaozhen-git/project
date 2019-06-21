@@ -7,6 +7,10 @@ var event;
 
 var Index;
 
+var source = new Array();
+
+var node;
+
 
 
 
@@ -54,6 +58,10 @@ layui.use('laydate', function(){
     })
     laydate.render({
         elem:'#time1'
+    })
+    laydate.render({
+        elem:'#itemTime',
+        range: true
     })
 });
 
@@ -306,7 +314,7 @@ window.onload=function () {
             } else {
                 var type = obj.event;
                 if (type === "add") {
-                    var node = layer.open({
+                    node = layer.open({
                         title: '添加节点'
                         , type: 1
                         , shift: 4
@@ -324,7 +332,7 @@ window.onload=function () {
                             ID += o.event_id + ",";
                         });
                         ID = ID.substring(0, ID.length - 1);
-                        var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                        node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
                             btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -380,7 +388,7 @@ window.onload=function () {
                         $("#event_description").val(event_description);
                         $("#change_state").val(event_success);
                         $("#select").find("option[value=" + event_state + "]").attr("selected", true);
-                        var node = layer.open({
+                        node = layer.open({
                             title: '编辑节点'
                             , type: 1
                             , shift: 5
@@ -397,7 +405,7 @@ window.onload=function () {
                         layer.msg('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].event_id;
-                        var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
+                        node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
                             btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -436,7 +444,7 @@ window.onload=function () {
                         var during_time = start_time + " - " + end_Time;
                         $("#time").val(during_time);
                         $("#select1 option[value='1']").attr("selected", "true");
-                        var node = layer.open({
+                        node = layer.open({
                             title: '编辑时间'
                             , type: 1
                             , shift: 4
@@ -456,7 +464,7 @@ window.onload=function () {
                         event = checkRow.data[0].event_id;
                         var event_progress = checkRow.data[0].event_progress;
                         $("#progressNum").val(event_progress);
-                        var node = layer.open({
+                        node = layer.open({
                             title: '编辑进度条'
                             , type: 1
                             , shift: 4
@@ -481,7 +489,7 @@ window.onload=function () {
             } else {
                 var type = obj.event;
                 if (type === "add1") {
-                    var node = layer.open({
+                    node = layer.open({
                         title: '添加待办理事件'
                         , type: 1
                         , shift: 4
@@ -504,7 +512,7 @@ window.onload=function () {
                             layer.msg('不是创建人，无法删除', {icon: 2});
                         }else{
                             ID = ID.substring(0, ID.length - 1);
-                            var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                            node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
                                 btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
                                     $.ajax({
                                         type: "post",
@@ -567,7 +575,7 @@ window.onload=function () {
                             form.render();
                             $("#extra_time").val(extra_time);
                             $("#extra_success").val(extra_success);
-                            var node = layer.open({
+                            node = layer.open({
                                 title: '编辑节点'
                                 , type: 1
                                 , shift: 5
@@ -585,7 +593,7 @@ window.onload=function () {
                         layer.msg('选择一个事件进行完成操作', {icon: 2});
                     } else {
                         var id = checkRow.data[0].extra_ID;
-                        var node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
+                        node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
                             btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -634,7 +642,7 @@ window.onload=function () {
                             var extra_time = checkRow.data[0].extra_time;
                             $("#time1").val(extra_time);
                             $("#select2 option[value='1']").attr("selected", "true");
-                            var node = layer.open({
+                            node = layer.open({
                                 title: '编辑时间'
                                 , type: 1
                                 , shift: 4
@@ -656,7 +664,7 @@ window.onload=function () {
             } else {
                 var type = obj.event;
                 if (type === "add") {
-                    var node = layer.open({
+                    node = layer.open({
                         title: '添加用户'
                         , type: 1
                         , shift: 4
@@ -674,7 +682,7 @@ window.onload=function () {
                             ID += o.user_ID + ",";
                         });
                         ID = ID.substring(0, ID.length - 1);
-                        var node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                        node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
                             btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
                                 $.ajax({
                                     type: "post",
@@ -729,8 +737,8 @@ window.onload=function () {
             }
         })
 
-
     })
+
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next ',
@@ -997,6 +1005,49 @@ function getDataList(id){
 
     //加载员工详情
     load();
+
+
+//加载详情数据
+    $.ajax({
+        type: "post",
+        url: "/getGanttData?id=" + project,//对应controller的URL
+        async: false,
+        dataType: 'json',
+        success: function (data) {
+            var data = data.data;
+            for(var i in data){
+                source[i] = data[i];
+            }
+            $("#ganttChart").gantt({
+                source: source,
+                navigate: 'scroll',//buttons  scroll
+                scale: "days",// months  weeks days  hours
+                maxScale: "days",
+                minScale: "days",
+                onItemClick: function (data) {
+                    onItem(data);
+                },
+                onAddClick: function (dt, rowId) {
+                    addItem();
+                },
+                onRender: function () {
+
+                }
+            });
+        }
+    });
+
+
+//弹窗功能
+$("#ganttChart").popover({
+    selector: ".bar",
+    title: "I'm a popover",
+    content: "And I'm the content of said popover.",
+    trigger: "hover",
+    placement: "auto right"
+});
+
+
 
     //文件显示
     $('#supplier_file').empty();
@@ -1334,7 +1385,7 @@ function addEvent() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('添加成功', {icon: 1});
                     table.reload('textReload', {
                         url: '/getBrandList?id=' + project + '&username='+user_ID,
@@ -1348,6 +1399,71 @@ function addEvent() {
     })
 }
 
+
+
+
+//添加详情事件
+function insertItem() {
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+        var eventName = $("#itemName").val();
+        var dutingTime = $("#itemTime").val();
+        if (eventName === "") {
+            layer.msg("事件名称不能为空");
+        } else if (dutingTime === "") {
+            layer.msg("时间不能为空");
+        } else {
+            $.ajax({
+                type: "post",
+                url: "/insertBrandList",//对应controller的URL
+                data: {
+                    "project_ID": project,
+                    "eventName": eventName,
+                    "groupLeader": user_ID,
+                    "duringTime": dutingTime,
+                    "eventDescription": $("#itemDes").val(),
+                    "eventState": $("#itemSelect option:selected").val()
+                },
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(node);
+                    layer.msg('添加成功', {icon: 1});
+                    $.ajax({
+                        type: "post",
+                        url: "/getGanttData?id=" + project,//对应controller的URL
+                        async: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            var data = data.data;
+                            for (var i in data) {
+                                source[i] = data[i];
+                            }
+                            $("#ganttChart").gantt({
+                                source: source,
+                                navigate: 'scroll',//buttons  scroll
+                                scale: "days",// months  weeks days  hours
+                                maxScale: "days",
+                                minScale: "days",
+                                onItemClick: function (data) {
+                                    onItem(data);
+                                },
+                                onAddClick: function (dt, rowId) {
+                                    addItem();
+                                },
+                                onRender: function () {
+
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    })
+}
 
 
 
@@ -1380,7 +1496,7 @@ function addExtra() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('添加成功', {icon: 1});
                     table.reload('extraReload', {
                         url: '/getExtraList?id=' + project + '&username='+user_ID,
@@ -1432,10 +1548,14 @@ function updateEvent() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
                         url: '/getBrandList?id=' + project + '&username='+user_ID,
+                        method: 'post',
+                    });
+                    table.reload('event', {
+                        url: '/getBrandList?id=' + project,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1476,7 +1596,7 @@ function updateExtra() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('修改成功', {icon: 1});
                     table.reload('extraReload', {
                         url: '/getExtraList?id=' + project + "&username="+user_ID,
@@ -1516,10 +1636,14 @@ function changeTime() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
                         url: '/getBrandList?id=' + project + '&username='+ user_ID,
+                        method: 'post',
+                    });
+                    table.reload('event', {
+                        url: '/getBrandList?id=' + project,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1553,10 +1677,14 @@ function changeProgress() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('修改成功', {icon: 1});
                     table.reload('textReload', {
                         url: '/getBrandList?id=' + project + '&username='+user_ID,
+                        method: 'post',
+                    });
+                    table.reload('event', {
+                        url: '/getBrandList?id=' + project,
                         method: 'post',
                     });
                     //重现加载用户详情页面
@@ -1589,7 +1717,7 @@ function changeExtraTime() {
                 async: false,
                 dataType: 'json',
                 success: function (data) {
-                    layer.closeAll();
+                    layer.close(node);
                     layer.msg('修改成功', {icon: 1});
                     table.reload('extraReload', {
                         url: '/getExtraList?id=' + project+"&username="+user_ID,
@@ -1610,7 +1738,7 @@ function changeExtraTime() {
 
 function setPassword() {
     layui.use('layer', function () {
-        var node = layer.open({
+        node = layer.open({
             title: '修改密码'
             , type: 1
             , shift: 4
@@ -1648,7 +1776,7 @@ function changePassword(){
                         $("#password2").val("");
                         layer.msg("原密码错误",{icon: 2});
                     }else{
-                        layer.closeAll();
+                        layer.close(node);
                         layer.msg("成功,3秒后重新登录",{icon: 1});
                         setTimeout('location.href="/"',3000); //跳转
                     }
@@ -1713,7 +1841,7 @@ function insertUser() {
                                 form.render();
                             }
                         });
-                        layer.closeAll();
+                        layer.close(node);
                         layer.msg("添加成功",{icon:1});
                         table.reload('userReload', {
                             url: '/getUserList?id=' + project,
@@ -1746,7 +1874,7 @@ function onSpan(id) {
                 $("#EventDep").val(data.departmentName);
                 $("#EventP").val(data.person);
                 $("#EventM").val(data.description);
-                var node = layer.open({
+                node = layer.open({
                     title: '周任务详情'
                     , type: 1
                     , shift: 4
@@ -1762,6 +1890,294 @@ function onSpan(id) {
                 });
             }
         })
+    })
+}
+
+
+
+$("#page_6").click(function () {
+    //初始化gantt
+    if(project===undefined){
+        $("#ganttChart").html("<div style='text-align: center;margin-top: 30px'><span style='color: #00FF00'>---未选择项目---</span></div>");
+    }else{
+        $("#ganttChart").gantt({
+            source: source,
+            navigate: 'scroll',//buttons  scroll
+            scale: "days",// months  weeks days  hours
+            maxScale: "days",
+            minScale: "days",
+            onItemClick: function (data) {
+                onItem(data);
+            },
+            onAddClick: function (dt, rowId) {
+                addItem();
+            },
+            onRender: function () {
+
+            }
+        });
+    }
+})
+
+
+
+//单击gantt里面得事件
+function  onItem(data) {
+    layui.use(['table','element','layer','form'], function() {
+      var table = layui.table;
+      var layer = layui.layer;
+      var element = layui.element;
+      var form = layui.form;
+        table.render({
+            elem: '#test1'
+            , url: '/getBrandList?id=' + project + '&username='+user_ID
+            , toolbar: '#toolbar'
+            , title: '事件数据表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'event_id', title: 'ID', hide: true, width: 60, align: 'center'}
+                    , {field: 'event_name', title: '事件节点名称', width: 200}
+                    , {field: 'event_description', title: '节点详情描述', width: 340}
+                    , {field: 'user_name', title: '负责组长', width: 100}
+                    // , {field: 'event_phone', title: '电话', width: 180,align:'center'}
+                    , {field: 'event_startTime', title: '开始时间', width: 120, align: 'center'}
+                    , {
+                    field: 'days', title: '计划节点时长', width: 120, align: 'center'
+                    , templet: function (d) {
+                        return d.days + "天"
+                    }
+                }
+                    , {
+                    field: 'event_state', title: '事件紧急情况', width: 120, align: 'center'
+                    , templet: function (d) {
+                        if (d.event_state === 0) {
+                            return "正常";
+                        } else if (d.event_state === 1) {
+                            return "紧急";
+                        }
+                    }
+                }
+                    , {
+                    field: 'event_success', title: '状态', width: 100, align: 'center'
+                    , templet: function (d) {
+                        if (d.event_success === 0) {
+                            return "完成";
+                        } else if (d.event_success === 1) {
+                            return "未完成";
+                        }
+                    }
+                }
+                    , {
+                    field: 'event_progress', title: '完成进度', width: 150,align:'center'
+                    , templet: function (d) {
+                        var html = '<div class="layui-progress">';
+                        html += '<div class="layui-progress-bar"  lay-percent="'+d.event_progress+'%"></div>';
+                        html +='</div>';
+                        return html;
+                    }
+                }
+                ]
+            ]
+            ,id:"event"
+            , page: false
+            ,done:function () {
+                element.render();
+            }
+        });
+
+
+
+
+        table.on('toolbar(test1)', function (obj) {
+            var type = obj.event;
+            if (type === "delete2") {
+                var checkRow = table.checkStatus('event');
+                if (checkRow.data.length > 0) {
+                    var ID = "";
+                    $.each(checkRow.data, function (i, o) {
+                        ID += o.event_id + ",";
+                    });
+                    ID = ID.substring(0, ID.length - 1);
+                    node = layer.confirm('是否删除选中的' + checkRow.data.length + '条数据', {
+                        btn: ['确定', '取消'], title: "删除", btn1: function (index, layero) {
+                            $.ajax({
+                                type: "post",
+                                url: 'deleteBrand?id=' + ID,
+                                dataType: "json",
+                                async: false,
+                                success: function (data) {
+                                    layer.close(node);
+                                    layer.msg('删除成功', {icon: 1});
+                                    table.reload('event', {
+                                        url: '/getBrandList?id=' + project,
+                                        method: 'post',
+                                    });
+                                }
+                            })
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(node);
+                            table.reload('event', {
+                                url: '/getBrandList?id=' + project,
+                                method: 'post',
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg('请选择至少一个事件', {icon: 2});
+                }
+            } else if (type === "update2") {
+                var checkRow = table.checkStatus('event');
+                if (checkRow.data.length > 1 || checkRow.data.length == 0) {
+                    layer.msg('选择一个事件进行编辑操作', {icon: 2});
+                } else {
+                    var event_name = checkRow.data[0].event_name;
+                    var group_leader = checkRow.data[0].event_groupLeader;
+                    var start_time = checkRow.data[0].event_startTime;
+                    var end_Time = checkRow.data[0].event_endTime;
+                    var during_time = start_time + " - " + end_Time;
+                    var event_description = checkRow.data[0].event_description;
+                    var event_state = checkRow.data[0].event_state;
+                    var event_success = checkRow.data[0].event_success;
+                    if (event_success === 0) {
+                        event_success = "完成";
+                    } else {
+                        event_success = "未完成";
+                    }
+                    event = checkRow.data[0].event_id;
+                    $("#event_name").val(event_name);
+                    $("#group_leader option:contains('"+group_leader+"')").attr("selected",true);
+                    form.render();
+                    $("#during_time").val(during_time);
+                    $("#event_description").val(event_description);
+                    $("#change_state").val(event_success);
+                    $("#select").find("option[value=" + event_state + "]").attr("selected", true);
+                    node = layer.open({
+                        title: '编辑事件'
+                        , type: 1
+                        , shift: 5
+                        , area: ['700px', '680px'] //宽高
+                        , content: $('#kkkkk')
+                    });
+                    $("#close").click(function () {
+                        layer.close(node);
+                    });
+                }
+            } else if (type == "success2") {
+                var checkRow = table.checkStatus('event');
+                if (checkRow.data.length > 1 || checkRow.data.length == 0) {
+                    layer.msg('选择一个事件进行完成操作', {icon: 2});
+                } else {
+                    var id = checkRow.data[0].event_id;
+                    node = layer.confirm('是否更改选中的' + checkRow.data.length + '条数据的完成状态', {
+                        btn: ['确定', '取消'], title: "完成状态的更改", btn1: function (index, layero) {
+                            $.ajax({
+                                type: "post",
+                                url: 'successBrand?id=' + id,
+                                dataType: "json",
+                                async: false,
+                                success: function (data) {
+                                    layer.close(node);
+                                    layer.msg('更改成功', {icon: 1});
+                                    table.reload('event', {
+                                        url: '/getBrandList?id=' + project,
+                                        method: 'post',
+                                    });
+                                }
+                            })
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(node);
+                            table.reload('event', {
+                                url: '/getBrandList?id=' + project,
+                                method: 'post',
+                            });
+                        }
+                    });
+                }
+            } else if (type == "time2") {
+                var checkRow = table.checkStatus('event');
+                if (checkRow.data.length > 1 || checkRow.data.length == 0) {
+                    layer.msg('选择一个事件进行编辑时间操作', {icon: 2});
+                } else {
+                    event = checkRow.data[0].event_id;
+                    var start_time = checkRow.data[0].event_startTime;
+                    var end_Time = checkRow.data[0].event_endTime;
+                    var during_time = start_time + " - " + end_Time;
+                    $("#time").val(during_time);
+                    $("#select1 option[value='1']").attr("selected", "true");
+                    node = layer.open({
+                        title: '编辑时间'
+                        , type: 1
+                        , shift: 4
+                        , area: ['700px', '300px'] //宽高
+                        , content: $('#tttt')
+                    });
+                    $("#close_time").click(function () {
+                        layer.close(node);
+                    });
+
+                }
+            }
+        })
+
+        layer.open({
+            title: '事件'
+            , type: 1
+            , shift: 1
+            , area: ['1400px', '600px'] //宽高
+            , content: $('#eventHtml')
+            ,cancel: function (index, layero) {
+                $.ajax({
+                    type: "post",
+                    url: "/getGanttData?id=" + project,//对应controller的URL
+                    async: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        var data = data.data;
+                        for (var i in data) {
+                            source[i] = data[i];
+                        }
+                        $("#ganttChart").gantt({
+                            source: source,
+                            navigate: 'scroll',//buttons  scroll
+                            scale: "days",// months  weeks days  hours
+                            maxScale: "days",
+                            minScale: "days",
+                            onItemClick: function (data) {
+                                onItem(data);
+                            },
+                            onAddClick: function (dt, rowId) {
+                                addItem();
+                            },
+                            onRender: function () {
+
+                            }
+                        });
+                    }
+                });
+            }
+        })
+
+    })
+}
+
+
+//新增详情事件
+function addItem(){
+    layui.use('layer', function() {
+        var layer = layui.layer;
+        node = layer.open({
+            title: '新增事件'
+            , type: 1
+            , shift: 1
+            , area: ['900px', '700px'] //宽高
+            , content: $('#addItem')
+        });
+        $("#item_close").click(function () {
+            layer.close(node);
+        });
     })
 }
 

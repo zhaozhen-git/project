@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiecang.project.dao.GanttMapper">
+
+    <select id="getGanttData" resultType="map">
+        SELECT
+        DISTINCT
+	    d.departmentName,
+	    u.user_ID,
+	    u.user_name,
+	    e.event_id,
+	    e.event_name,
+	    e.event_startTime,
+	    e.event_endTime,
+	    e.event_success,
+	    e.event_state,
+	    e.event_tab
+        FROM
+	    project_user pu
+	    LEFT JOIN USER u ON u.user_ID = pu.user_ID
+	    left join event e on e.event_groupLeader = u.user_ID
+	    LEFT JOIN department d ON pu.departmentID = d.departmentID
+    </select>
+
+
+</mapper>

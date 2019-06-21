@@ -55,9 +55,14 @@
 
 
     <select id="getThing" resultType="map">
-        select d.departmentName,e.extra_time,e.extra_person,e.extra_name from project_user pu
-        left join department d on pu.departmentID = d.departmentID
+        select distinct e.extra_time,e.extra_person,e.extra_name from project_user pu
         left join extra e on pu.project_ID = e.project_ID
         where e.extra_ID = #{id}
+    </select>
+
+    <select id="getData" resultType="map">
+        select u.user_name,d.departmentName from user u
+        left join department d on u.departmentID=d.departmentID
+        where u.user_ID=#{user_ID}
     </select>
 </mapper>

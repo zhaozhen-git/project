@@ -512,6 +512,15 @@ public class ProjectController {
                 map1.put("project_detail",project_detail);
                 map1.put("supplier_data",supplier_data);
                 map1.put("demand_data",demand_data);
+                //将projectDirector改为用户名
+                projectDirector = projectService.getProjectDirector(map1);
+                //将supplier改为用户名
+                supplier = projectService.getSupplier(map1);
+                //将demand改为用户名
+                demand = projectService.getDemand(map1);
+                map1.put("projectDirector",projectDirector);
+                map1.put("supplier",supplier);
+                map1.put("demand",demand);
                 if(x!=0 || y!=0) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     //项目里面员工得任务
@@ -670,20 +679,35 @@ public class ProjectController {
         map.put("id",id);
         if(id.contains("ex")){
             list = extraService.getThing(map);
+            map.put("user_ID",list.get(0).get("extra_person"));
+            List<Map<String,Object>> list2 = extraService.getData(map);
+            Map<String,Object> map2 = list2.get(0);
+            map = list.get(0);
+            map.putAll(map2);
+            list.clear();
+            list.add(map);
             Map<String,Object> map1 = new HashMap<>();
             map1.put("departmentName",list.get(0).get("departmentName"));
             map1.put("time",list.get(0).get("extra_time"));
-            map1.put("person",list.get(0).get("extra_person"));
+            map1.put("person",list.get(0).get("user_name"));
             map1.put("description",list.get(0).get("extra_name"));
             list1.add(map1);
         }else{
             list = brandService.getThing(map);
+            Map<String,Object> map2 = new HashMap<>();
+            map2.put("event_groupLeader",list.get(0).get("event_groupLeader"));
+            List<Map<String,Object>> list2 = brandService.getDepartment(map2);
+            map = list.get(0);
+            map2 = list2.get(0);
+            map.putAll(map2);
+            list.clear();
+            list.add(map);
             Map<String,Object> map1 = new HashMap<>();
             map1.put("departmentName",list.get(0).get("departmentName"));
             String start = String.valueOf(list.get(0).get("event_startTime"));
             String end = String.valueOf(list.get(0).get("event_endTime"));
             map1.put("time",start+" - "+end);
-            map1.put("person",list.get(0).get("event_groupLeader"));
+            map1.put("person",list.get(0).get("user_name"));
             map1.put("description",list.get(0).get("event_description"));
             list1.add(map1);
         }

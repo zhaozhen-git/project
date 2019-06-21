@@ -261,4 +261,16 @@
         select count(extra_ID) from extra where project_ID = #{id}
     </select>
 
+    <select id="getProjectDirector" resultType="String">
+        select user_name from user where user_ID = #{projectDirector}
+    </select>
+
+    <select id="getSupplier" resultType="String">
+        select user_name from user where user_ID = #{supplier}
+    </select>
+
+    <select id="getDemand" resultType="String">
+        select user_name from user where user_ID = #{demand}
+    </select>
+
 </mapper>

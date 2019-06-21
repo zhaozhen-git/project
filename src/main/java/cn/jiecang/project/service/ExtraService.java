@@ -57,4 +57,7 @@ public class ExtraService {
         return extraMapper.getThing(map);
     }
 
+    public List<Map<String,Object>> getData(Map<String,Object> map){
+        return extraMapper.getData(map);
+    }
 }

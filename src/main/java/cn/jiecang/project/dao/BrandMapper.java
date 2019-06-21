@@ -23,6 +23,8 @@ public interface BrandMapper {
 
     List<Map<String,Object>> getBrand(Map<String,Object> map);
 
+    String getName(Map<String,Object> map);
+
     String getDate(Map<String,Object> map);
 
     void changeTime(Map<String,Object> map);
@@ -34,5 +36,7 @@ public interface BrandMapper {
     String getNum();
 
     List<Map<String,Object>> getThing(Map<String,Object> map);
+
+    List<Map<String,Object>> brandService(Map<String,Object> map);
 
 }
